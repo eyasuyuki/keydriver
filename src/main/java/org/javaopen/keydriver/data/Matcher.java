@@ -1,4 +1,4 @@
-package org.javaopen.keydriver;
+package org.javaopen.keydriver.data;
 
 import java.util.Arrays;
 
@@ -13,7 +13,10 @@ public enum Matcher implements Tag {
     LESS_THAN_EQUAL("lessThanEqual"),
     ;
     public static Tag getTag(String name) {
-        return Arrays.stream(Matcher.values()).filter(x -> x.getString().equals(name)).findFirst().orElseThrow(() -> new IllegalArgumentException(name));
+        return Arrays.stream(Matcher.values())
+            .filter(x -> x.getString().equals(name))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(name));
     }
 
     private String text;

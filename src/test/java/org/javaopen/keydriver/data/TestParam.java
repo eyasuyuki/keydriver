@@ -1,4 +1,4 @@
-package org.javaopen.keydriver;
+package org.javaopen.keydriver.data;
 
 import org.junit.Test;
 
@@ -15,5 +15,9 @@ public class TestParam {
         param = new Param("is[true]");
         assertThat(param.getTag(), is(Matcher.IS));
         assertThat(param.getValue(), is("true"));
+
+        param = new Param("url[http://www.javaopen.org/");
+        assertThat(param.getTag(), is(DataType.URL));
+        assertThat(param.getValue(), is("http://www.javaopen.org/"));
     }
 }

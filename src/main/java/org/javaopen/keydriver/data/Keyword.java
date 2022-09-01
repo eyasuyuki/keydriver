@@ -1,4 +1,6 @@
-package org.javaopen.keydriver;
+package org.javaopen.keydriver.data;
+
+import java.util.Arrays;
 
 public enum Keyword {
     OPEN("open"),
@@ -15,6 +17,13 @@ public enum Keyword {
 
     private Keyword(final String text) {
         this.text = text;
+    }
+
+    public static Keyword getKeyword(String keyword) {
+        return Arrays.stream(Keyword.values())
+            .filter(x -> x.getString().equals(keyword))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(keyword));
     }
 
     public String getString() {
