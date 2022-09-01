@@ -8,16 +8,21 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class Param {
-    private static final String CONFIG = "config";
+    public static final String CONFIG = "config";
     private static final String VALUE_HEAD_KEY = "valueHead";
     private static final String VALUE_TAIL_KEY = "valueTail";
     private static final String VALUE_HEAD_DEFAULT = "\\[";
     private static final String VALUE_TAIL_DEFAULT = "]";
-    private static final List<String> MATCHERS = Arrays.asList(Matcher.values()).stream().map(x -> x.getString()).collect(Collectors.toList());
-    private static final List<String> DATA_TYPES = Arrays.asList(DataType.values()).stream().map(x -> x.getString()).collect(Collectors.toList());
+    private static final List<String> MATCHERS = Arrays.asList(Matcher.values())
+        .stream()
+        .map(x -> x.getString())
+        .collect(Collectors.toList());
+    private static final List<String> DATA_TYPES = Arrays.asList(DataType.values())
+        .stream()
+        .map(x -> x.getString())
+        .collect(Collectors.toList());
     public Param(String param) {
         String[] str = param.split(getValueHead());
-        if (str.length < 2) throw new IllegalArgumentException(param);
         if (MATCHERS.contains(str[0])) {
             tag = Matcher.getTag(str[0]);
             setValue(str[1]);

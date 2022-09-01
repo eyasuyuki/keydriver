@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -26,12 +27,14 @@ public class ExcelReader implements Reader {
         final XSSFWorkbook workbook = new XSSFWorkbook(in);
         final XSSFSheet sheet0 = workbook.getSheetAt(0);// TODO multi sheets
         final Iterable<Row> iter = () -> sheet0.iterator();
-        String[] keys = new String[Record.KEYS.size()];
+        String[] keys = null;
         final List<Record> rows = new ArrayList<>();
         for (Row r: iter) {
+            Iterator<Cell> cellIterator = r.cellIterator();
             if (keys == null) {
+                keys = new String[Record.KEYS.size()];
                 for (int i=0; i<keys.length; i++) {
-                    Cell c = r.cellIterator().next();
+                    Cell c = cellIterator.next();
                     keys[i] = getString(c);
                     if (StringUtils.isEmpty(keys[i])) {
                         keys[i] = Record.KEYS.get(i);
@@ -40,8 +43,10 @@ public class ExcelReader implements Reader {
             } else {
                 Map<String, String> cols = new HashMap<>();
                 for (int i = 0; i < keys.length; i++) {
-                    Cell c = r.cellIterator().next();
-                    cols.put(keys[i], getString(c));
+                    if (cellIterator.hasNext()) {
+                        Cell c = cellIterator.next();
+                        cols.put(keys[i], getString(c));
+                    }
                 }
                 rows.add(new Record(cols));
             }
