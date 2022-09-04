@@ -83,7 +83,7 @@ public class Web implements Driver {
                 throw new RuntimeException(e);
             }
         } else if (key.equals(Keyword.ASSERT)) {
-            String value = findElement(driver, object).getAttribute("innerHTML");
+            String value = findElement(driver, object).getAttribute("innerText");
             if (!match(value, argument)) {
                 logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
             }
@@ -106,7 +106,7 @@ public class Web implements Driver {
         return w.until(ExpectedConditions.alertIsPresent());
     }
     private File getCaptureFile(Context context, Section section, Record record) {
-        String num = String.format("%3d", record.getNumber());
+        String num = String.format("%03d", record.getNumber());
         return new File(section.getName()+"_"+num+".png");
     }
 }
