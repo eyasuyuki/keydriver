@@ -12,6 +12,7 @@ import static org.javaopen.keydriver.web.Browser.FIREFOX;
 import static org.javaopen.keydriver.web.Browser.SAFARI;
 
 public class WebDriverFactory {
+    public static final String BROWSER_KEY = "browser";
     private static WebDriver webdriver;
 
     public static WebDriver getInstance(String browser) {

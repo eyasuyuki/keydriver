@@ -4,13 +4,17 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.driver.Context;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,43 +22,56 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static org.javaopen.keydriver.driver.Context.KEYS;
+
 public class ExcelReader implements Reader {
     private static final Logger logger = Logger.getLogger(ExcelReader.class.getName());
+    private static final int MAX_SHEETS = 1000;
 
     @Override
-    public List<Record> read(String path) throws IOException {
+    public List<Section> read(Context context, String path) throws IOException {
+        List<Section> sections = new ArrayList<>();
         final FileInputStream in = new FileInputStream(new File(path));
         final XSSFWorkbook workbook = new XSSFWorkbook(in);
-        final XSSFSheet sheet0 = workbook.getSheetAt(0);// TODO multi sheets
-        final Iterable<Row> iter = () -> sheet0.iterator();
+        final Iterable<Sheet> sheetIter = () -> workbook.sheetIterator();
+        for (Sheet s: sheetIter) {
+            Section section = new Section(s.getSheetName());
+            setRecords(context, section, s);
+            sections.add(section);
+        }
+        return sections;
+    }
+
+    private void setRecords(Context context, Section section, Sheet sheet) {
+        final Iterable<Row> iter = () -> sheet.iterator();
         String[] keys = null;
-        final List<Record> rows = new ArrayList<>();
         for (Row r: iter) {
-            Iterator<Cell> cellIterator = r.cellIterator();
             if (keys == null) {
-                keys = new String[Record.KEYS.size()];
+                keys = new String[KEYS.size()];
                 for (int i=0; i<keys.length; i++) {
-                    Cell c = cellIterator.next();
-                    keys[i] = getString(c);
+                    Cell c = r.getCell(i);
+                    keys[i] = getCellString(c);
                     if (StringUtils.isEmpty(keys[i])) {
-                        keys[i] = Record.KEYS.get(i);
+                        keys[i] = KEYS.get(i);
                     }
                 }
             } else {
                 Map<String, String> cols = new HashMap<>();
                 for (int i = 0; i < keys.length; i++) {
-                    if (cellIterator.hasNext()) {
-                        Cell c = cellIterator.next();
-                        cols.put(keys[i], getString(c));
-                    }
+                        Cell c = r.getCell(i);
+                        cols.put(keys[i], getCellString(c));
                 }
-                rows.add(new Record(cols));
+                section.getRecords().add(new Record(context, cols));
             }
         }
-        return rows;
     }
 
-    private String getString(Cell cell) {
+
+
+    private String getCellString(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
         CellType type = cell.getCellType();
         if (type == CellType._NONE) {
             return "";

@@ -2,7 +2,7 @@ package org.javaopen.keydriver.data;
 
 import java.util.Arrays;
 
-public enum Matcher implements Tag {
+public enum Matches implements Tag {
     IS("is"),
     IS_NOT("isNot"),
     IS_NULL("isNull"),
@@ -13,14 +13,14 @@ public enum Matcher implements Tag {
     LESS_THAN_EQUAL("lessThanEqual"),
     ;
     public static Tag getTag(String name) {
-        return Arrays.stream(Matcher.values())
+        return Arrays.stream(Matches.values())
             .filter(x -> x.getString().equals(name))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(name));
     }
 
     private String text;
-    private Matcher(final String text) {
+    private Matches(final String text) {
         this.text = text;
     }
 

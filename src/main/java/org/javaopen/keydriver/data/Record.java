@@ -1,30 +1,18 @@
 package org.javaopen.keydriver.data;
 
-import org.apache.commons.lang.StringUtils;
+import org.javaopen.keydriver.driver.Context;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
+
+import static org.javaopen.keydriver.driver.Context.ARGUMENT_KEY;
+import static org.javaopen.keydriver.driver.Context.COMMENT_KEY;
+import static org.javaopen.keydriver.driver.Context.KEYWORD_KEY;
+import static org.javaopen.keydriver.driver.Context.NUMBER_KEY;
+import static org.javaopen.keydriver.driver.Context.OBJECT_KEY;
+import static org.javaopen.keydriver.driver.Context.OPTION_KEY;
+import static org.javaopen.keydriver.driver.Context.TARGET_KEY;
 
 public class Record {
-    public static final String NUMBER_KEY = "number";
-    public static final String KEYWORD_KEY = "keyword";
-    public static final String TARGET_KEY = "target";
-    public static final String ARGUMENT_KEY = "argument";
-    public static final String COMMENT_KEY = "comment";
-    public static final String OBJECT_KEY = "object";
-    public static final String OPTION_KEY = "option";
-    public static final List<String> KEYS = Arrays.asList(new String[]{
-        NUMBER_KEY,
-        KEYWORD_KEY,
-        TARGET_KEY,
-        ARGUMENT_KEY,
-        COMMENT_KEY,
-        OBJECT_KEY,
-        OPTION_KEY});
-    private Map<String, String> dic;
     private int number;
     private Keyword keyword;
     private Param target;
@@ -33,8 +21,8 @@ public class Record {
     private Param object;
     private Param option;
 
-    public Record(Map<String, String> record) {
-        dic = getDic();
+    public Record(Context context, Map<String, String> record) {
+        final Map<String, String> dic = context.getDic();
         setNumber(record.get(dic.get(NUMBER_KEY)));
         setKeyword(record.get(dic.get(KEYWORD_KEY)));
         setTarget(record.get(dic.get(TARGET_KEY)));
@@ -42,19 +30,6 @@ public class Record {
         setComment(record.get(dic.get(COMMENT_KEY)));
         setObject(record.get(dic.get(OBJECT_KEY)));
         setOption(record.get(dic.get(OPTION_KEY)));
-    }
-
-    private Map<String, String> getDic() {
-        Map<String, String> dic = new HashMap<>();
-        ResourceBundle bundle = ResourceBundle.getBundle(Param.CONFIG);
-        for (String k: KEYS) {
-            String s = bundle.getString(k);
-            if (StringUtils.isEmpty(s)) {
-                s = k;
-            }
-            dic.put(k, s);
-        }
-        return dic;
     }
 
     public int getNumber() {

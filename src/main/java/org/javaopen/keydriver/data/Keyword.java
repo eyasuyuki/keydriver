@@ -7,8 +7,10 @@ public enum Keyword {
     CLICK("click"),
     SELECT("select"),
     INPUT("input"),
+    CLEAR("clear"),
     ACCEPT("accept"),
     DISMISS("dismiss"),
+    CAPTURE("capture"),
     ASSERT("assert"),
     EXECUTE("execute")
     ;

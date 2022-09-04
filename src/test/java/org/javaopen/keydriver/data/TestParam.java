@@ -13,7 +13,7 @@ public class TestParam {
         assertThat(param.getValue(), is("save_button"));
 
         param = new Param("is[true]");
-        assertThat(param.getTag(), is(Matcher.IS));
+        assertThat(param.getTag(), is(Matches.IS));
         assertThat(param.getValue(), is("true"));
 
         param = new Param("url[http://www.javaopen.org/");
