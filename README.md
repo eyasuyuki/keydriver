@@ -3,6 +3,18 @@ Keydriver
 
 Keyword driven "like" testing tool.
 
+```mermaid
+sequenceDiagram
+    Keydriver ->> POI: read Excel file
+    POI ->> Excel file: read
+    Excel file ->> POI: worksheet data
+    POI ->> Keydriver: worksheet data
+    Keydriver ->> WebDriver: manipurate browser
+    WebDriver ->> Browser: manipurate browser
+    Browser ->> WebDriver: browse result
+    WebDriver ->> Keydriver: browse result    
+```
+
 # How to use
 
 1. Install WebDriver executable
