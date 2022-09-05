@@ -39,7 +39,7 @@ mvn package
 
 see [FileFormat](doc/FileFormat.md)
 
-## Run executable jar file
+## Run Keydriver jar file
 
 ```
 java -jar keydriver-<version>.jar <test_directive>.xlsx
