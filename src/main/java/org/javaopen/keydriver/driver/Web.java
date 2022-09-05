@@ -1,6 +1,7 @@
 package org.javaopen.keydriver.driver;
 
 
+import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.apache.commons.io.FileUtils;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
@@ -24,19 +25,18 @@ import java.time.Duration;
 import java.util.logging.Logger;
 
 public class Web implements Driver {
-    public static final String BROWSER_WAIT = "browser_wait";
+    public static final String BROWSER_WAIT_KEY = "browser_wait";
+    public static final String AUTO_CAPTURE_KEY = "auto_capture";
     private Logger logger = Logger.getLogger(Web.class.getName());
 
     @Override
     public void perform(Context context, Section section, Record record) {
-        // wait
-        String waitStr = context.getBundle().getString(BROWSER_WAIT);
-        int wait = 0;
-        try {
-            wait = Integer.parseInt(waitStr);
-        } catch (NumberFormatException e) {
-            logger.severe(e.getMessage());
-        }
+        // set wait
+        int wait = PropertyConverter.toInteger(context.getBundle().getObject(BROWSER_WAIT_KEY));
+
+        // auto capture mode
+        boolean autoCapture = PropertyConverter.toBoolean(context.getBundle().getObject(AUTO_CAPTURE_KEY));
+
         // getDriver
         WebDriver driver = context.getDriver();
         if (driver == null) {
@@ -76,17 +76,18 @@ public class Web implements Driver {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
         } else if (key.equals(Keyword.CAPTURE)) {
-            File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-            try {
-                FileUtils.copyFile(f, getCaptureFile(context, section, record));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (!autoCapture) {
+                capture(driver, context, section, record);
             }
         } else if (key.equals(Keyword.ASSERT)) {
-            String value = findElement(driver, object).getAttribute("innerText");
-            if (!match(value, argument)) {
-                logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
-            }
+                String value = findElement(driver, object).getAttribute("innerText");
+                if (!match(value, argument)) {
+                    logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
+                }
+        }
+        // auto capture mode
+        if (autoCapture) {
+            capture(driver, context, section, record);
         }
     }
     private WebElement findElement(WebDriver driver, Param object) {
@@ -108,5 +109,14 @@ public class Web implements Driver {
     private File getCaptureFile(Context context, Section section, Record record) {
         String num = String.format("%03d", record.getNumber());
         return new File(section.getName()+"_"+num+".png");
+    }
+
+    private void capture(WebDriver driver, Context context, Section section, Record record) {
+        File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        try {
+            FileUtils.copyFile(f, getCaptureFile(context, section, record));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

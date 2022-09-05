@@ -44,3 +44,11 @@ see [FileFormat](doc/FileFormat.md)
 ```
 java -jar keydriver-<version>.jar <test_directive>.xlsx
 ```
+
+# Configuration
+
+see [Config](doc/Config.md)
+
+# ToDo
+
+- Dynamic loading JDBC driver jar
