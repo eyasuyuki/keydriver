@@ -51,4 +51,6 @@ see [Config](doc/Config.md)
 
 # ToDo
 
+- More util tests
 - Dynamic loading JDBC driver jar
+- Dynamic loading ```config.properties```
