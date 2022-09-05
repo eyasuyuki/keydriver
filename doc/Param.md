@@ -16,6 +16,10 @@ xpath[//title]
 is[5]
 ```
 
+## Param parenthesis settings
+
+see [Config](Config.md)
+
 # Tag
 
 Tag is these types:
