@@ -42,7 +42,7 @@ option=Option
 
 # Param settings
 
-Settings for Param parenthesis.
+Settings for [Param](Param.md) parenthesis.
 
 | key | value | description |
 ------|-------|--------------
