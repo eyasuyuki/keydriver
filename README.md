@@ -51,6 +51,7 @@ see [Config](doc/Config.md)
 
 # ToDo
 
+- Add JavaDoc comment
 - Output standard test result
 - More util tests
 - Dynamic loading JDBC driver jar
