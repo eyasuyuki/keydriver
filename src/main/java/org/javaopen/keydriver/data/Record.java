@@ -61,7 +61,11 @@ public class Record {
     }
 
     private void setNumber(String number) {
+        if (number == null) {
+            return;
+        }
         int n = Integer.parseInt(number);
+        this.number = n;
     }
 
     private void setKeyword(String keyword) {
