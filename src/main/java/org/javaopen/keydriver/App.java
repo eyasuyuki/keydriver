@@ -1,6 +1,5 @@
 package org.javaopen.keydriver;
 
-import com.google.gson.Gson;
 import org.javaopen.keydriver.data.Record;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;

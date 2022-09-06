@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="org.javaopen.keydriver.data.TestParam" time="0.04" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="org.javaopen.keydriver.data.TestParam" time="0.045" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Users/yasuyuki/Library/Java/JavaVirtualMachines/temurin-1.8.0_345/Contents/Home/jre/lib"/>
@@ -46,7 +46,7 @@
     <property name="java.vm.specification.version" value="1.8"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/Users/yasuyuki/Library/Java/JavaVirtualMachines/temurin-1.8.0_345/Contents/Home/jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean dependency:copy-dependencies package"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher test"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="ja"/>
     <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
@@ -64,5 +64,5 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16|192.168.2.0/24|*.192.168.2.0/24|127.0.0.1|localhost|*.localhost|127.0.0.1"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="org.javaopen.keydriver.data.TestParam" name="testParam" time="0.04"/>
+  <testcase classname="org.javaopen.keydriver.data.TestParam" name="testParam" time="0.045"/>
 </testsuite>
