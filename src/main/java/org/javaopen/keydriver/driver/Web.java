@@ -38,18 +38,9 @@ public class Web implements Driver {
         boolean autoCapture = PropertyConverter.toBoolean(context.getBundle().getObject(AUTO_CAPTURE_KEY));
 
         // getDriver
-        WebDriver driver = context.getDriver();
-        if (driver == null) {
-            String browser = context.getBundle().getString(WebDriverFactory.BROWSER_KEY);
-            driver = WebDriverFactory.getInstance(browser);
-            // set browser wait
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));
-            // set driver
-            context.setDriver(driver);
-        }
+        WebDriver driver = getDriver(context, wait);
 
         // get record fields
-        int number = record.getNumber();
         Keyword key = record.getKeyword();
         Param target = record.getTarget();
         Param argument = record.getArgument();
@@ -75,20 +66,29 @@ public class Web implements Driver {
         } else if (key.equals(Keyword.DISMISS)) {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
-        } else if (key.equals(Keyword.CAPTURE)) {
-            if (!autoCapture) {
-                capture(driver, context, section, record);
-            }
         } else if (key.equals(Keyword.ASSERT)) {
                 String value = findElement(driver, object).getAttribute("innerText");
                 if (!match(value, argument)) {
                     logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
                 }
         }
-        // auto capture mode
-        if (autoCapture) {
+        // manual capture or auto
+        if (key.equals(Keyword.CAPTURE) || autoCapture) {
             capture(driver, context, section, record);
         }
+    }
+
+    private WebDriver getDriver(Context context, int wait) {
+        WebDriver driver = context.getDriver();
+        if (driver == null) {
+            String browser = context.getBundle().getString(WebDriverFactory.BROWSER_KEY);
+            driver = WebDriverFactory.getInstance(browser);
+            // set browser wait
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));
+            // set driver
+            context.setDriver(driver);
+        }
+        return driver;
     }
     private WebElement findElement(WebDriver driver, Param object) {
         if (object.getTag() == DataType.ID) {

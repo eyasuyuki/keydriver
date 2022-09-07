@@ -5,6 +5,9 @@ import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Record;
 import org.javaopen.keydriver.data.Section;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,9 +16,41 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 
 public class Database implements Driver {
+    public static final String JDBC_DRIVER_PATH = "jdbc_driver_path";
+    public static final String JDBC_CLASS_NAME = "jdbc_class_name";
     private static final Logger logger = Logger.getLogger(Database.class.getName());
+
+    private java.sql.Driver driver;
+
+    private java.sql.Driver initDriver(Context context) {
+        String path = context.getBundle().getString(JDBC_DRIVER_PATH);
+        String classname = context.getBundle().getString(JDBC_CLASS_NAME);
+        if (StringUtils.isEmpty(path)) {
+            return null;
+        }
+        try {
+            URL u = new URL("jar:file:"+path+"!/");
+            URLClassLoader loader = new URLClassLoader(new URL[]{ u });
+            java.sql.Driver d = (java.sql.Driver)Class.forName(classname, true, loader).newInstance();
+            DriverManager.registerDriver(d);
+            return d;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     @Override
     public void perform(Context context, Section section, Record record) {
+        if (this.driver == null) {
+            this.driver = initDriver(context);
+        }
         try (Connection conn = DriverManager.getConnection(record.getOption().getValue())) {
             Statement st = conn.createStatement();
             String sql = record.getObject().getValue();
