@@ -48,3 +48,12 @@ Settings for [Param](Param.md) parenthesis.
 ------|-------|--------------
 | valueHead | regexp string | ex. ```valueHead=\\[``` |
 | valueTail | plain string | ex. ```valueTail=]``` |
+
+# JDBC driver settings
+
+Dynamic loading JDBC driver settings
+
+| key              | value | description                                                                  |
+------------------|-------|------------------------------------------------------------------------------
+| jdbc_driver_path | path string | ex.```jdbc_driver_path=/home/yasuyuki/lib/mysql-connector-java-8.0.29.jar``` |
+| jdbc_class_name  | class name | ex.```jdbc_class_name=com.mysql.jdbc.Driver``` | 
