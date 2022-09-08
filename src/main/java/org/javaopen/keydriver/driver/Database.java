@@ -22,18 +22,17 @@ public class Database implements Driver {
 
     private java.sql.Driver driver;
 
-    private java.sql.Driver initDriver(Context context) {
+    private void initDriver(Context context) {
         String path = context.getBundle().getString(JDBC_DRIVER_PATH);
         String classname = context.getBundle().getString(JDBC_CLASS_NAME);
-        if (StringUtils.isEmpty(path)) {
-            return null;
+        if (driver != null || StringUtils.isEmpty(path) || StringUtils.isEmpty(classname)) {
+            return;
         }
         try {
             URL u = new URL("jar:file:"+path+"!/");
             URLClassLoader loader = new URLClassLoader(new URL[]{ u });
-            java.sql.Driver d = (java.sql.Driver)Class.forName(classname, true, loader).newInstance();
-            DriverManager.registerDriver(d);
-            return d;
+            driver = (java.sql.Driver)Class.forName(classname, true, loader).newInstance();
+            DriverManager.registerDriver(driver);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -48,9 +47,7 @@ public class Database implements Driver {
     }
     @Override
     public void perform(Context context, Section section, Record record) {
-        if (this.driver == null) {
-            this.driver = initDriver(context);
-        }
+        initDriver(context);
         try (Connection conn = DriverManager.getConnection(record.getOption().getValue())) {
             Statement st = conn.createStatement();
             String sql = record.getObject().getValue();
