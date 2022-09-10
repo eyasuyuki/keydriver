@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
+import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
 import org.javaopen.keydriver.data.Record;
 import org.javaopen.keydriver.data.Section;
@@ -43,6 +44,7 @@ public class Web implements Driver {
         WebDriver driver = getDriver(context, wait);
 
         // get record fields
+        int number = record.getNumber();
         Keyword key = record.getKeyword();
         Param target = record.getTarget();
         Param argument = record.getArgument();
@@ -69,18 +71,32 @@ public class Web implements Driver {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
         } else if (key.equals(Keyword.ASSERT)) {
-            String attribute = object.getAttribute();
-            if (StringUtils.isEmpty(attribute)) {
-                attribute = DEFAULT_ATTRIBUTE;
-            }
-            String value = findElement(driver, object).getAttribute(attribute);
-            if (!match(value, argument)) {
-                logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
-            }
+            doAssert(section, record, driver, object, argument);
         }
         // manual capture or auto
         if (key.equals(Keyword.CAPTURE) || autoCapture) {
             capture(driver, context, section, record);
+        }
+    }
+
+    private void doAssert(Section section, Record record, WebDriver driver, Param object, Param argument) {
+        String attribute = object.getAttribute();
+        if (StringUtils.isEmpty(attribute)) {
+            attribute = DEFAULT_ATTRIBUTE;
+        }
+        WebElement element = findElement(driver, object);
+        String value;
+        if (Param.ATTRIBUTE_DISPLAYED.equals(object.getAttribute())) {
+            value = Boolean.toString(element.isDisplayed());
+        } else if (Param.ATTRIBUTE_ENABLED.equals(object.getAttribute())) {
+            value = Boolean.toString(element.isEnabled());
+        } else if (Param.ATTRIBUTE_SELECTED.equals(object.getAttribute())) {
+            value = Boolean.toString(element.isSelected());
+        } else {
+            value  = element.getAttribute(attribute);
+        }
+        if (!match(value, argument)) {
+            logger.severe("Section: "+section.getName()+", Test: "+record.getNumber()+" failed: expected: "+argument.getValue()+", but got: "+value);
         }
     }
 

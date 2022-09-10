@@ -11,13 +11,21 @@ ex.
 
 ```
 id[save_button]
-id[save_button#visible]
+id[save_button#enabled]
 name[comment_input]
 xpath[//title]
 is[5]
 ```
 
+## Default attribute
+
+Default attribute is ```innerText```.
+
 ## Param parenthesis settings
+
+see [Config](Config.md)
+
+## Attribute and value separator settings
 
 see [Config](Config.md)
 

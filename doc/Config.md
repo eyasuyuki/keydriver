@@ -9,8 +9,8 @@ src/main/resources/config_<locale>.properties
 
 | key | value            | description |
 ----- |------------------|--------------
-| outputDirectory | output file path | ex. ```outputDirectory=.``` |
-| logDirectory | log file path | ex. ```logDirectory=./log``` |   
+| output_directory | output file path | ex. ```output_directory=.``` |
+| log_directory | log file path | ex. ```log_directory=./log``` |   
 
 # Keyword aliases
 
@@ -46,8 +46,9 @@ Settings for [Param](Param.md) parenthesis.
 
 | key | value | description |
 ------|-------|--------------
-| valueHead | regexp string | ex. ```valueHead=\\[``` |
-| valueTail | plain string | ex. ```valueTail=]``` |
+| value_head | regexp string | ex. ```value_head=\\[``` |
+| value_tail | plain string | ex. ```value_tail=]``` |
+| attribute_separator | sepalator of value and attribute | ex. ```attribute_separator=#``` |
 
 # JDBC driver settings
 

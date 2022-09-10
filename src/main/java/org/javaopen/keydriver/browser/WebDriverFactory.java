@@ -2,6 +2,8 @@ package org.javaopen.keydriver.browser;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverLogLevel;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -20,7 +22,9 @@ public class WebDriverFactory {
             return webdriver;
         }
         if (CHROME.getName().equals(browser)) {
-            webdriver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.setLogLevel(ChromeDriverLogLevel.SEVERE);
+            webdriver = new ChromeDriver(options);
         } else if (FIREFOX.getName().equals(browser)) {
             webdriver = new FirefoxDriver();
         } else if (EDGE.getName().equals(browser)) {
