@@ -4,14 +4,15 @@ Param
 # Format
 
 ```
-tag[value]
+tag[value#attribute]
 ```
 
 ex.
 
 ```
 id[save_button]
-name[
+id[save_button#visible]
+name[comment_input]
 xpath[//title]
 is[5]
 ```

@@ -9,9 +9,9 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class Param {
-    private static final String VALUE_HEAD_KEY = "valueHead";
-    private static final String VALUE_TAIL_KEY = "valueTail";
-    private static final String ATTRIBUTE_SEPARATOR_KEY = "attributeSeparator";
+    private static final String VALUE_HEAD_KEY = "value_head";
+    private static final String VALUE_TAIL_KEY = "value_tail";
+    private static final String ATTRIBUTE_SEPARATOR_KEY = "attribute_separator";
     private static final String VALUE_HEAD_DEFAULT = "\\[";
     private static final String VALUE_TAIL_DEFAULT = "]";
     private static final String ATTRIBUTE_SEPARATOR_DEFAULT = "#";
