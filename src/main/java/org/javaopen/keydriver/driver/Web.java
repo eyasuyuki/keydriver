@@ -3,12 +3,13 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Param;
 import org.javaopen.keydriver.data.Record;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.web.WebDriverFactory;
+import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 public class Web implements Driver {
     public static final String BROWSER_WAIT_KEY = "browser_wait";
     public static final String AUTO_CAPTURE_KEY = "auto_capture";
+    private static final String DEFAULT_ATTRIBUTE = "innerText";
     private Logger logger = Logger.getLogger(Web.class.getName());
 
     @Override
@@ -67,10 +69,14 @@ public class Web implements Driver {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
         } else if (key.equals(Keyword.ASSERT)) {
-                String value = findElement(driver, object).getAttribute("innerText");
-                if (!match(value, argument)) {
-                    logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
-                }
+            String attribute = object.getAttribute();
+            if (StringUtils.isEmpty(attribute)) {
+                attribute = DEFAULT_ATTRIBUTE;
+            }
+            String value = findElement(driver, object).getAttribute(attribute);
+            if (!match(value, argument)) {
+                logger.severe("Section: "+section.getName()+", Test: "+comment+" failed: expected: "+argument.getValue()+", but got: "+value);
+            }
         }
         // manual capture or auto
         if (key.equals(Keyword.CAPTURE) || autoCapture) {

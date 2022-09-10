@@ -1,4 +1,4 @@
-package org.javaopen.keydriver.web;
+package org.javaopen.keydriver.browser;
 
 public enum Browser {
     CHROME("chrome"),

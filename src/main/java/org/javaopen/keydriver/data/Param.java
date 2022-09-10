@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 public class Param {
     private static final String VALUE_HEAD_KEY = "valueHead";
     private static final String VALUE_TAIL_KEY = "valueTail";
+    private static final String ATTRIBUTE_SEPARATOR_KEY = "attributeSeparator";
     private static final String VALUE_HEAD_DEFAULT = "\\[";
     private static final String VALUE_TAIL_DEFAULT = "]";
+    private static final String ATTRIBUTE_SEPARATOR_DEFAULT = "#";
     private static final List<String> MATCHERS = Arrays.asList(Matches.values())
         .stream()
         .map(x -> x.getString())
@@ -41,6 +43,9 @@ public class Param {
     private String getValueTail() {
         return getConfigValue(VALUE_TAIL_KEY, VALUE_TAIL_DEFAULT);
     }
+    private String getAttributeSeparator() {
+        return getConfigValue(ATTRIBUTE_SEPARATOR_KEY, ATTRIBUTE_SEPARATOR_DEFAULT);
+    }
     private String getConfigValue(String key, String defValue) {
         ResourceBundle bundle = ResourceBundle.getBundle(Context.CONFIG);
         String value = bundle.getString(key);
@@ -52,6 +57,7 @@ public class Param {
     }
     private Tag tag;
     private String value;
+    private String attribute;
 
     public Tag getTag() {
         return tag;
@@ -60,6 +66,9 @@ public class Param {
     public String getValue() {
         return value;
     }
+    public String getAttribute() {
+        return attribute;
+    }
     private void setValue(String rawValue) {
         final String valueTail = getValueTail();
         if (rawValue.endsWith(valueTail)) {
@@ -67,10 +76,19 @@ public class Param {
         } else {
             value = rawValue;
         }
+        String[] values = value.split(getAttributeSeparator());
+        if (values.length > 1 && StringUtils.isNotEmpty(values[1])) {
+            value = values[0];
+            attribute = values[1];
+        }
     }
 
     @Override
     public String toString() {
-        return tag.toString()+"["+value+"]";
+        String attr = "";
+        if (StringUtils.isNotEmpty(attribute)) {
+            attr = getAttributeSeparator()+attribute;
+        }
+        return tag.toString()+"["+value+attr+"]";
     }
 }

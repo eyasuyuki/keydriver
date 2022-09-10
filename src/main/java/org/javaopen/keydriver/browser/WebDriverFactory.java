@@ -1,4 +1,4 @@
-package org.javaopen.keydriver.web;
+package org.javaopen.keydriver.browser;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -6,10 +6,10 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
-import static org.javaopen.keydriver.web.Browser.CHROME;
-import static org.javaopen.keydriver.web.Browser.EDGE;
-import static org.javaopen.keydriver.web.Browser.FIREFOX;
-import static org.javaopen.keydriver.web.Browser.SAFARI;
+import static org.javaopen.keydriver.browser.Browser.CHROME;
+import static org.javaopen.keydriver.browser.Browser.EDGE;
+import static org.javaopen.keydriver.browser.Browser.FIREFOX;
+import static org.javaopen.keydriver.browser.Browser.SAFARI;
 
 public class WebDriverFactory {
     public static final String BROWSER_KEY = "browser";
