@@ -20,9 +20,13 @@ public class TestParam {
         assertThat(param.getTag(), is(DataType.URL));
         assertThat(param.getValue(), is("http://www.javaopen.org/"));
 
-        param = new Param("name[user_label#visible]");
+        param = new Param("name[user_label#displayed]");
         assertThat(param.getTag(), is(DataType.NAME));
         assertThat(param.getValue(), is("user_label"));
-        assertThat(param.getAttribute(), is("visible"));
+        assertThat(param.getAttribute(), is("displayed"));
+
+        param = new Param("sheet[Sheet1]");
+        assertThat(param.getTag(), is(DataType.SHEET));
+        assertThat(param.getValue(), is("Sheet1"));
     }
 }
