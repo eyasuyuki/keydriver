@@ -27,13 +27,14 @@ public class Param {
         .map(x -> x.getString())
         .collect(Collectors.toList());
     public Param(String param) {
-        String[] str = param.split(getValueHead());
-        if (MATCHERS.contains(str[0])) {
-            tag = Matches.getTag(str[0]);
-            setValue(str[1]);
-        } else if (DATA_TYPES.contains(str[0])) {
-            tag = DataType.getTag(str[0]);
-            setValue(str[1]);
+        int pos = param.indexOf(getValueHead());
+        String tagStr = param.substring(0, pos);
+        if (MATCHERS.contains(tagStr)) {
+            tag = Matches.getTag(tagStr);
+            setValue(param.substring(pos+1));
+        } else if (DATA_TYPES.contains(tagStr)) {
+            tag = DataType.getTag(tagStr);
+            setValue(param.substring(pos+1));
         } else {
             tag = DataType.TEXT;
             setValue(param);

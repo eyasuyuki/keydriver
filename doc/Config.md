@@ -44,10 +44,10 @@ option=Option
 
 Settings for [Param](Param.md) parenthesis.
 
-| key | value | description |
-------|-------|--------------
-| value_head | regexp string | ex. ```value_head=\\[``` |
-| value_tail | plain string | ex. ```value_tail=]``` |
+| key | value                            | description |
+------|----------------------------------|--------------
+| value_head | plain string                     | ex. ```value_head=[``` |
+| value_tail | plain string                     | ex. ```value_tail=]``` |
 | attribute_separator | sepalator of value and attribute | ex. ```attribute_separator=#``` |
 
 # JDBC driver settings

@@ -25,6 +25,11 @@ public class TestParam {
         assertThat(param.getValue(), is("user_label"));
         assertThat(param.getAttribute(), is("displayed"));
 
+        param = new Param("xpath[//*[@id=\"main\"]/div/div[1]/form/div/div[2]/div[4]/input#displayed]");
+        assertThat(param.getTag(), is(DataType.XPATH));
+        assertThat(param.getValue(), is("//*[@id=\"main\"]/div/div[1]/form/div/div[2]/div[4]/input"));
+        assertThat(param.getAttribute(), is("displayed"));
+
         param = new Param("sheet[Sheet1]");
         assertThat(param.getTag(), is(DataType.SHEET));
         assertThat(param.getValue(), is("Sheet1"));
