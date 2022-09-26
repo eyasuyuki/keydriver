@@ -25,6 +25,7 @@ public class App {
                     driver.perform(context, s, r);
                 }
             }
+            driver.quit(context);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -67,4 +67,9 @@ public class Database implements Driver {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void quit(Context context) {
+        // nothing to do it
+    }
 }

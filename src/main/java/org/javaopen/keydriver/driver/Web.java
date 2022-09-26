@@ -24,10 +24,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Web implements Driver {
     public static final String BROWSER_WAIT_KEY = "browser_wait";
+    public static final String BROWSER_QUIT_KEY = "browser_quit";
     public static final String AUTO_CAPTURE_KEY = "auto_capture";
     private static final String DEFAULT_ATTRIBUTE = "innerText";
     private Logger logger = Logger.getLogger(Web.class.getName());
@@ -76,6 +78,15 @@ public class Web implements Driver {
         // manual capture or auto
         if (key.equals(Keyword.CAPTURE) || autoCapture) {
             capture(driver, context, section, record);
+        }
+    }
+
+    @Override
+    public void quit(Context context) {
+        WebDriver driver = context.getDriver();
+        boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(BROWSER_QUIT_KEY));
+        if (driver != null && quit) {
+            driver.quit();
         }
     }
 

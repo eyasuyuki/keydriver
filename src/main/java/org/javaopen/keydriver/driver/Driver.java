@@ -16,6 +16,7 @@ import static org.hamcrest.core.IsNull.nullValue;
 
 public interface Driver {
     void perform(Context context, Section section, Record record);
+    void quit(Context context);
     default boolean match(String value, Param param) throws NumberFormatException {
         if (param.getTag().equals(Matches.IS)) {
             return is(param.getValue()).matches(value);
