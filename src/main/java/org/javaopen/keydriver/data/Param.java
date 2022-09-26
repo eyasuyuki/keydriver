@@ -28,12 +28,11 @@ public class Param {
         .collect(Collectors.toList());
     public Param(String param) {
         int pos = param.indexOf(getValueHead());
-        String tagStr = param.substring(0, pos);
-        if (MATCHERS.contains(tagStr)) {
-            tag = Matches.getTag(tagStr);
+        if (pos > 0 && MATCHERS.contains(param.substring(0, pos))) {
+            tag = Matches.getTag(param.substring(0, pos));
             setValue(param.substring(pos+1));
-        } else if (DATA_TYPES.contains(tagStr)) {
-            tag = DataType.getTag(tagStr);
+        } else if (pos > 0 && DATA_TYPES.contains(param.substring(0, pos))) {
+            tag = DataType.getTag(param.substring(0, pos));
             setValue(param.substring(pos+1));
         } else {
             tag = DataType.TEXT;
