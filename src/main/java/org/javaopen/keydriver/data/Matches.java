@@ -11,6 +11,7 @@ public enum Matches implements Tag {
     GREATER_THAN_EQUAL("greaterThanEqual"),
     LESS_THAN("lessThan"),
     LESS_THAN_EQUAL("lessThanEqual"),
+    FAIL("fail"),
     ;
     public static Tag getTag(String name) {
         return Arrays.stream(Matches.values())
