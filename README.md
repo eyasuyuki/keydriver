@@ -6,8 +6,8 @@ Keyword driven "like" testing tool.
 ```mermaid
 sequenceDiagram
     Keydriver ->> POI: read Excel file
-    POI ->> Excel file: read
-    Excel file ->> POI: worksheet data
+    POI ->> Excel: read
+    Excel ->> POI: worksheet data
     POI ->> Keydriver: worksheet data
     Keydriver ->> WebDriver: manipurate browser
     WebDriver ->> Browser: manipurate browser
