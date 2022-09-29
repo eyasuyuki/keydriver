@@ -7,12 +7,10 @@ org/javaopen/keydriver/reader/ExcelReader.class
 org/javaopen/keydriver/data/Section.class
 org/javaopen/keydriver/data/Record.class
 org/javaopen/keydriver/driver/Web.class
-org/javaopen/keydriver/web/WebDriverFactory.class
 org/javaopen/keydriver/reader/Reader.class
 org/javaopen/keydriver/driver/Database.class
 org/javaopen/keydriver/driver/DriverFactory.class
 org/javaopen/keydriver/App.class
-org/javaopen/keydriver/web/Browser.class
 org/javaopen/keydriver/data/Param.class
 org/javaopen/keydriver/data/Matches.class
 org/javaopen/keydriver/reader/ReaderFactory.class

@@ -77,7 +77,7 @@ public class Web implements Driver {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
         } else if (key.equals(Keyword.UPLOAD)) {
-            doUpload(driver, target, object);
+            doUpload(driver, argument, object);
         } else if (key.equals(Keyword.ASSERT)) {
             doAssert(section, record, driver, object, argument);
         }
@@ -96,11 +96,11 @@ public class Web implements Driver {
         }
     }
 
-    private void doUpload(WebDriver driver, Param target, Param object) {
+    private void doUpload(WebDriver driver, Param argument, Param object) {
         String filename;
-        if (target.getTag().equals(DataType.URL)) {
+        if (argument.getTag().equals(DataType.URL)) {
             try {
-                URL url = new URL(target.getValue());
+                URL url = new URL(argument.getValue());
                 File file = new File(url.toURI());
                 filename = file.getAbsolutePath();
             } catch (MalformedURLException e) {
@@ -109,7 +109,7 @@ public class Web implements Driver {
                 throw new RuntimeException(e);
             }
         } else {
-            filename = target.getValue();
+            filename = argument.getValue();
         }
         findElement(driver, object).sendKeys(filename);
     }

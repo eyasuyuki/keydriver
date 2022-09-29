@@ -52,5 +52,20 @@ public class TestRecord {
         assertThat(record.getObject().getTag(), is(DataType.NAME));
         assertThat(record.getObject().getValue(), is("q"));
         assertThat(record.getOption(), nullValue());
+
+        map = Stream.of(new String[][]{
+                {"No", "3"},
+                {"Keyword", "upload"},
+                {"Target", "/Users/yasuyuki/Documents/playlist.txt"},
+                {"Object", "id[file_upload_1]"}
+        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+        record = new Record(context, map);
+
+        assertThat(record.getNumber(), is(3));
+        assertThat(record.getKeyword(), is(Keyword.UPLOAD));
+        assertThat(record.getTarget().getTag(), is(DataType.TEXT));
+        assertThat(record.getTarget().getValue(), is("/Users/yasuyuki/Documents/playlist.txt"));
+        assertThat(record.getObject().getTag(), is(DataType.ID));
+        assertThat(record.getObject().getValue(), is("file_upload_1"));
     }
 }
