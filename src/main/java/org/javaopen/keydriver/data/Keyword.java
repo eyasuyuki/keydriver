@@ -12,7 +12,8 @@ public enum Keyword {
     DISMISS("dismiss"),
     CAPTURE("capture"),
     ASSERT("assert"),
-    EXECUTE("execute")
+    EXECUTE("execute"),
+    UPLOAD("upload"),
     ;
 
     private final String text;

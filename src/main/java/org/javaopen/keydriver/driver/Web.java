@@ -23,6 +23,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,6 +76,8 @@ public class Web implements Driver {
         } else if (key.equals(Keyword.DISMISS)) {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
+        } else if (key.equals(Keyword.UPLOAD)) {
+            doUpload(driver, argument, object);
         } else if (key.equals(Keyword.ASSERT)) {
             doAssert(section, record, driver, object, argument);
         }
@@ -88,6 +94,24 @@ public class Web implements Driver {
         if (driver != null && quit) {
             driver.quit();
         }
+    }
+
+    private void doUpload(WebDriver driver, Param argument, Param object) {
+        String filename;
+        if (argument.getTag().equals(DataType.URL)) {
+            try {
+                URL url = new URL(argument.getValue());
+                File file = new File(url.toURI());
+                filename = file.getAbsolutePath();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            filename = argument.getValue();
+        }
+        findElement(driver, object).sendKeys(filename);
     }
 
     private void doAssert(Section section, Record record, WebDriver driver, Param object, Param argument) {

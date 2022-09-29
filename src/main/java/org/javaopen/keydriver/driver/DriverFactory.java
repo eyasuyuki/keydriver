@@ -17,7 +17,8 @@ public class DriverFactory {
         Keyword.SELECT,
         Keyword.CAPTURE,
         Keyword.ACCEPT,
-        Keyword.DISMISS
+        Keyword.DISMISS,
+        Keyword.UPLOAD,
     });
 
     private static final Driver web = new Web();
