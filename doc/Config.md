@@ -34,12 +34,14 @@ option=Option
 
 # Browser settings
 
-|key| value                                                    | description                                               |
-----|----------------------------------------------------------|-----------------------------------------------------------
-| browser | ```chrome```<br>```edge```<br>```firefox```<br>```safari``` | WebDriver executable name                                 |
-| browser_wait | integer value | Browser wait seconds                                      |
-| auto_capture | boolean vale | ```true```: always capture<br>```false```: manual capture |
-| browser_quit | boolean vale | ```true```: quit WebDriver<br>```false```: does not quit WebDriver |
+|key| value                                                                | description                                               |
+----|----------------------------------------------------------------------|-----------------------------------------------------------
+| browser | ```chrome```<br>```edge```<br>```firefox```<br>```safari```<br>```ie``` | WebDriver executable name                                 |
+| browser_wait | integer value                                                        | Browser wait seconds                                      |
+| auto_capture | boolean vale                                                         | ```true```: always capture<br>```false```: manual capture |
+| browser_quit | boolean vale                                                         | ```true```: quit WebDriver<br>```false```: does not quit WebDriver |
+
+```ie``` is Edge's IE mode.
 
 # Param settings
 

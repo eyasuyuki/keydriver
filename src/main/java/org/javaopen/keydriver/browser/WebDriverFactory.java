@@ -6,11 +6,14 @@ import org.openqa.selenium.chrome.ChromeDriverLogLevel;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.safari.SafariDriver;
 
 import static org.javaopen.keydriver.browser.Browser.CHROME;
 import static org.javaopen.keydriver.browser.Browser.EDGE;
 import static org.javaopen.keydriver.browser.Browser.FIREFOX;
+import static org.javaopen.keydriver.browser.Browser.IE;
 import static org.javaopen.keydriver.browser.Browser.SAFARI;
 
 public class WebDriverFactory {
@@ -31,6 +34,10 @@ public class WebDriverFactory {
             webdriver = new EdgeDriver();
         } else if (SAFARI.getName().equals(browser)) {
             webdriver = new SafariDriver();
+        } else if (IE.getName().equals(browser)) {
+            InternetExplorerOptions options = new InternetExplorerOptions();
+            options.attachToEdgeChrome();
+            webdriver = new InternetExplorerDriver(options);
         } else {
             throw new IllegalArgumentException(browser);
         }
