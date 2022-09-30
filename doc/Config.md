@@ -40,6 +40,8 @@ option=Option
 | browser_wait | integer value                                                        | Browser wait seconds                                      |
 | auto_capture | boolean vale                                                         | ```true```: always capture<br>```false```: manual capture |
 | browser_quit | boolean vale                                                         | ```true```: quit WebDriver<br>```false```: does not quit WebDriver |
+| edge_executable | full path of Edge executable | ex.```C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe``` |
+| ie_driver_path | full path of IEDriver.exe | ex.```C:\\IEDriverServer_x64_4.3.0\\IEDriverServer.exe``` |
 
 ```ie``` is Edge's IE mode.
 

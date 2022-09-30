@@ -139,7 +139,7 @@ public class Web implements Driver {
         WebDriver driver = context.getDriver();
         if (driver == null) {
             String browser = context.getBundle().getString(WebDriverFactory.BROWSER_KEY);
-            driver = WebDriverFactory.getInstance(browser);
+            driver = WebDriverFactory.getInstance(context, browser);
             // set browser wait
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));
             // set driver
