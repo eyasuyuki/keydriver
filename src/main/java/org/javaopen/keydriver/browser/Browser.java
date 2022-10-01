@@ -1,10 +1,15 @@
 package org.javaopen.keydriver.browser;
 
+import org.javaopen.keydriver.data.Keyword;
+
+import java.util.Arrays;
+
 public enum Browser {
     CHROME("chrome"),
     FIREFOX("firefox"),
     EDGE("edge"),
     SAFARI("safari"),
+    IE("ie"),
     ;
 
     private final String name;
@@ -15,16 +20,9 @@ public enum Browser {
         this.name = name;
     }
     static Browser getEnum(String name) {
-        if (CHROME.name.equals(name)) {
-            return CHROME;
-        } else if (FIREFOX.name.equals(name)) {
-            return FIREFOX;
-        } else if (EDGE.name.equals(name)) {
-            return EDGE;
-        } else if (SAFARI.name.equals(name)) {
-            return SAFARI;
-        } else {
-            throw new IllegalArgumentException(name);
-        }
+        return Arrays.stream(Browser.values())
+                .filter(x -> x.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(name));
     }
 }
