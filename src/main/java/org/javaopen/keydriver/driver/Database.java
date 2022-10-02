@@ -2,7 +2,7 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Keyword;
-import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 
 import java.net.MalformedURLException;
@@ -46,21 +46,21 @@ public class Database implements Driver {
         }
     }
     @Override
-    public void perform(Context context, Section section, Record record) {
+    public void perform(Context context, Section section, Test test) {
         initDriver(context);
-        try (Connection conn = DriverManager.getConnection(record.getOption().getValue())) {
+        try (Connection conn = DriverManager.getConnection(test.getOption().getValue())) {
             Statement st = conn.createStatement();
-            String sql = record.getObject().getValue();
+            String sql = test.getObject().getValue();
             if (StringUtils.isEmpty(sql)) {
-                sql = record.getArgument().getValue();
+                sql = test.getArgument().getValue();
             }
-            if (record.getKeyword().equals(Keyword.ASSERT)) {
+            if (test.getKeyword().equals(Keyword.ASSERT)) {
                 ResultSet res = st.executeQuery(sql);
                 String value = res.getString(0);
-                if (!match(value, record.getArgument())) {
-                    logger.severe("Section: "+section.getName()+", Test: "+record.getComment()+" failed: expected: "+record.getArgument().getValue()+", but got: "+value);
+                if (!match(value, test.getArgument())) {
+                    logger.severe("Section: "+section.getName()+", Test: "+ test.getComment()+" failed: expected: "+ test.getArgument().getValue()+", but got: "+value);
                 }
-            } else if (record.getKeyword().equals(Keyword.EXECUTE)) {
+            } else if (test.getKeyword().equals(Keyword.EXECUTE)) {
                 st.execute(sql);
             }
         } catch (SQLException e) {

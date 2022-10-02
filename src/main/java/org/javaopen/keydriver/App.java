@@ -1,7 +1,6 @@
 package org.javaopen.keydriver;
 
-import com.google.gson.Gson;
-import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;
 import org.javaopen.keydriver.driver.Driver;
@@ -20,9 +19,9 @@ public class App {
             List<Section> sections = reader.read(context, args[0]);
             Driver driver = null;
             for (Section s: sections) {
-                for (Record r: s.getRecords()) {
-                    driver = DriverFactory.getDriver(r);
-                    driver.perform(context, s, r);
+                for (Test t: s.getTests()) {
+                    driver = DriverFactory.getDriver(t);
+                    driver.perform(context, s, t);
                 }
             }
             driver.quit(context);

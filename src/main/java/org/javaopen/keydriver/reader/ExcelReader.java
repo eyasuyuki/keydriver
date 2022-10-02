@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;
 
@@ -58,7 +58,7 @@ public class ExcelReader implements Reader {
                         Cell c = r.getCell(i);
                         cols.put(keys[i], getCellString(c));
                 }
-                section.getRecords().add(new Record(context, cols));
+                section.getTests().add(new Test(context, cols));
             }
         }
     }

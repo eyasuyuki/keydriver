@@ -6,9 +6,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
-import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
-import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.openqa.selenium.Alert;
@@ -24,11 +23,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Web implements Driver {
@@ -39,7 +36,7 @@ public class Web implements Driver {
     private Logger logger = Logger.getLogger(Web.class.getName());
 
     @Override
-    public void perform(Context context, Section section, Record record) {
+    public void perform(Context context, Section section, Test test) {
         // set wait
         int wait = PropertyConverter.toInteger(context.getBundle().getObject(BROWSER_WAIT_KEY));
 
@@ -50,13 +47,13 @@ public class Web implements Driver {
         WebDriver driver = getDriver(context, wait);
 
         // get record fields
-        int number = record.getNumber();
-        Keyword key = record.getKeyword();
-        Param target = record.getTarget();
-        Param argument = record.getArgument();
-        String comment = record.getComment();
-        Param object = record.getObject();
-        Param option = record.getOption();
+        int number = test.getNumber();
+        Keyword key = test.getKeyword();
+        Param target = test.getTarget();
+        Param argument = test.getArgument();
+        String comment = test.getComment();
+        Param object = test.getObject();
+        Param option = test.getOption();
 
         // perform
         if (key.equals(Keyword.OPEN)) {
@@ -79,11 +76,11 @@ public class Web implements Driver {
         } else if (key.equals(Keyword.UPLOAD)) {
             doUpload(driver, argument, object);
         } else if (key.equals(Keyword.ASSERT)) {
-            doAssert(section, record, driver, object, argument);
+            doAssert(section, test, driver, object, argument);
         }
         // manual capture or auto
         if (key.equals(Keyword.CAPTURE) || autoCapture) {
-            capture(driver, context, section, record);
+            capture(driver, context, section, test);
         }
     }
 
@@ -114,7 +111,7 @@ public class Web implements Driver {
         findElement(driver, object).sendKeys(filename);
     }
 
-    private void doAssert(Section section, Record record, WebDriver driver, Param object, Param argument) {
+    private void doAssert(Section section, Test test, WebDriver driver, Param object, Param argument) {
         String attribute = object.getAttribute();
         if (StringUtils.isEmpty(attribute)) {
             attribute = DEFAULT_ATTRIBUTE;
@@ -131,7 +128,7 @@ public class Web implements Driver {
             value  = element.getAttribute(attribute);
         }
         if (!match(value, argument)) {
-            logger.severe("Section: "+section.getName()+", Test: "+record.getNumber()+" failed: expected: "+argument.getValue()+", but got: "+value);
+            logger.severe("Section: "+section.getName()+", Test: "+ test.getNumber()+" failed: expected: "+argument.getValue()+", but got: "+value);
         }
     }
 
@@ -163,15 +160,15 @@ public class Web implements Driver {
         WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(wait));
         return w.until(ExpectedConditions.alertIsPresent());
     }
-    private File getCaptureFile(Context context, Section section, Record record) {
-        String num = String.format("%03d", record.getNumber());
+    private File getCaptureFile(Context context, Section section, Test test) {
+        String num = String.format("%03d", test.getNumber());
         return new File(section.getName()+"_"+num+".png");
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Record record) {
+    private void capture(WebDriver driver, Context context, Section section, Test test) {
         File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(f, getCaptureFile(context, section, record));
+            FileUtils.copyFile(f, getCaptureFile(context, section, test));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
