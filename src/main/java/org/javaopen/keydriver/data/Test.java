@@ -2,6 +2,7 @@ package org.javaopen.keydriver.data;
 
 import org.javaopen.keydriver.driver.Context;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 import static org.javaopen.keydriver.driver.Context.ARGUMENT_KEY;
@@ -15,13 +16,14 @@ import static org.javaopen.keydriver.driver.Context.TARGET_KEY;
 public class Test {
     private int number;
     private Keyword keyword;
-
     private Param target;
     private Param argument;
     private String comment;
     private Param object;
     private Param option;
 
+    private Timestamp start;
+    private Timestamp end;
     private boolean success;
     private boolean completed;
     private boolean expectingFailure;
@@ -113,6 +115,22 @@ public class Test {
             return;
         }
         this.option = new Param(option);
+    }
+
+    public Timestamp getStart() {
+        return start;
+    }
+
+    public void setStart(Timestamp start) {
+        this.start = start;
+    }
+
+    public Timestamp getEnd() {
+        return end;
+    }
+
+    public void setEnd(Timestamp end) {
+        this.end = end;
     }
 
     public boolean isSuccess() {
