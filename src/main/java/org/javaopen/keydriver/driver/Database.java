@@ -5,6 +5,8 @@ import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -13,6 +15,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.logging.Logger;
 
 public class Database implements Driver {
@@ -47,6 +50,7 @@ public class Database implements Driver {
     }
     @Override
     public void perform(Context context, Section section, Test test) {
+        test.setStart(new Timestamp(System.currentTimeMillis()));
         initDriver(context);
         try (Connection conn = DriverManager.getConnection(test.getOption().getValue())) {
             Statement st = conn.createStatement();
@@ -58,13 +62,28 @@ public class Database implements Driver {
                 ResultSet res = st.executeQuery(sql);
                 String value = res.getString(0);
                 if (!match(value, test.getArgument())) {
-                    logger.severe("Section: "+section.getName()+", Test: "+ test.getComment()+" failed: expected: "+ test.getArgument().getValue()+", but got: "+value);
+                    test.setSuccess(false);
+                    test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+test.getArgument().toString()+", but got: "+value);
+                    logger.severe(test.getMatchFailed());
+                    throw new AssertionError(test.getMatchFailed());
+                } else {
+                    test.setSuccess(true);
                 }
             } else if (test.getKeyword().equals(Keyword.EXECUTE)) {
                 st.execute(sql);
+                test.setSuccess(true);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            test.setCompleted(true);
+            test.setEnd(new Timestamp(System.currentTimeMillis()));
+        } catch (Throwable t) {
+            test.setSuccess(false);
+            test.setCompleted(false);
+
+            StringWriter writer = new StringWriter();
+            t.printStackTrace(new PrintWriter(writer));
+            test.setStackTrace(writer.toString());
+
+            test.setEnd(new Timestamp(System.currentTimeMillis()));
         }
     }
 

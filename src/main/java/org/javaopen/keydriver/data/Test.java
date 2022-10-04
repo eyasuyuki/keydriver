@@ -29,6 +29,7 @@ public class Test {
     private boolean expectingFailure;
     private String expected;
     private String actual;
+    private String matchFailed;
     private String stackTrace;
 
     public Test(Context context, Map<String, String> record) {
@@ -155,6 +156,14 @@ public class Test {
 
     public void setActual(String actual) {
         this.actual = actual;
+    }
+
+    public String getMatchFailed() {
+        return matchFailed;
+    }
+
+    public void setMatchFailed(String matchFailed) {
+        this.matchFailed = matchFailed;
     }
 
     public String getStackTrace() {

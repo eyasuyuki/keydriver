@@ -22,9 +22,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.logging.Logger;
 
@@ -32,21 +35,32 @@ public class Web implements Driver {
     public static final String BROWSER_WAIT_KEY = "browser_wait";
     public static final String BROWSER_QUIT_KEY = "browser_quit";
     public static final String AUTO_CAPTURE_KEY = "auto_capture";
+    public static final String ERROR_SUFFIX_KEY = "error_suffix";
+    public static final String ERROR_SUFFIX_DEFAULT = "__ERROR__";
     private static final String DEFAULT_ATTRIBUTE = "innerText";
     private Logger logger = Logger.getLogger(Web.class.getName());
 
+    private String errorSuffix;
+
     @Override
     public void perform(Context context, Section section, Test test) {
+        // set test properties
+        test.setStart(new Timestamp(System.currentTimeMillis()));
         // set wait
         int wait = PropertyConverter.toInteger(context.getBundle().getObject(BROWSER_WAIT_KEY));
 
         // auto capture mode
         boolean autoCapture = PropertyConverter.toBoolean(context.getBundle().getObject(AUTO_CAPTURE_KEY));
+        // error suffix
+        errorSuffix = context.getBundle().getString(ERROR_SUFFIX_KEY);
+        if (StringUtils.isEmpty(errorSuffix)) {
+            errorSuffix = ERROR_SUFFIX_DEFAULT;
+        }
 
         // getDriver
         WebDriver driver = getDriver(context, wait);
 
-        // get record fields
+        // get test fields
         int number = test.getNumber();
         Keyword key = test.getKeyword();
         Param target = test.getTarget();
@@ -55,32 +69,49 @@ public class Web implements Driver {
         Param object = test.getObject();
         Param option = test.getOption();
 
-        // perform
-        if (key.equals(Keyword.OPEN)) {
-            driver.get(target.getValue());
-        } else if (key.equals(Keyword.CLICK)) {
-            findElement(driver, object).click();
-        } else if (key.equals(Keyword.INPUT)) {
-            findElement(driver, object).sendKeys(argument.getValue());
-        } else if (key.equals(Keyword.CLEAR)) {
-            findElement(driver, object).clear();
-        } else if (key.equals(Keyword.SELECT)) {
-            Select select = new Select(findElement(driver, object));
-            select.selectByValue(option.getValue());
-        } else if (key.equals(Keyword.ACCEPT)) {
-            Alert alert = waitAlert(driver, wait);
-            alert.accept();
-        } else if (key.equals(Keyword.DISMISS)) {
-            Alert alert = waitAlert(driver, wait);
-            alert.dismiss();
-        } else if (key.equals(Keyword.UPLOAD)) {
-            doUpload(driver, argument, object);
-        } else if (key.equals(Keyword.ASSERT)) {
-            doAssert(section, test, driver, object, argument);
-        }
-        // manual capture or auto
-        if (key.equals(Keyword.CAPTURE) || autoCapture) {
-            capture(driver, context, section, test);
+        try {
+            // perform
+            if (key.equals(Keyword.OPEN)) {
+                driver.get(target.getValue());
+            } else if (key.equals(Keyword.CLICK)) {
+                findElement(driver, object).click();
+            } else if (key.equals(Keyword.INPUT)) {
+                findElement(driver, object).sendKeys(argument.getValue());
+            } else if (key.equals(Keyword.CLEAR)) {
+                findElement(driver, object).clear();
+            } else if (key.equals(Keyword.SELECT)) {
+                Select select = new Select(findElement(driver, object));
+                select.selectByValue(option.getValue());
+            } else if (key.equals(Keyword.ACCEPT)) {
+                Alert alert = waitAlert(driver, wait);
+                alert.accept();
+            } else if (key.equals(Keyword.DISMISS)) {
+                Alert alert = waitAlert(driver, wait);
+                alert.dismiss();
+            } else if (key.equals(Keyword.UPLOAD)) {
+                doUpload(driver, argument, object);
+            } else if (key.equals(Keyword.ASSERT)) {
+                doAssert(section, test, driver, object, argument);
+            }
+            // manual capture or auto
+            if (key.equals(Keyword.CAPTURE) || autoCapture) {
+                capture(driver, context, section, test);
+            }
+            test.setCompleted(true);
+            // set end
+            test.setEnd(new Timestamp(System.currentTimeMillis()));
+        } catch (Throwable t) {
+            test.setSuccess(false);
+            test.setCompleted(false);
+
+            StringWriter writer = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(writer);
+            t.printStackTrace(printWriter);
+            test.setStackTrace(writer.toString());
+
+            capture(driver, context, section, test, true);
+
+            test.setEnd(new Timestamp(System.currentTimeMillis()));
         }
     }
 
@@ -118,6 +149,8 @@ public class Web implements Driver {
         }
         WebElement element = findElement(driver, object);
         String value;
+
+        test.setExpected(argument.getValue());
         if (Param.ATTRIBUTE_DISPLAYED.equals(object.getAttribute())) {
             value = Boolean.toString(element.isDisplayed());
         } else if (Param.ATTRIBUTE_ENABLED.equals(object.getAttribute())) {
@@ -127,8 +160,14 @@ public class Web implements Driver {
         } else {
             value  = element.getAttribute(attribute);
         }
+        test.setActual(value);
         if (!match(value, argument)) {
-            logger.severe("Section: "+section.getName()+", Test: "+ test.getNumber()+" failed: expected: "+argument.getValue()+", but got: "+value);
+            test.setSuccess(false);
+            test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+argument.toString()+", but got: "+value);
+            logger.severe(test.getMatchFailed());
+            throw new AssertionError(test.getMatchFailed());
+        } else {
+            test.setSuccess(true);
         }
     }
 
@@ -160,15 +199,20 @@ public class Web implements Driver {
         WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(wait));
         return w.until(ExpectedConditions.alertIsPresent());
     }
-    private File getCaptureFile(Context context, Section section, Test test) {
+    private File getCaptureFile(Context context, Section section, Test test, boolean isError) {
+        String suffix = isError ? errorSuffix : "";
         String num = String.format("%03d", test.getNumber());
-        return new File(section.getName()+"_"+num+".png");
+        return new File(section.getName()+"_"+num+suffix+".png");
     }
 
     private void capture(WebDriver driver, Context context, Section section, Test test) {
+        capture(driver, context, section, test, false);
+    }
+
+    private void capture(WebDriver driver, Context context, Section section, Test test, boolean isError) {
         File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(f, getCaptureFile(context, section, test));
+            FileUtils.copyFile(f, getCaptureFile(context, section, test, isError));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
