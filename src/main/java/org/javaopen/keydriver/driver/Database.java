@@ -84,6 +84,8 @@ public class Database implements Driver {
             test.setStackTrace(writer.toString());
 
             test.setEnd(new Timestamp(System.currentTimeMillis()));
+
+            throw new RuntimeException(t);
         }
     }
 

@@ -61,11 +61,9 @@ public class Web implements Driver {
         WebDriver driver = getDriver(context, wait);
 
         // get test fields
-        int number = test.getNumber();
         Keyword key = test.getKeyword();
         Param target = test.getTarget();
         Param argument = test.getArgument();
-        String comment = test.getComment();
         Param object = test.getObject();
         Param option = test.getOption();
 
@@ -112,6 +110,7 @@ public class Web implements Driver {
             capture(driver, context, section, test, true);
 
             test.setEnd(new Timestamp(System.currentTimeMillis()));
+            throw new RuntimeException(t);
         }
     }
 
