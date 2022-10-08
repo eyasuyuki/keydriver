@@ -96,6 +96,7 @@ public class Web implements Driver {
                 capture(driver, context, section, test);
             }
             test.setCompleted(true);
+            test.setSuccess(true);
             // set end
             test.setEnd(new Timestamp(System.currentTimeMillis()));
         } catch (Throwable t) {
@@ -107,7 +108,11 @@ public class Web implements Driver {
             t.printStackTrace(printWriter);
             test.setStackTrace(writer.toString());
 
-            capture(driver, context, section, test, true);
+            try {
+                capture(driver, context, section, test, true);
+            } catch (IOException e) {
+                // do nothing
+            }
 
             test.setEnd(new Timestamp(System.currentTimeMillis()));
             throw new RuntimeException(t);
@@ -204,16 +209,12 @@ public class Web implements Driver {
         return new File(section.getName()+"_"+num+suffix+".png");
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Test test) {
+    private void capture(WebDriver driver, Context context, Section section, Test test) throws IOException {
         capture(driver, context, section, test, false);
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Test test, boolean isError) {
+    private void capture(WebDriver driver, Context context, Section section, Test test, boolean isError) throws IOException {
         File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        try {
-            FileUtils.copyFile(f, getCaptureFile(context, section, test, isError));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        FileUtils.copyFile(f, getCaptureFile(context, section, test, isError));
     }
 }
