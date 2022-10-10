@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
+import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
 import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
@@ -110,7 +111,7 @@ public class Web implements Driver {
 
             try {
                 capture(driver, context, section, test, true);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 // do nothing
             }
 
@@ -147,31 +148,43 @@ public class Web implements Driver {
     }
 
     private void doAssert(Section section, Test test, WebDriver driver, Param object, Param argument) {
-        String attribute = object.getAttribute();
-        if (StringUtils.isEmpty(attribute)) {
-            attribute = DEFAULT_ATTRIBUTE;
+        String attribute = DEFAULT_ATTRIBUTE;
+        if (object != null && StringUtils.isNotEmpty(object.getAttribute())) {
+            attribute = object.getAttribute();
         }
         WebElement element = findElement(driver, object);
-        String value;
-
         test.setExpected(argument.getValue());
-        if (Param.ATTRIBUTE_DISPLAYED.equals(object.getAttribute())) {
-            value = Boolean.toString(element.isDisplayed());
-        } else if (Param.ATTRIBUTE_ENABLED.equals(object.getAttribute())) {
-            value = Boolean.toString(element.isEnabled());
-        } else if (Param.ATTRIBUTE_SELECTED.equals(object.getAttribute())) {
-            value = Boolean.toString(element.isSelected());
-        } else {
-            value  = element.getAttribute(attribute);
-        }
+
+        String value = getValue(element, attribute);
         test.setActual(value);
+
+        test.setExpectingFailure(argument != null && argument.getTag() == Matches.FAIL);
+
         if (!match(value, argument)) {
             test.setSuccess(false);
-            test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+argument.toString()+", but got: "+value);
+            if (test.isExpectingFailure()) {
+                test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+argument.toString());
+            } else {
+                test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+argument.toString()+", but got: "+value);
+            }
             logger.severe(test.getMatchFailed());
             throw new AssertionError(test.getMatchFailed());
         } else {
             test.setSuccess(true);
+        }
+    }
+
+    private String getValue(WebElement element, String attribute) {
+        if (element == null) {
+            return null;
+        } else if (Param.ATTRIBUTE_DISPLAYED.equals(attribute)) {
+            return Boolean.toString(element.isDisplayed());
+        } else if (Param.ATTRIBUTE_ENABLED.equals(attribute)) {
+            return Boolean.toString(element.isEnabled());
+        } else if (Param.ATTRIBUTE_SELECTED.equals(attribute)) {
+            return Boolean.toString(element.isSelected());
+        } else {
+            return element.getAttribute(attribute);
         }
     }
 
@@ -188,7 +201,9 @@ public class Web implements Driver {
         return driver;
     }
     private WebElement findElement(WebDriver driver, Param object) {
-        if (object.getTag() == DataType.ID) {
+        if (driver == null || object == null) {
+            return null;
+        } else if (object.getTag() == DataType.ID) {
             return driver.findElement(By.id(object.getValue()));
         } else if (object.getTag() == DataType.NAME) {
             return driver.findElement(By.name(object.getValue()));

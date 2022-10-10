@@ -34,6 +34,8 @@ public interface Driver {
             return lessThan(Integer.parseInt(param.getValue())).matches(Integer.parseInt(value));
         } else if (param.getTag().equals(Matches.LESS_THAN_EQUAL)) {
             return lessThanOrEqualTo(Integer.parseInt(param.getValue())).matches(Integer.parseInt(value));
+        } else if (param.getTag().equals(Matches.FAIL)) {
+            return false;
         } else {
             throw new IllegalArgumentException(param.toString());
         }

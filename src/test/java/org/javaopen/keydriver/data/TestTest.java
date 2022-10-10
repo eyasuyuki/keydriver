@@ -66,5 +66,16 @@ public class TestTest {
         assertThat(test.getTarget().getValue(), is("/Users/yasuyuki/Documents/playlist.txt"));
         assertThat(test.getObject().getTag(), is(DataType.ID));
         assertThat(test.getObject().getValue(), is("file_upload_1"));
+
+        map = Stream.of(new String[][]{
+                {"No", "7"},
+                {"Keyword", "assert"},
+                {"Argument", "fail[]"},
+        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+        test = new Test(context, map);
+
+        assertThat(test.getNumber(), is(7));
+        assertThat(test.getKeyword(), is(Keyword.ASSERT));
+        assertThat(test.getArgument().getTag(), is(Matches.FAIL));
     }
 }
