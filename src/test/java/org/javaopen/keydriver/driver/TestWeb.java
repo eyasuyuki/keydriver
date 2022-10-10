@@ -370,6 +370,7 @@ public class TestWeb {
         doThrow(new RuntimeException()).when(driver).switchTo();
         try {
             d.perform(context, section, test);
+            assertThat(null, false);
         } catch (Exception e) {
             assertException(test);
         }
@@ -409,6 +410,7 @@ public class TestWeb {
         doThrow(new RuntimeException()).when(driver).switchTo();
         try {
             d.perform(context, section, test);
+            assertThat(null, false);
         } catch (Exception e) {
             assertException(test);
         }
@@ -502,6 +504,7 @@ public class TestWeb {
         when(element.isEnabled()).thenReturn(false);
         try {
             d.perform(context, section, test);
+            assertThat(null, false);
         } catch (Exception e) {
             assertException(test);
         }
@@ -524,6 +527,7 @@ public class TestWeb {
         when(element.isEnabled()).thenReturn(false);
         try {
             d.perform(context, section, test);
+            assertThat(null, false);
         } catch (Exception e) {
             assertThat(test.getStart(), is(not(nullValue())));
             assertThat(test.getEnd(), is(not(nullValue())));
