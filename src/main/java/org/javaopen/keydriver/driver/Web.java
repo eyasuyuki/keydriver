@@ -69,6 +69,7 @@ public class Web implements Driver {
         Param option = test.getOption();
 
         try {
+            test.setExecuted(true);
             // perform
             if (key.equals(Keyword.OPEN)) {
                 driver.get(target.getValue());

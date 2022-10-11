@@ -5,6 +5,7 @@ import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Test;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +20,13 @@ public class Summary implements Report, Usage {
     private int expectingFailureCount;
     private int uncompletedTestCount;
     private Timestamp startTime;
-    private long expectingTime;
-    private long duration;
+    private Duration expectingTime;
+    private Duration duration;
 
     public Summary(List<Section> sections) {
         Stream<Test> stream = sections.stream().flatMap(x -> x.getTests().stream());
         expectingTestCount = (int)stream.count();
-        // TODO executedTestCount
+        executedTestCount = (int)stream.filter(x -> x.isExecuted()).count();
         successTestCount = (int)stream.filter(x -> x.isSuccess()).count();
         failedTestCount = (int)stream.filter(x -> !x.isSuccess()).count();
         expectingFailureCount = (int)stream.filter(x -> x.isExpectingFailure()).count();
@@ -38,8 +39,9 @@ public class Summary implements Report, Usage {
             startTime = min.get().getStart();
         }
         // TODO expecting time
+
         if (min.isPresent() && max.isPresent()) {
-            duration = max.get().getEnd().getTime() - startTime.getTime();
+            duration = Duration.between(startTime.toInstant(), max.get().getEnd().toInstant());
         }
 
     }
@@ -76,17 +78,17 @@ public class Summary implements Report, Usage {
 
     @Override
     public Timestamp getStartTime() {
-        return null;
+        return startTime;
     }
 
     @Override
-    public long getExpectingTime() {
-        return 0;
+    public Duration getExpectingTime() {
+        return expectingTime;
     }
 
     @Override
-    public long getDuration() {
-        return 0;
+    public Duration getDuration() {
+        return duration;
     }
 
     @Override

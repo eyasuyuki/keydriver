@@ -1,5 +1,8 @@
 package org.javaopen.keydriver.driver;
 
+import org.javaopen.keydriver.data.DummyTests;
+import org.javaopen.keydriver.data.Keyword;
+import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Section;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +15,6 @@ import org.openqa.selenium.WebElement;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -29,6 +29,7 @@ import static org.mockito.Mockito.withSettings;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestWeb {
+    private DummyTests dummyTests;
     private Context context;
     private WebDriver driver;
     private WebElement element;
@@ -37,6 +38,7 @@ public class TestWeb {
     public void setUp() {
         Locale.setDefault(Locale.US);//important
 
+        dummyTests = new DummyTests();
         context = new Context();
         driver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
         element = mock(WebElement.class);
@@ -55,12 +57,7 @@ public class TestWeb {
 
     @Test
     public void testOpen() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "1" },
-                { "Keyword", "open" },
-                { "Target", "url[https://www.example.com]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.OPEN);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -72,6 +69,7 @@ public class TestWeb {
     }
 
     private void assertSuccess(org.javaopen.keydriver.data.Test test) {
+        assertThat(test.isExecuted(), is(true));
         assertThat(test.getStart(), is(not(nullValue())));
         assertThat(test.getEnd(), is(not(nullValue())));
         assertThat(test.getEnd(), is(greaterThanOrEqualTo(test.getStart())));
@@ -83,18 +81,13 @@ public class TestWeb {
 
     @Test
     public void testOpenException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "1" },
-                { "Keyword", "open" },
-                { "Target", "url[abcxyz]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.OPEN);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
-        doThrow(new RuntimeException()).when(driver).get("abcxyz");
+        doThrow(new RuntimeException()).when(driver).get(anyObject());
         try {
             d.perform(context, section, test);
             assertThat(null, false);//fail if no-exception
@@ -104,6 +97,7 @@ public class TestWeb {
     }
 
     private void assertException(org.javaopen.keydriver.data.Test test) {
+        assertThat(test.isExecuted(), is(true));
         assertThat(test.getStart(), is(not(nullValue())));
         assertThat(test.getEnd(), is(not(nullValue())));
         assertThat(test.getEnd(), is(greaterThanOrEqualTo(test.getStart())));
@@ -115,14 +109,7 @@ public class TestWeb {
 
     @Test
     public void testClick() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "2" },
-                { "Keyword", "click" },
-                { "Target", "Button" },
-                { "Argument", "" },
-                { "Object", "id[send_button]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLICK);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -135,14 +122,7 @@ public class TestWeb {
 
     @Test
     public void testClickException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "2" },
-                { "Keyword", "click" },
-                { "Target", "Button" },
-                { "Argument", "" },
-                { "Object", "id[send_button]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLICK);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -159,14 +139,7 @@ public class TestWeb {
 
     @Test
     public void testInput() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "2" },
-                { "Keyword", "input" },
-                { "Target", "Textbox" },
-                { "Argument", "Metal Gear Solid" },
-                { "Object", "name[q]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.INPUT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -179,14 +152,7 @@ public class TestWeb {
 
     @Test
     public void testInputException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "2" },
-                { "Keyword", "input" },
-                { "Target", "Textbox" },
-                { "Argument", "Metal Gear Solid" },
-                { "Object", "name[q]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.INPUT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -203,13 +169,7 @@ public class TestWeb {
 
     @Test
     public void testClear() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "2" },
-                { "Keyword", "clear" },
-                { "Target", "Input" },
-                { "Object", "id[name_text]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLEAR);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -223,13 +183,7 @@ public class TestWeb {
 
     @Test
     public void testClearException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "2" },
-                { "Keyword", "clear" },
-                { "Target", "Input" },
-                { "Object", "id[name_text]" },
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLEAR);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -246,15 +200,7 @@ public class TestWeb {
 
     @Test
     public void testSelect() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "5"},
-                {"Keyword", "select"},
-                {"Target", "Select"},
-                {"Argument", "1"},
-                {"Object", "id[name_text]"},
-                {"Option", "1"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.SELECT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -273,15 +219,7 @@ public class TestWeb {
 
     @Test
     public void testSelectException() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "5"},
-                {"Keyword", "select"},
-                {"Target", "Select"},
-                {"Argument", "1"},
-                {"Object", "id[name_text]"},
-                {"Option", "1"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.SELECT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -298,12 +236,7 @@ public class TestWeb {
 
     @Test
     public void testCapture() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "4" },
-                { "Keyword", "capture" },
-                { "Comment", "Take screen shot"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CAPTURE);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -316,12 +249,7 @@ public class TestWeb {
 
     @Test
     public void testCaptureException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "4" },
-                { "Keyword", "capture" },
-                { "Comment", "Take screen shot"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CAPTURE);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -338,12 +266,7 @@ public class TestWeb {
 
     @Test
     public void testAccept() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "3" },
-                { "Keyword", "accept" },
-                { "Comment", "Accept an alert"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ACCEPT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -356,12 +279,7 @@ public class TestWeb {
 
     @Test
     public void testAcceptException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "3" },
-                { "Keyword", "accept" },
-                { "Comment", "Accept an alert"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ACCEPT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -378,12 +296,7 @@ public class TestWeb {
 
     @Test
     public void testDismiss() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "3" },
-                { "Keyword", "dismiss" },
-                { "Comment", "Dismiss an alert"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.DISMISS);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -396,12 +309,7 @@ public class TestWeb {
 
     @Test
     public void testDismissException() {
-        Map<String, String> map = Stream.of(new String[][] {
-                { "No", "3" },
-                { "Keyword", "dismiss" },
-                { "Comment", "Dismiss an alert"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.DISMISS);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -418,15 +326,7 @@ public class TestWeb {
 
     @Test
     public void testUpload() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "3"},
-                {"Keyword", "upload"},
-                {"Target", "input[file]"},
-                {"Argument", "/Users/yasuyuki/Documents/playlist.txt"},
-                {"Object", "id[file_upload_1]"}
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
-
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.UPLOAD);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -439,15 +339,7 @@ public class TestWeb {
 
     @Test
     public void testUploadException() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "3"},
-                {"Keyword", "upload"},
-                {"Target", "input[file]"},
-                {"Argument", "/Users/yasuyuki/Documents/playlist.txt"},
-                {"Object", "id[file_upload_1]"}
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
-
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.UPLOAD);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -464,15 +356,7 @@ public class TestWeb {
 
     @Test
     public void testAssert() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "7"},
-                {"Keyword", "assert"},
-                {"Target", "input[text]"},
-                {"Argument", "is[true]"},
-                {"Object", "id[save_button#enabled]"}
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
-
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ASSERT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -487,15 +371,7 @@ public class TestWeb {
 
     @Test
     public void testAssertFailed() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "7"},
-                {"Keyword", "assert"},
-                {"Target", "input[text]"},
-                {"Argument", "is[true]"},
-                {"Object", "id[save_button#displayed]"}
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
-
+        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ASSERT);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -512,13 +388,10 @@ public class TestWeb {
 
     @Test
     public void testAssertExpectingFailure() {
-        Map<String, String> map = Stream.of(new String[][]{
-                {"No", "7"},
-                {"Keyword", "assert"},
-                {"Argument", "fail[]"},
-        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
-        org.javaopen.keydriver.data.Test test = new org.javaopen.keydriver.data.Test(context, map);
-
+        org.javaopen.keydriver.data.Test test = dummyTests.getTests().stream()
+            .filter(x -> x.getKeyword().equals(Keyword.ASSERT) && x.getArgument().getTag().equals(Matches.FAIL))
+            .findFirst()
+            .orElse(null);
 
         Driver d = DriverFactory.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
@@ -529,6 +402,7 @@ public class TestWeb {
             d.perform(context, section, test);
             assertThat(null, false);
         } catch (Exception e) {
+            assertThat(test.isExecuted(), is(true));
             assertThat(test.getStart(), is(not(nullValue())));
             assertThat(test.getEnd(), is(not(nullValue())));
             assertThat(test.getEnd(), is(greaterThanOrEqualTo(test.getStart())));

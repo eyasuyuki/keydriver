@@ -24,6 +24,7 @@ public class Test {
 
     private Timestamp start;
     private Timestamp end;
+    private boolean executed;
     private boolean success;
     private boolean completed;
     private boolean expectingFailure;
@@ -132,6 +133,14 @@ public class Test {
 
     public void setEnd(Timestamp end) {
         this.end = end;
+    }
+
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    public void setExecuted(boolean executed) {
+        this.executed = executed;
     }
 
     public boolean isSuccess() {
