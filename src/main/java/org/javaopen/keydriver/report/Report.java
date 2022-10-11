@@ -11,6 +11,5 @@ public interface Report {
     int getExpectingFailureCount();//予定失敗数
     int getUncompletedTestCount();//未完了テスト数
     Timestamp getStartTime();// 開始時刻
-    Duration getExpectingTime(); //予定時間
     Duration getDuration();//実行時間
 }

@@ -10,6 +10,8 @@ import org.javaopen.keydriver.driver.Web;
 import org.javaopen.keydriver.reader.Reader;
 import org.javaopen.keydriver.reader.ReaderFactory;
 import org.javaopen.keydriver.report.Summary;
+import org.javaopen.keydriver.report.Writer;
+import org.javaopen.keydriver.report.WriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,7 @@ public class App {
     private static List<Section> sections;
     private static Driver driver;
     private static Summary summary;
+    private static Writer writer;
     public static void main(String args[]) {
         context = Context.getContext();
         Reader reader = ReaderFactory.getReader(args[0]);
@@ -43,5 +46,7 @@ public class App {
         }
         // report
         summary = new Summary(context, sections);
+        writer = WriterFactory.getWriter(context);
+        writer.write(context, summary, summary);
     }
 }
