@@ -76,12 +76,7 @@ public class TestSummary {
         Timestamp start = min.get().getStart();
         assertThat(summary.getStartTime(), is(start));
     }
-    @Test
-    public void testGetExpectingTime() {
-        double ex = PropertyConverter.toDouble(context.getBundle().getObject(Summary.EXPECTING_TIME_KEY));
-        Duration ext = Duration.ofSeconds((long)(summary.getExpectingTestCount() * ex));
-        assertThat(summary.getExpectingTime(), is(ext));
-    }
+
     @Test
     public void testGetDuration() {
         Optional<org.javaopen.keydriver.data.Test> min = dummyTests.getTests().stream()

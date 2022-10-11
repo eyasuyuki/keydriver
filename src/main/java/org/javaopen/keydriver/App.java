@@ -26,6 +26,7 @@ public class App {
     private static Writer writer;
     public static void main(String args[]) {
         context = Context.getContext();
+        context.setInputFileName(args[0]);
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
             sections = reader.read(context, args[0]);

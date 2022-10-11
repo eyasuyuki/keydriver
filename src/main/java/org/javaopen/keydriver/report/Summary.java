@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class Summary implements Report, Usage {
-    public static final String EXPECTING_TIME_KEY = "expecting_time";
     private final SystemInformation information = new SystemInformation();
     private final int expectingTestCount;
     private final int executedTestCount;
@@ -21,7 +20,6 @@ public class Summary implements Report, Usage {
     private final int expectingFailureCount;
     private final int uncompletedTestCount;
     private Timestamp startTime;
-    private final Duration expectingTime;
     private Duration duration;
 
     public Summary(Context context, List<Section> sections) {
@@ -34,9 +32,6 @@ public class Summary implements Report, Usage {
         Optional<Test> min = sections.stream().flatMap(x -> x.getTests().stream()).min(Comparator.comparingLong(x -> x.getStart().getTime()));
         Optional<Test> max = sections.stream().flatMap(x -> x.getTests().stream()).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
         min.ifPresent(test -> startTime = test.getStart());
-        double ex = PropertyConverter.toDouble(context.getBundle().getObject(EXPECTING_TIME_KEY));
-        double exTime = (double)expectingTestCount * ex;
-        expectingTime = Duration.ofSeconds((long)exTime);
 
         if (min.isPresent() && max.isPresent()) {
             duration = Duration.between(startTime.toInstant(), max.get().getEnd().toInstant());
@@ -77,11 +72,6 @@ public class Summary implements Report, Usage {
     @Override
     public Timestamp getStartTime() {
         return startTime;
-    }
-
-    @Override
-    public Duration getExpectingTime() {
-        return expectingTime;
     }
 
     @Override
