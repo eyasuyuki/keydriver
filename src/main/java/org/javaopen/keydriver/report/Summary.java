@@ -1,7 +1,6 @@
 package org.javaopen.keydriver.report;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
-import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.driver.Context;
@@ -11,33 +10,30 @@ import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class Summary implements Report, Usage {
     public static final String EXPECTING_TIME_KEY = "expecting_time";
-    private SystemInformation information = new SystemInformation();
-    private int expectingTestCount;
-    private int executedTestCount;
-    private int successTestCount;
-    private int failedTestCount;
-    private int expectingFailureCount;
-    private int uncompletedTestCount;
+    private final SystemInformation information = new SystemInformation();
+    private final int expectingTestCount;
+    private final int executedTestCount;
+    private final int successTestCount;
+    private final int failedTestCount;
+    private final int expectingFailureCount;
+    private final int uncompletedTestCount;
     private Timestamp startTime;
-    private Duration expectingTime;
+    private final Duration expectingTime;
     private Duration duration;
 
     public Summary(Context context, List<Section> sections) {
-        expectingTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).count();
-        executedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> x.isExecuted()).count();
-        successTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> x.isSuccess()).count();
+        expectingTestCount = (int)sections.stream().mapToLong(x -> x.getTests().size()).sum();
+        executedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExecuted).count();
+        successTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isSuccess).count();
         failedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isSuccess()).count();
-        expectingFailureCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> x.isExpectingFailure()).count();
+        expectingFailureCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExpectingFailure).count();
         uncompletedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isCompleted()).count();
         Optional<Test> min = sections.stream().flatMap(x -> x.getTests().stream()).min(Comparator.comparingLong(x -> x.getStart().getTime()));
         Optional<Test> max = sections.stream().flatMap(x -> x.getTests().stream()).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
-        if (min.isPresent()) {
-            startTime = min.get().getStart();
-        }
+        min.ifPresent(test -> startTime = test.getStart());
         double ex = PropertyConverter.toDouble(context.getBundle().getObject(EXPECTING_TIME_KEY));
         double exTime = (double)expectingTestCount * ex;
         expectingTime = Duration.ofSeconds((long)exTime);
