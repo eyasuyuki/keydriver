@@ -40,7 +40,7 @@ public class TestSummary {
         }
         Section section = new Section("Section1");
         section.getTests().addAll(dummyTests.getTests());
-        summary = new Summary(context, Arrays.asList(section));
+        summary = new Summary(Arrays.asList(section));
         testCount = dummyTests.getTests().size();
     }
 

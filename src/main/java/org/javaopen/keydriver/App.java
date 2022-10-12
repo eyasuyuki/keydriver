@@ -46,7 +46,7 @@ public class App {
             }
         }
         // report
-        summary = new Summary(context, sections);
+        summary = new Summary(sections);
         writer = WriterFactory.getWriter(context);
         writer.write(context, summary, summary);
     }

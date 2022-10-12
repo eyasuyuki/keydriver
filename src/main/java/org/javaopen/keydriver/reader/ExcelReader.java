@@ -5,6 +5,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.ExcelStyleDateFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +90,7 @@ public class ExcelReader implements Reader {
             boolean value = cell.getBooleanCellValue();
             return Boolean.toString(value);
         } else if (type == CellType.FORMULA) {
+            final boolean isDate = DateUtil.isCellDateFormatted(cell);
             CreationHelper helper = workbook.getCreationHelper();
             FormulaEvaluator evaluator = helper.createFormulaEvaluator();
             CellValue value = evaluator.evaluate(cell);
@@ -93,14 +98,25 @@ public class ExcelReader implements Reader {
             if (value.getCellType().equals(CellType.STRING)) {
                 result = value.getStringValue();
             } else if (value.getCellType().equals(CellType.NUMERIC)) {
-                result = Double.toString(value.getNumberValue());
+                if (isDate) {
+                    DataFormatter formatter = new DataFormatter();
+                    result = formatter.formatCellValue(cell, evaluator);
+                } else {
+                    result = Double.toString(value.getNumberValue());
+                }
             } else if (value.getCellType().equals(CellType.BOOLEAN)) {
                 result = Boolean.toString(value.getBooleanValue());
             }
             return result;
         } else if (type == CellType.NUMERIC) {
-            double value = cell.getNumericCellValue();
-            return Integer.toString((int)value);
+            final boolean isDate = DateUtil.isCellDateFormatted(cell);
+            if (isDate) {
+                DataFormatter formatter = new DataFormatter();
+                return formatter.formatCellValue(cell);//TEST
+            } else {
+                double value = cell.getNumericCellValue();
+                return Integer.toString((int) value);
+            }
         } else {
             return "";
         }

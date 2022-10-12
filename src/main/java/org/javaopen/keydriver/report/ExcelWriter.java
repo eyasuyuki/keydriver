@@ -99,8 +99,12 @@ public class ExcelWriter implements Writer {
         sheet.getCellRange("B5").setNumberValue(report.getFailedTestCount());
         sheet.getCellRange("B6").setNumberValue(report.getUncompletedTestCount());
 
-        sheet.getCellRange("B8").setValue(report.getStartTime().toString());//TODO format
-        sheet.getCellRange("B9").setValue(report.getDuration().toString());//TODO format
+        if (report.getStartTime() != null) {
+            sheet.getCellRange("B8").setValue(report.getStartTime().toString());//TODO format
+        }
+        if (report.getDuration() != null) {
+            sheet.getCellRange("B9").setValue(report.getDuration().toString());//TODO format
+        }
 
         sheet.getCellRange("B11").setValue(usage.getArch());
         sheet.getCellRange("B12").setNumberValue(usage.getProcessorCount());

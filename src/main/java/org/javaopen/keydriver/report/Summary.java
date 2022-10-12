@@ -13,16 +13,19 @@ import java.util.Optional;
 
 public class Summary implements Report, Usage {
     private final SystemInformation information = new SystemInformation();
-    private final int expectingTestCount;
-    private final int executedTestCount;
-    private final int successTestCount;
-    private final int failedTestCount;
-    private final int expectingFailureCount;
-    private final int uncompletedTestCount;
+    private int expectingTestCount;
+    private int executedTestCount;
+    private int successTestCount;
+    private int failedTestCount;
+    private int expectingFailureCount;
+    private int uncompletedTestCount;
     private Timestamp startTime;
     private Duration duration;
 
-    public Summary(Context context, List<Section> sections) {
+    public Summary(List<Section> sections) {
+        if (sections == null || sections.size() < 1) {
+            return;
+        }
         expectingTestCount = (int)sections.stream().mapToLong(x -> x.getTests().size()).sum();
         executedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExecuted).count();
         successTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isSuccess).count();
