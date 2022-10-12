@@ -7,12 +7,17 @@ import com.spire.xls.Workbook;
 import com.spire.xls.Worksheet;
 import com.spire.xls.charts.ChartSerie;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.javaopen.keydriver.driver.Context;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 
 public class ExcelWriter implements Writer {
+    public static final String COMMA_FORMAT = "#,##0";
+    public static final String TIMESTAMP_FORMAT_KEY =               "timestamp_format";
     public static final String OUTPUT_DIRECTORY_KEY =               "output_directory";
     public static final String OUTPUT_EXTENSION_KEY =               "output_extension";
     public static final String OUTPUT_PREFIX_KEY =                  "output_prefix";
@@ -36,6 +41,7 @@ public class ExcelWriter implements Writer {
     public static final String FREE_DISK_LABEL_KEY =                "free_disk_label";
     public static final String TOTAL_DISK_LABEL_KEY =               "total_disk_label";
 
+    private String timestampFormat;
     private String outputDirectory;
     private String outputExtension;
     private String outputPrefix;
@@ -98,20 +104,29 @@ public class ExcelWriter implements Writer {
         sheet.getCellRange("B6").setNumberValue(report.getNotExecutedTestCount());
 
         if (report.getStartTime() != null) {
-            sheet.getCellRange("B8").setValue(report.getStartTime().toString());//TODO format
+            sheet.getCellRange("B8").setNumberFormat(timestampFormat);
+            double startTime = DateUtil.getExcelDate(report.getStartTime().toLocalDateTime());
+            sheet.getCellRange("B8").setNumberValue(startTime);
         }
         if (report.getDuration() != null) {
-            sheet.getCellRange("B9").setValue(report.getDuration().toString());//TODO format
+            double duration = (double)(report.getDuration().toMillis() / 1000.0);
+            sheet.getCellRange("B9").setNumberValue(duration);
         }
 
         sheet.getCellRange("B11").setValue(usage.getArch());
         sheet.getCellRange("B12").setNumberValue(usage.getProcessorCount());
         sheet.getCellRange("B13").setNumberValue(usage.getLoadAverage());
+        sheet.getCellRange("B14").setNumberFormat(COMMA_FORMAT);
         sheet.getCellRange("B14").setNumberValue(usage.getMaxMemory());
+        sheet.getCellRange("B15").setNumberFormat(COMMA_FORMAT);
         sheet.getCellRange("B15").setNumberValue(usage.getFreeMemory());
+        sheet.getCellRange("B16").setNumberFormat(COMMA_FORMAT);
         sheet.getCellRange("B16").setNumberValue(usage.getTotalMemory());
+        sheet.getCellRange("B17").setNumberFormat(COMMA_FORMAT);
         sheet.getCellRange("B17").setNumberValue(usage.getUsableDisk());
+        sheet.getCellRange("B18").setNumberFormat(COMMA_FORMAT);
         sheet.getCellRange("B18").setNumberValue(usage.getFreeMemory());
+        sheet.getCellRange("B19").setNumberFormat(COMMA_FORMAT);
         sheet.getCellRange("B19").setNumberValue(usage.getTotalDisk());
 
         sheet.getAllocatedRange().autoFitColumns();
@@ -127,7 +142,8 @@ public class ExcelWriter implements Writer {
     }
 
     private void init(Context context) {
-        outputDirectory =               context.getBundle().getString(OUTPUT_DIRECTORY_KEY);     
+        timestampFormat =               context.getBundle().getString(TIMESTAMP_FORMAT_KEY);
+        outputDirectory =               context.getBundle().getString(OUTPUT_DIRECTORY_KEY);
         outputExtension =               context.getBundle().getString(OUTPUT_EXTENSION_KEY);
         outputPrefix =                  context.getBundle().getString(OUTPUT_PREFIX_KEY);
         summarySheetName =              context.getBundle().getString(SUMMARY_SHEET_NAME_KEY);
