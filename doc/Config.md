@@ -79,6 +79,7 @@ Dynamic loading JDBC driver settings
 | key | value                         | description |
 ----- |-------------------------------|--------------
 | timestamp_format | Excel timestamp format        | ex. ```yyyy-mm-dd hh:mm:ss.000``` |
+| test_file_name_label | Test file name label | ex. ```Test file name``` |
 | expecting_test_count_label | Expecting test count label    | ex. ```Expecting test count``` |
 | expecting_failure_count_label | Expecting failure count label | ex. ```Expecting failure count``` |
 | executed_test_count_label | Executed test count label     | ex. ```Executed test count``` |
