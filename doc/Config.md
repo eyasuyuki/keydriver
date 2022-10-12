@@ -90,12 +90,14 @@ Dynamic loading JDBC driver settings
 
 ## Test environment label settings
 
-arch_label |  | Architecture
-processor_count_label |  | Processor count
-load_average_label |  | Load average
-max_memory_label |  | Max memory
-free_memory_label |  | Free memory
-total_memory_label |  | Total memory
-usable_disk_label |  | Usable disk space
-free_disk_label |  | Free disk space
-total_disk_label |  | Total disk space
+| key | value                   | description |
+----- |-------------------------|--------------
+arch_label | Architecture label      | Architecture
+processor_count_label | Processor count label   | Processor count
+load_average_label | Load average label      | Load average
+max_memory_label | Max memory label        | Max memory
+free_memory_label | Free memory label       | Free memory
+total_memory_label | Total memory label      | Total memory
+usable_disk_label | Usable disk space label | Usable disk space
+free_disk_label | Free disk space label   | Free disk space
+total_disk_label | Total disk space label  | Total disk space
