@@ -73,7 +73,6 @@ public class TestWeb {
         assertThat(test.getStart(), is(not(nullValue())));
         assertThat(test.getEnd(), is(not(nullValue())));
         assertThat(test.getEnd(), is(greaterThanOrEqualTo(test.getStart())));
-        assertThat(test.isCompleted(), is(true));
         assertThat(test.isSuccess(), is(true));
         assertThat(test.isExpectingFailure(), is(false));
         assertThat(test.getStackTrace(), is(nullValue()));
@@ -101,7 +100,6 @@ public class TestWeb {
         assertThat(test.getStart(), is(not(nullValue())));
         assertThat(test.getEnd(), is(not(nullValue())));
         assertThat(test.getEnd(), is(greaterThanOrEqualTo(test.getStart())));
-        assertThat(test.isCompleted(), is(false));
         assertThat(test.isSuccess(), is(false));
         assertThat(test.isExpectingFailure(), is(false));
         assertThat(test.getStackTrace(), is(not(nullValue())));
@@ -406,7 +404,6 @@ public class TestWeb {
             assertThat(test.getStart(), is(not(nullValue())));
             assertThat(test.getEnd(), is(not(nullValue())));
             assertThat(test.getEnd(), is(greaterThanOrEqualTo(test.getStart())));
-            assertThat(test.isCompleted(), is(false));
             assertThat(test.isSuccess(), is(false));
             assertThat(test.isExpectingFailure(), is(true));
             assertThat(test.getStackTrace(), is(not(nullValue())));

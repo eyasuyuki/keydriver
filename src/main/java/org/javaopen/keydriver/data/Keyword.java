@@ -3,6 +3,7 @@ package org.javaopen.keydriver.data;
 import java.util.Arrays;
 
 public enum Keyword {
+    _DIRECTIVE("_directive"),
     OPEN("open"),
     CLICK("click"),
     SELECT("select"),
@@ -26,7 +27,7 @@ public enum Keyword {
         return Arrays.stream(Keyword.values())
             .filter(x -> x.getString().equals(keyword))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(keyword));
+            .orElse(_DIRECTIVE);
     }
 
     public String getString() {

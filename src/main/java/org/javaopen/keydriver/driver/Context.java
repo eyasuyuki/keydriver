@@ -32,6 +32,7 @@ public class Context {
         return context;
     }
     private WebDriver driver;
+    private Driver currentDriver;
     private Connection connection;
     private ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
     private Map<String, String> dic = new HashMap<>();
@@ -54,6 +55,14 @@ public class Context {
 
     public void setDriver(WebDriver driver) {
         this.driver = driver;
+    }
+
+    public Driver getCurrentDriver() {
+        return currentDriver;
+    }
+
+    public void setCurrentDriver(Driver currentDriver) {
+        this.currentDriver = currentDriver;
     }
 
     public Connection getConnection() {

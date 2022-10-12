@@ -64,8 +64,8 @@ public class TestSummary {
         assertThat(summary.getExpectingFailureCount(), is(1));
     }
     @Test
-    public void testGetUncompletedTestCount() {
-        assertThat(summary.getNotExecutedTestCount(), is(1));
+    public void testNotExecutedTestCount() {
+        assertThat(summary.getNotExecutedTestCount(), is(0));
     }
     @Test
     public void testGetStartTime() {
@@ -98,14 +98,12 @@ public class TestSummary {
         setStartEnd(test);
         test.setExecuted(true);
         test.setSuccess(true);
-        test.setCompleted(true);
     }
 
     private void expectingFailure(org.javaopen.keydriver.data.Test test) {
         setStartEnd(test);
         test.setExecuted(true);
         test.setSuccess(false);
-        test.setCompleted(false);
         test.setExpectingFailure(true);
         test.setMatchFailed("dummy");
         test.setExpected("dummy");

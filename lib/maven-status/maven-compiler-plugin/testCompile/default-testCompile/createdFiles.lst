@@ -1,2 +1,7 @@
 org/javaopen/keydriver/report/TestSystemInformation.class
+org/javaopen/keydriver/report/TestSummary.class
+org/javaopen/keydriver/data/DummyTests.class
+org/javaopen/keydriver/driver/TestDatabase.class
 org/javaopen/keydriver/data/TestParam.class
+org/javaopen/keydriver/driver/TestWeb.class
+org/javaopen/keydriver/data/TestTest.class

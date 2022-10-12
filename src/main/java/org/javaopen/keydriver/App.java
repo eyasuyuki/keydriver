@@ -21,7 +21,6 @@ public class App {
     private static Logger logger = LoggerFactory.getLogger(App.class);
     private static Context context;
     private static List<Section> sections;
-    private static Driver driver;
     private static Summary summary;
     private static Writer writer;
     public static void main(String args[]) {
@@ -30,19 +29,16 @@ public class App {
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
             sections = reader.read(context, args[0]);
-            driver = null;
             for (Section s: sections) {
-                for (Test t: s.getTests()) {
-                    driver = DriverFactory.getDriver(t);
-                    driver.perform(context, s, t);
-                }
+                s.run(context);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
         } finally {
             boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(Web.BROWSER_QUIT_KEY));
-            if (driver != null && quit) {
-                driver.quit(context);
+            if (context.getCurrentDriver() != null && quit) {
+                context.getCurrentDriver().quit(context);
             }
         }
         // report
@@ -50,4 +46,5 @@ public class App {
         writer = WriterFactory.getWriter(context);
         writer.write(context, summary, summary);
     }
+
 }
