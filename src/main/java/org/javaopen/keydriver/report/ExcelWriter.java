@@ -177,7 +177,7 @@ public class ExcelWriter implements Writer {
         Chart chart = sheet.getCharts().add(ExcelChartType.Pie);
 
         // chart data range
-        chart.setDataRange(sheet.getCellRange("B4:B6"));
+        chart.setDataRange(sheet.getCellRange("B5:B7"));
 
         // chart rectangle
         chart.setLeftColumn(3);
@@ -187,8 +187,8 @@ public class ExcelWriter implements Writer {
 
         // TODO chart labels
         ChartSerie cs = chart.getSeries().get(0);
-        cs.setCategoryLabels(sheet.getCellRange("A4:A6"));
-        cs.setValues(sheet.getCellRange("B4:B6"));
+        cs.setCategoryLabels(sheet.getCellRange("A5:A7"));
+        cs.setValues(sheet.getCellRange("B5:B7"));
         cs.getDataPoints().getDefaultDataPoint().getDataLabels().hasValue(true);
         chart.getPlotArea().getFill().setVisible(true);
 
