@@ -5,6 +5,12 @@ Keyword driven "like" testing tool.
 
 ```mermaid
 sequenceDiagram
+    participant Keydriver
+    participant POI
+    participant Spire.XLS
+    participant Excel
+    participant WebDriver
+    participant Browser
     Keydriver ->> POI: read Excel file
     POI ->> Excel: read
     Excel ->> POI: worksheet data
@@ -12,7 +18,10 @@ sequenceDiagram
     Keydriver ->> WebDriver: manipurate browser
     WebDriver ->> Browser: manipurate browser
     Browser ->> WebDriver: browse result
-    WebDriver ->> Keydriver: browse result    
+    WebDriver ->> Keydriver: browse result
+    Keydriver ->> Keydriver: assert result
+    Keydriver ->> Spire.XLS: Output test report
+    Spire.XLS ->> Excel: Output test report
 ```
 
 # How to use
@@ -52,7 +61,5 @@ see [Config](doc/Config.md)
 # ToDo
 
 - Add JavaDoc comment
-- Output standard test result
-- More util tests
-- Dynamic loading JDBC driver jar
+- More unit tests
 - Dynamic loading ```config.properties```

@@ -92,6 +92,6 @@ public class Param {
         if (StringUtils.isNotEmpty(attribute)) {
             attr = getAttributeSeparator()+attribute;
         }
-        return tag.toString()+"["+value+attr+"]";
+        return tag.getString()+"["+value+attr+"]";
     }
 }

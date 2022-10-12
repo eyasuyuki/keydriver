@@ -1,33 +1,53 @@
 package org.javaopen.keydriver;
 
-import com.google.gson.Gson;
-import org.javaopen.keydriver.data.Record;
+import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.driver.Context;
 import org.javaopen.keydriver.driver.Driver;
 import org.javaopen.keydriver.driver.DriverFactory;
+import org.javaopen.keydriver.driver.Web;
 import org.javaopen.keydriver.reader.Reader;
 import org.javaopen.keydriver.reader.ReaderFactory;
+import org.javaopen.keydriver.report.Summary;
+import org.javaopen.keydriver.report.Writer;
+import org.javaopen.keydriver.report.WriterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 public class App {
+    private static Logger logger = LoggerFactory.getLogger(App.class);
+    private static Context context;
+    private static List<Section> sections;
+    private static Driver driver;
+    private static Summary summary;
+    private static Writer writer;
     public static void main(String args[]) {
-        Context context = Context.getContext();
+        context = Context.getContext();
+        context.setInputFileName(args[0]);
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
-            List<Section> sections = reader.read(context, args[0]);
-            Driver driver = null;
+            sections = reader.read(context, args[0]);
+            driver = null;
             for (Section s: sections) {
-                for (Record r: s.getRecords()) {
-                    driver = DriverFactory.getDriver(r);
-                    driver.perform(context, s, r);
+                for (Test t: s.getTests()) {
+                    driver = DriverFactory.getDriver(t);
+                    driver.perform(context, s, t);
                 }
             }
-            driver.quit(context);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(Web.BROWSER_QUIT_KEY));
+            if (driver != null && quit) {
+                driver.quit(context);
+            }
         }
+        // report
+        summary = new Summary(sections);
+        writer = WriterFactory.getWriter(context);
+        writer.write(context, summary, summary);
     }
 }

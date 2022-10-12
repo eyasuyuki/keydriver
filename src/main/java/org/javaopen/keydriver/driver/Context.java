@@ -35,6 +35,7 @@ public class Context {
     private Connection connection;
     private ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
     private Map<String, String> dic = new HashMap<>();
+    private String inputFileName;
 
     public Context() {
         this.getBundle();
@@ -69,5 +70,13 @@ public class Context {
 
     public Map<String, String> getDic() {
         return dic;
+    }
+
+    public String getInputFileName() {
+        return inputFileName;
+    }
+
+    public void setInputFileName(String inputFileName) {
+        this.inputFileName = inputFileName;
     }
 }

@@ -2,6 +2,7 @@ package org.javaopen.keydriver.data;
 
 import org.javaopen.keydriver.driver.Context;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 import static org.javaopen.keydriver.driver.Context.ARGUMENT_KEY;
@@ -12,7 +13,7 @@ import static org.javaopen.keydriver.driver.Context.OBJECT_KEY;
 import static org.javaopen.keydriver.driver.Context.OPTION_KEY;
 import static org.javaopen.keydriver.driver.Context.TARGET_KEY;
 
-public class Record {
+public class Test {
     private int number;
     private Keyword keyword;
     private Param target;
@@ -21,7 +22,18 @@ public class Record {
     private Param object;
     private Param option;
 
-    public Record(Context context, Map<String, String> record) {
+    private Timestamp start;
+    private Timestamp end;
+    private boolean executed;
+    private boolean success;
+    private boolean completed;
+    private boolean expectingFailure;
+    private String expected;
+    private String actual;
+    private String matchFailed;
+    private String stackTrace;
+
+    public Test(Context context, Map<String, String> record) {
         final Map<String, String> dic = context.getDic();
         setNumber(record.get(dic.get(NUMBER_KEY)));
         setKeyword(record.get(dic.get(KEYWORD_KEY)));
@@ -105,5 +117,85 @@ public class Record {
             return;
         }
         this.option = new Param(option);
+    }
+
+    public Timestamp getStart() {
+        return start;
+    }
+
+    public void setStart(Timestamp start) {
+        this.start = start;
+    }
+
+    public Timestamp getEnd() {
+        return end;
+    }
+
+    public void setEnd(Timestamp end) {
+        this.end = end;
+    }
+
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    public void setExecuted(boolean executed) {
+        this.executed = executed;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getExpected() {
+        return expected;
+    }
+
+    public void setExpected(String expected) {
+        this.expected = expected;
+    }
+
+    public String getActual() {
+        return actual;
+    }
+
+    public void setActual(String actual) {
+        this.actual = actual;
+    }
+
+    public String getMatchFailed() {
+        return matchFailed;
+    }
+
+    public void setMatchFailed(String matchFailed) {
+        this.matchFailed = matchFailed;
+    }
+
+    public String getStackTrace() {
+        return stackTrace;
+    }
+
+    public void setStackTrace(String stackTrace) {
+        this.stackTrace = stackTrace;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public boolean isExpectingFailure() {
+        return expectingFailure;
+    }
+
+    public void setExpectingFailure(boolean expectingFailure) {
+        this.expectingFailure = expectingFailure;
     }
 }

@@ -1,5 +1,8 @@
 package org.javaopen.keydriver.report;
 
+import java.sql.Timestamp;
+import java.time.Duration;
+
 public interface Report {
     int getExpectingTestCount();//予定テスト数
     int getExecutedTestCount();//実行されたテスト数
@@ -7,7 +10,6 @@ public interface Report {
     int getFailedTestCount();//失敗テスト数
     int getExpectingFailureCount();//予定失敗数
     int getUncompletedTestCount();//未完了テスト数
-    String getResourceInformation();//マシン利用状況、ディスク容量等
-    long getExpectingTime(); //予定時間
-    long getDuration();//実行時間
+    Timestamp getStartTime();// 開始時刻
+    Duration getDuration();//実行時間
 }

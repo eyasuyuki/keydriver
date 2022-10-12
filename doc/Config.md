@@ -9,7 +9,6 @@ src/main/resources/config_<locale>.properties
 
 | key | value            | description |
 ----- |------------------|--------------
-| output_directory | output file path | ex. ```output_directory=.``` |
 | log_directory | log file path | ex. ```log_directory=./log``` |   
 
 # Keyword aliases
@@ -63,3 +62,40 @@ Dynamic loading JDBC driver settings
 ------------------|-------|------------------------------------------------------------------------------
 | jdbc_driver_path | path string | ex.```jdbc_driver_path=/home/yasuyuki/lib/mysql-connector-java-8.0.29.jar``` |
 | jdbc_class_name  | class name | ex.```jdbc_class_name=com.mysql.jdbc.Driver``` | 
+
+# Output settings
+
+| key | value            | description |
+----- |------------------|--------------
+| output_directory | output file path | ex. ```output_directory=.``` |
+| log_directory | log file path | ex. ```log_directory=./log``` |   
+| output_extension | output file extension | ex ```xlsx``` |
+| output_prefix | output file prefix | ex. ```Test_Result_``` |
+| summary_sheet_name | summary sheet name | ex. ```Summary``` |
+| error_sheet_prefix | error sheet prefix | ex. ```[Error]_``` |
+
+## Test result label settings
+
+| key | value                         | description |
+----- |-------------------------------|--------------
+| expecting_test_count_label | Expecting test count label    | ex. ```Expecting test count``` |
+| expecting_failure_count_label | Expecting failure count label | ex. ```Expecting failure count``` |
+| executed_test_count_label | Executed test count label     | ex. ```Executed test count``` |
+| success_test_count_label | Success test count label      | ex. ```Success test count``` |
+| failed_test_count_label | Failed test count label       | ex. ```Failed test count``` |
+| uncompleted_test_count_label | Uncompleted test count label  | ex. ```Uncompleted test count``` |
+| start_time_label | Start time label              | ex. ```Start time``` |
+| duration_label | Duration label                | ex. ```Duration``` |
+
+
+## Test environment label settings
+
+arch_label |  | Architecture
+processor_count_label |  | Processor count
+load_average_label |  | Load average
+max_memory_label |  | Max memory
+free_memory_label |  | Free memory
+total_memory_label |  | Total memory
+usable_disk_label |  | Usable disk space
+free_disk_label |  | Free disk space
+total_disk_label |  | Total disk space

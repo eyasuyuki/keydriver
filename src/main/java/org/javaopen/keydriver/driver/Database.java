@@ -2,9 +2,11 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Keyword;
-import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -13,6 +15,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.logging.Logger;
 
 public class Database implements Driver {
@@ -46,25 +49,43 @@ public class Database implements Driver {
         }
     }
     @Override
-    public void perform(Context context, Section section, Record record) {
+    public void perform(Context context, Section section, Test test) {
+        test.setStart(new Timestamp(System.currentTimeMillis()));
         initDriver(context);
-        try (Connection conn = DriverManager.getConnection(record.getOption().getValue())) {
+        try (Connection conn = DriverManager.getConnection(test.getOption().getValue())) {
             Statement st = conn.createStatement();
-            String sql = record.getObject().getValue();
+            String sql = test.getObject().getValue();
             if (StringUtils.isEmpty(sql)) {
-                sql = record.getArgument().getValue();
+                sql = test.getArgument().getValue();
             }
-            if (record.getKeyword().equals(Keyword.ASSERT)) {
+            if (test.getKeyword().equals(Keyword.ASSERT)) {
                 ResultSet res = st.executeQuery(sql);
                 String value = res.getString(0);
-                if (!match(value, record.getArgument())) {
-                    logger.severe("Section: "+section.getName()+", Test: "+record.getComment()+" failed: expected: "+record.getArgument().getValue()+", but got: "+value);
+                if (!match(value, test.getArgument())) {
+                    test.setSuccess(false);
+                    test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+test.getArgument().toString()+", but got: "+value);
+                    logger.severe(test.getMatchFailed());
+                    throw new AssertionError(test.getMatchFailed());
+                } else {
+                    test.setSuccess(true);
                 }
-            } else if (record.getKeyword().equals(Keyword.EXECUTE)) {
+            } else if (test.getKeyword().equals(Keyword.EXECUTE)) {
                 st.execute(sql);
+                test.setSuccess(true);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            test.setCompleted(true);
+            test.setEnd(new Timestamp(System.currentTimeMillis()));
+        } catch (Throwable t) {
+            test.setSuccess(false);
+            test.setCompleted(false);
+
+            StringWriter writer = new StringWriter();
+            t.printStackTrace(new PrintWriter(writer));
+            test.setStackTrace(writer.toString());
+
+            test.setEnd(new Timestamp(System.currentTimeMillis()));
+
+            throw new RuntimeException(t);
         }
     }
 

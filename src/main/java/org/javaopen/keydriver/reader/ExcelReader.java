@@ -3,10 +3,16 @@ package org.javaopen.keydriver.reader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.ExcelStyleDateFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.javaopen.keydriver.data.Record;
+import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;
 
@@ -14,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +32,12 @@ public class ExcelReader implements Reader {
     private static final Logger logger = Logger.getLogger(ExcelReader.class.getName());
     private static final int MAX_SHEETS = 1000;
 
+    private XSSFWorkbook workbook;
     @Override
     public List<Section> read(Context context, String path) throws IOException {
         List<Section> sections = new ArrayList<>();
         final FileInputStream in = new FileInputStream(new File(path));
-        final XSSFWorkbook workbook = new XSSFWorkbook(in);
+        workbook = new XSSFWorkbook(in);
         final Iterable<Sheet> sheetIter = () -> workbook.sheetIterator();
         for (Sheet s: sheetIter) {
             Section section = new Section(s.getSheetName());
@@ -58,7 +66,7 @@ public class ExcelReader implements Reader {
                         Cell c = r.getCell(i);
                         cols.put(keys[i], getCellString(c));
                 }
-                section.getRecords().add(new Record(context, cols));
+                section.getTests().add(new Test(context, cols));
             }
         }
     }
@@ -82,10 +90,33 @@ public class ExcelReader implements Reader {
             boolean value = cell.getBooleanCellValue();
             return Boolean.toString(value);
         } else if (type == CellType.FORMULA) {
-            return cell.getCellFormula();
+            final boolean isDate = DateUtil.isCellDateFormatted(cell);
+            CreationHelper helper = workbook.getCreationHelper();
+            FormulaEvaluator evaluator = helper.createFormulaEvaluator();
+            CellValue value = evaluator.evaluate(cell);
+            String result = null;
+            if (value.getCellType().equals(CellType.STRING)) {
+                result = value.getStringValue();
+            } else if (value.getCellType().equals(CellType.NUMERIC)) {
+                if (isDate) {
+                    DataFormatter formatter = new DataFormatter();
+                    result = formatter.formatCellValue(cell, evaluator);
+                } else {
+                    result = Double.toString(value.getNumberValue());
+                }
+            } else if (value.getCellType().equals(CellType.BOOLEAN)) {
+                result = Boolean.toString(value.getBooleanValue());
+            }
+            return result;
         } else if (type == CellType.NUMERIC) {
-            double value = cell.getNumericCellValue();
-            return Integer.toString((int)value);
+            final boolean isDate = DateUtil.isCellDateFormatted(cell);
+            if (isDate) {
+                DataFormatter formatter = new DataFormatter();
+                return formatter.formatCellValue(cell);//TEST
+            } else {
+                double value = cell.getNumericCellValue();
+                return Integer.toString((int) value);
+            }
         } else {
             return "";
         }
