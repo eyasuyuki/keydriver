@@ -44,3 +44,5 @@ buildNumber.properties
 
 # IntelliJ IDEA
 .idea
+classes
+test-classes
