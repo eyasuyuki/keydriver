@@ -1,8 +1,12 @@
 package org.javaopen.keydriver.report;
 
+import com.spire.xls.Chart;
+import com.spire.xls.ExcelChartType;
 import com.spire.xls.ExcelVersion;
 import com.spire.xls.Workbook;
 import com.spire.xls.Worksheet;
+import com.spire.xls.charts.ChartSerie;
+import com.spire.xls.charts.ChartSeries;
 import org.apache.commons.io.FilenameUtils;
 import org.javaopen.keydriver.driver.Context;
 
@@ -108,7 +112,10 @@ public class ExcelWriter implements Writer {
         sheet.getCellRange("B18").setNumberValue(usage.getFreeMemory());
         sheet.getCellRange("B19").setNumberValue(usage.getTotalDisk());
 
-        // TODO pie chart
+        sheet.getAllocatedRange().autoFitColumns();
+
+        // chart
+        chart(sheet, report, usage);
 
         // TODO error sheet
 
@@ -140,5 +147,27 @@ public class ExcelWriter implements Writer {
         usableDiskLabel =               context.getBundle().getString(USABLE_DISK_LABEL_KEY);
         freeDiskLabel =                 context.getBundle().getString(FREE_DISK_LABEL_KEY);
         totalDiskLabel =                context.getBundle().getString(TOTAL_DISK_LABEL_KEY);
+    }
+
+    private void chart(Worksheet sheet, Report report, Usage usage) {
+        // pie chart
+        Chart chart = sheet.getCharts().add(ExcelChartType.Pie);
+
+        // chart data range
+        chart.setDataRange(sheet.getCellRange("B4:B5"));
+
+        // chart rectangle
+        chart.setLeftColumn(3);
+        chart.setRightColumn(7);
+        chart.setTopRow(1);
+        chart.setBottomRow(7);
+
+        // TODO chart labels
+        ChartSerie cs = chart.getSeries().get(0);
+        cs.setCategoryLabels(sheet.getCellRange("A4:A5"));
+        cs.setValues(sheet.getCellRange("B4:B5"));
+        cs.getDataPoints().getDefaultDataPoint().getDataLabels().hasValue(true);
+        chart.getPlotArea().getFill().setVisible(true);
+
     }
 }

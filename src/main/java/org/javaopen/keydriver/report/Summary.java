@@ -29,8 +29,8 @@ public class Summary implements Report, Usage {
         failedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isSuccess()).count();
         expectingFailureCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExpectingFailure).count();
         uncompletedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isCompleted()).count();
-        Optional<Test> min = sections.stream().flatMap(x -> x.getTests().stream()).min(Comparator.comparingLong(x -> x.getStart().getTime()));
-        Optional<Test> max = sections.stream().flatMap(x -> x.getTests().stream()).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
+        Optional<Test> min = sections.stream().flatMap(x -> x.getTests().stream().filter(y -> y.getStart() != null)).min(Comparator.comparingLong(x -> x.getStart().getTime()));
+        Optional<Test> max = sections.stream().flatMap(x -> x.getTests().stream().filter(y -> y.getEnd() != null)).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
         min.ifPresent(test -> startTime = test.getStart());
 
         if (min.isPresent() && max.isPresent()) {
