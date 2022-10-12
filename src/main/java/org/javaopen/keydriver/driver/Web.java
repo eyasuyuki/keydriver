@@ -97,13 +97,11 @@ public class Web implements Driver {
             if (key.equals(Keyword.CAPTURE) || autoCapture) {
                 capture(driver, context, section, test);
             }
-            test.setCompleted(true);
             test.setSuccess(true);
             // set end
             test.setEnd(new Timestamp(System.currentTimeMillis()));
         } catch (Throwable t) {
             test.setSuccess(false);
-            test.setCompleted(false);
 
             StringWriter writer = new StringWriter();
             PrintWriter printWriter = new PrintWriter(writer);

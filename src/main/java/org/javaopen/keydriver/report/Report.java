@@ -9,7 +9,7 @@ public interface Report {
     int getSucceedTestCount();//成功テスト数
     int getFailedTestCount();//失敗テスト数
     int getExpectingFailureCount();//予定失敗数
-    int getUncompletedTestCount();//未完了テスト数
+    int getNotExecutedTestCount();//未実行テスト数
     Timestamp getStartTime();// 開始時刻
     Duration getDuration();//実行時間
 }

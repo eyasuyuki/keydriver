@@ -73,11 +73,9 @@ public class Database implements Driver {
                 st.execute(sql);
                 test.setSuccess(true);
             }
-            test.setCompleted(true);
             test.setEnd(new Timestamp(System.currentTimeMillis()));
         } catch (Throwable t) {
             test.setSuccess(false);
-            test.setCompleted(false);
 
             StringWriter writer = new StringWriter();
             t.printStackTrace(new PrintWriter(writer));

@@ -1,9 +1,7 @@
 package org.javaopen.keydriver.report;
 
-import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Test;
-import org.javaopen.keydriver.driver.Context;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -18,7 +16,7 @@ public class Summary implements Report, Usage {
     private int successTestCount;
     private int failedTestCount;
     private int expectingFailureCount;
-    private int uncompletedTestCount;
+    private int notExecutedTestCount;
     private Timestamp startTime;
     private Duration duration;
 
@@ -29,9 +27,9 @@ public class Summary implements Report, Usage {
         expectingTestCount = (int)sections.stream().mapToLong(x -> x.getTests().size()).sum();
         executedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExecuted).count();
         successTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isSuccess).count();
-        failedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isSuccess()).count();
+        failedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> x.isExecuted() && !x.isSuccess()).count();
         expectingFailureCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExpectingFailure).count();
-        uncompletedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isCompleted()).count();
+        notExecutedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isExecuted()).count();
         Optional<Test> min = sections.stream().flatMap(x -> x.getTests().stream().filter(y -> y.getStart() != null)).min(Comparator.comparingLong(x -> x.getStart().getTime()));
         Optional<Test> max = sections.stream().flatMap(x -> x.getTests().stream().filter(y -> y.getEnd() != null)).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
         min.ifPresent(test -> startTime = test.getStart());
@@ -68,8 +66,8 @@ public class Summary implements Report, Usage {
     }
 
     @Override
-    public int getUncompletedTestCount() {
-        return uncompletedTestCount;
+    public int getNotExecutedTestCount() {
+        return notExecutedTestCount;
     }
 
     @Override

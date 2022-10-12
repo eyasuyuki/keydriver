@@ -6,11 +6,9 @@ import com.spire.xls.ExcelVersion;
 import com.spire.xls.Workbook;
 import com.spire.xls.Worksheet;
 import com.spire.xls.charts.ChartSerie;
-import com.spire.xls.charts.ChartSeries;
 import org.apache.commons.io.FilenameUtils;
 import org.javaopen.keydriver.driver.Context;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,7 +23,7 @@ public class ExcelWriter implements Writer {
     public static final String EXECUTED_TEST_COUNT_LABEL_KEY =      "executed_test_count_label";
     public static final String SUCCESS_TEST_COUNT_LABEL_KEY =       "success_test_count_label";
     public static final String FAILED_TEST_COUNT_LABEL_KEY =        "failed_test_count_label";
-    public static final String UNCOMPLETED_TEST_COUNT_LABEL_KEY =   "uncompleted_test_count_label";
+    public static final String NOT_EXECUTED_TEST_COUNT_KEY =        "not_executed_test_count";
     public static final String START_TIME_LABEL_KEY =               "start_time_label";
     public static final String DURATION_LABEL_KEY =                 "duration_label";
     public static final String ARCH_LABEL_KEY =                     "arch_label";
@@ -48,7 +46,7 @@ public class ExcelWriter implements Writer {
     private String executedTestCountLabel;
     private String successTestCountLabel;
     private String failedTestCountLabel;
-    private String uncompletedTestCountLabel;
+    private String notExecutedTestCount;
     private String startTimeLabel;
     private String durationLabel;
     private String archLabel;
@@ -76,7 +74,7 @@ public class ExcelWriter implements Writer {
         sheet.getCellRange("A3").setValue(executedTestCountLabel);
         sheet.getCellRange("A4").setValue(successTestCountLabel);
         sheet.getCellRange("A5").setValue(failedTestCountLabel);
-        sheet.getCellRange("A6").setValue(uncompletedTestCountLabel);
+        sheet.getCellRange("A6").setValue(notExecutedTestCount);
 
         sheet.getCellRange("A8").setValue(startTimeLabel);
         sheet.getCellRange("A9").setValue(durationLabel);
@@ -97,7 +95,7 @@ public class ExcelWriter implements Writer {
         sheet.getCellRange("B3").setNumberValue(report.getExecutedTestCount());
         sheet.getCellRange("B4").setNumberValue(report.getSucceedTestCount());
         sheet.getCellRange("B5").setNumberValue(report.getFailedTestCount());
-        sheet.getCellRange("B6").setNumberValue(report.getUncompletedTestCount());
+        sheet.getCellRange("B6").setNumberValue(report.getNotExecutedTestCount());
 
         if (report.getStartTime() != null) {
             sheet.getCellRange("B8").setValue(report.getStartTime().toString());//TODO format
@@ -139,7 +137,7 @@ public class ExcelWriter implements Writer {
         executedTestCountLabel =        context.getBundle().getString(EXECUTED_TEST_COUNT_LABEL_KEY);
         successTestCountLabel =         context.getBundle().getString(SUCCESS_TEST_COUNT_LABEL_KEY);
         failedTestCountLabel =          context.getBundle().getString(FAILED_TEST_COUNT_LABEL_KEY);
-        uncompletedTestCountLabel =     context.getBundle().getString(UNCOMPLETED_TEST_COUNT_LABEL_KEY);
+        notExecutedTestCount =          context.getBundle().getString(NOT_EXECUTED_TEST_COUNT_KEY);
         startTimeLabel =                context.getBundle().getString(START_TIME_LABEL_KEY);
         durationLabel =                 context.getBundle().getString(DURATION_LABEL_KEY);
         archLabel =                     context.getBundle().getString(ARCH_LABEL_KEY);
@@ -158,18 +156,18 @@ public class ExcelWriter implements Writer {
         Chart chart = sheet.getCharts().add(ExcelChartType.Pie);
 
         // chart data range
-        chart.setDataRange(sheet.getCellRange("B4:B5"));
+        chart.setDataRange(sheet.getCellRange("B4:B6"));
 
         // chart rectangle
         chart.setLeftColumn(3);
-        chart.setRightColumn(7);
+        chart.setRightColumn(8);
         chart.setTopRow(1);
         chart.setBottomRow(7);
 
         // TODO chart labels
         ChartSerie cs = chart.getSeries().get(0);
-        cs.setCategoryLabels(sheet.getCellRange("A4:A5"));
-        cs.setValues(sheet.getCellRange("B4:B5"));
+        cs.setCategoryLabels(sheet.getCellRange("A4:A6"));
+        cs.setValues(sheet.getCellRange("B4:B6"));
         cs.getDataPoints().getDefaultDataPoint().getDataLabels().hasValue(true);
         chart.getPlotArea().getFill().setVisible(true);
 

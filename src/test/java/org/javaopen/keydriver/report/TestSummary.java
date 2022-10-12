@@ -1,6 +1,5 @@
 package org.javaopen.keydriver.report;
 
-import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.javaopen.keydriver.data.DummyTests;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Matches;
@@ -66,7 +65,7 @@ public class TestSummary {
     }
     @Test
     public void testGetUncompletedTestCount() {
-        assertThat(summary.getUncompletedTestCount(), is(1));
+        assertThat(summary.getNotExecutedTestCount(), is(1));
     }
     @Test
     public void testGetStartTime() {

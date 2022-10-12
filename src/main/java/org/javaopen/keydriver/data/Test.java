@@ -26,7 +26,6 @@ public class Test {
     private Timestamp end;
     private boolean executed;
     private boolean success;
-    private boolean completed;
     private boolean expectingFailure;
     private String expected;
     private String actual;
@@ -183,13 +182,6 @@ public class Test {
         this.stackTrace = stackTrace;
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
 
     public boolean isExpectingFailure() {
         return expectingFailure;
