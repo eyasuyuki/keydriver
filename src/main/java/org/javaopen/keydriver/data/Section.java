@@ -17,10 +17,14 @@ public class Section {
     private boolean executed;
 
     public void run(Context context) {
+        if (isExecuted()) {
+            return;
+        }
         for (Test t : getTests()) {
             context.setCurrentDriver(DriverFactory.getDriver(t));
             context.getCurrentDriver().perform(context, this, t);
         }
+        setExecuted(true);
     }
 
     public String getName() {

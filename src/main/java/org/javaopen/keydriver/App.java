@@ -36,8 +36,8 @@ public class App {
             logger.error(e.getMessage());
         } finally {
             boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(Web.BROWSER_QUIT_KEY));
-            if (context.getCurrentDriver() != null && quit) {
-                context.getCurrentDriver().quit(context);
+            if (context.getDriver() != null && quit) {
+                context.getDriver().quit();
             }
         }
         // report
