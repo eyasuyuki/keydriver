@@ -20,7 +20,11 @@ public class SystemInformation implements Usage {
 
     @Override
     public double getLoadAverage() {
-        return bean.getSystemLoadAverage();
+        double value = bean.getSystemLoadAverage();
+        if (value < 0.0) {
+            value = ((com.sun.management.OperatingSystemMXBean)bean).getSystemCpuLoad();
+        }
+        return value;
     }
 
     @Override

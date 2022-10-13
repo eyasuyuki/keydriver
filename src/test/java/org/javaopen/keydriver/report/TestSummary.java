@@ -64,7 +64,7 @@ public class TestSummary {
         assertThat(summary.getExpectingFailureCount(), is(1));
     }
     @Test
-    public void testNotExecutedTestCount() {
+    public void testGetNotExecutedTestCount() {
         assertThat(summary.getNotExecutedTestCount(), is(0));
     }
     @Test
