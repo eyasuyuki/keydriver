@@ -29,6 +29,7 @@ public class App {
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
             sections = reader.read(context, args[0]);
+            context.setSectionMap(sections);
             for (Section s: sections) {
                 s.run(context);
             }

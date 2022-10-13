@@ -1,6 +1,7 @@
 package org.javaopen.keydriver.driver;
 
 import org.apache.commons.lang.StringUtils;
+import org.javaopen.keydriver.data.Section;
 import org.openqa.selenium.WebDriver;
 
 import java.sql.Connection;
@@ -36,6 +37,7 @@ public class Context {
     private ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
     private Map<String, String> dic = new HashMap<>();
     private String inputFileName;
+    private Map<String, Section> sectionMap = new HashMap<>();
 
     public Context() {
         this.getBundle();
@@ -78,5 +80,15 @@ public class Context {
 
     public void setInputFileName(String inputFileName) {
         this.inputFileName = inputFileName;
+    }
+
+    public void setSectionMap(List<Section> sections) {
+        for (Section s: sections) {
+            sectionMap.put(s.getName(), s);
+        }
+    }
+
+    public Map<String, Section> getSectionMap() {
+        return sectionMap;
     }
 }
