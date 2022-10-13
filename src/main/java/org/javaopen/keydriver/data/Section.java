@@ -21,8 +21,8 @@ public class Section {
             return;
         }
         for (Test t : getTests()) {
-            context.setCurrentDriver(DriverFactory.getDriver(t));
-            context.getCurrentDriver().perform(context, this, t);
+            Driver driver = DriverFactory.getDriver(t);
+            driver.perform(context, this, t);
         }
         setExecuted(true);
     }
