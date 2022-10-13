@@ -30,7 +30,7 @@ public class TestSystemInformation {
 
     @Test
     public void testGetLoadAverage() {
-        assertThat(usage.getLoadAverage(), is(greaterThan(0.0)));
+        assertThat(usage.getLoadAverage(), is(greaterThanOrEqualTo(0.0)));
     }
 
     @Test
