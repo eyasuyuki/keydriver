@@ -46,3 +46,5 @@ buildNumber.properties
 .idea
 classes
 test-classes
+archive-tmp
+maven-archiver
