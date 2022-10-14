@@ -2,10 +2,7 @@ package org.javaopen.keydriver;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.driver.Context;
-import org.javaopen.keydriver.driver.Driver;
-import org.javaopen.keydriver.driver.DriverFactory;
 import org.javaopen.keydriver.driver.Web;
 import org.javaopen.keydriver.reader.Reader;
 import org.javaopen.keydriver.reader.ReaderFactory;
@@ -33,8 +30,8 @@ public class App {
             logger.error(e.getMessage());
         } finally {
             boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(Web.BROWSER_QUIT_KEY));
-            if (context.getDriver() != null && quit) {
-                context.getDriver().quit();
+            if (context.getWebDriver() != null && quit) {
+                context.getWebDriver().quit();
             }
         }
         // report

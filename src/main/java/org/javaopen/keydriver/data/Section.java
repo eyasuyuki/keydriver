@@ -19,7 +19,7 @@ public class Section {
 
     public void run(Context context) {
         for (Test t : getTests()) {
-            Driver driver = DriverFactory.getDriver(t);
+            Driver driver = context.getDriver(t);
             driver.perform(context, this, t);
         }
         setRan(true);

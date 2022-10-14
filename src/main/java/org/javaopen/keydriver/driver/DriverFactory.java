@@ -25,7 +25,7 @@ public class DriverFactory {
     private static final Driver web = new Web();
     private static final Driver database = new Database();
 
-    public static Driver getDriver(Test test) {
+    static Driver getDriver(Test test) {
         if (WEB_KEYWORDS.contains(test.getKeyword())) {
             return web;
         } else if (test.getKeyword().equals(Keyword.EXECUTE)) {

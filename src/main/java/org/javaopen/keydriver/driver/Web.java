@@ -137,7 +137,7 @@ public class Web implements Driver {
 
     @Override
     public void quit(Context context) {
-        WebDriver driver = context.getDriver();
+        WebDriver driver = context.getWebDriver();
         boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(BROWSER_QUIT_KEY));
         if (driver != null && quit) {
             driver.quit();
@@ -204,14 +204,14 @@ public class Web implements Driver {
     }
 
     private WebDriver getDriver(Context context, int wait) {
-        WebDriver driver = context.getDriver();
+        WebDriver driver = context.getWebDriver();
         if (driver == null) {
             String browser = context.getBundle().getString(WebDriverFactory.BROWSER_KEY);
             driver = WebDriverFactory.getInstance(context, browser);
             // set browser wait
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));
             // set driver
-            context.setDriver(driver);
+            context.setWebDriver(driver);
         }
         return driver;
     }

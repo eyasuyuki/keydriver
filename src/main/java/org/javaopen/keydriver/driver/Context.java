@@ -2,6 +2,7 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.Test;
 import org.openqa.selenium.WebDriver;
 
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class Context {
     public static Context getContext() {
         return context;
     }
-    private WebDriver driver;
+    private WebDriver webDriver;
     private Connection connection;
     private ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
     private Map<String, String> dic = new HashMap<>();
@@ -50,12 +51,16 @@ public class Context {
         }
     }
 
-    public WebDriver getDriver() {
-        return driver;
+    public Driver getDriver(Test test) {
+        return DriverFactory.getDriver(test);
     }
 
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
+    public WebDriver getWebDriver() {
+        return webDriver;
+    }
+
+    public void setWebDriver(WebDriver webDriver) {
+        this.webDriver = webDriver;
     }
 
     public Connection getConnection() {
