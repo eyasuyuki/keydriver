@@ -25,8 +25,8 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestWeb {
     private DummyTests dummyTests;

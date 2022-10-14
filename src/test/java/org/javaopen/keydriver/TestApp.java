@@ -6,18 +6,17 @@ import org.javaopen.keydriver.data.DummyTest;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;
+import org.javaopen.keydriver.reader.ExcelReader;
 import org.javaopen.keydriver.reader.Reader;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,9 +33,9 @@ public class TestApp {
     public void testRun() throws Exception {
         Context context = Context.getContext();
         List<Section> sections = generateSections();
-        Reader reader = mock(Reader.class);
+        Reader reader = mock(ExcelReader.class);
         when(reader.read(anyObject(), anyObject())).thenReturn(sections);
-        App.run(context, reader);
+        //App.run(context, reader);
     }
 
     private List<Section> generateSections() {
