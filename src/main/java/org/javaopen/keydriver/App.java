@@ -47,7 +47,7 @@ public class App {
         sections = reader.read(context, context.getInputFileName());
         context.setSectionMap(sections);
         for (Section s: sections) {
-            s.run(context);
+            s.execute(context);
         }
     }
 

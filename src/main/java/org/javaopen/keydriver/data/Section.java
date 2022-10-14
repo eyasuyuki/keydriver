@@ -15,15 +15,21 @@ public class Section {
     private String name;
     private List<Test> tests = new ArrayList<>();
     private boolean executed;
+    private boolean ran;
 
     public void run(Context context) {
-        if (isExecuted()) {
-            return;
-        }
         for (Test t : getTests()) {
             Driver driver = DriverFactory.getDriver(t);
             driver.perform(context, this, t);
         }
+        setRan(true);
+    }
+
+    public void execute(Context context) {
+        if (isExecuted() || isRan()) {
+            return;
+        }
+        run(context);
         setExecuted(true);
     }
 
@@ -41,6 +47,14 @@ public class Section {
 
     public void setExecuted(boolean executed) {
         this.executed = executed;
+    }
+
+    public boolean isRan() {
+        return ran;
+    }
+
+    public void setRan(boolean ran) {
+        this.ran = ran;
     }
 }
 
