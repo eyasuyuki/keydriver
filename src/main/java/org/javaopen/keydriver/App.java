@@ -28,11 +28,7 @@ public class App {
         context.setInputFileName(args[0]);
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
-            sections = reader.read(context, args[0]);
-            context.setSectionMap(sections);
-            for (Section s: sections) {
-                s.run(context);
-            }
+            run(context, reader);
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -45,6 +41,14 @@ public class App {
         summary = new Summary(sections);
         writer = WriterFactory.getWriter(context);
         writer.write(context, summary, summary);
+    }
+
+    static void run(Context context, Reader reader) throws Exception {
+        sections = reader.read(context, context.getInputFileName());
+        context.setSectionMap(sections);
+        for (Section s: sections) {
+            s.run(context);
+        }
     }
 
 }
