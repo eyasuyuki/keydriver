@@ -48,3 +48,4 @@ classes
 test-classes
 archive-tmp
 maven-archiver
+maven-status
