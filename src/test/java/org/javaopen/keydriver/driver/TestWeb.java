@@ -25,8 +25,8 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestWeb {
     private DummyTests dummyTests;
@@ -39,10 +39,10 @@ public class TestWeb {
         Locale.setDefault(Locale.US);//important
 
         dummyTests = new DummyTests();
-        context = new Context();
+        context = Context.getContext();
         driver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
         element = mock(WebElement.class);
-        context.setDriver(driver);
+        context.setWebDriver(driver);
         // mock screenshot
         when(((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE))
             .thenReturn(new File("./src/test/resources/screenshot.png"));
@@ -59,7 +59,7 @@ public class TestWeb {
     public void testOpen() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.OPEN);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -82,7 +82,7 @@ public class TestWeb {
     public void testOpenException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.OPEN);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -109,7 +109,7 @@ public class TestWeb {
     public void testClick() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLICK);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -122,7 +122,7 @@ public class TestWeb {
     public void testClickException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLICK);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -139,7 +139,7 @@ public class TestWeb {
     public void testInput() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.INPUT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -152,7 +152,7 @@ public class TestWeb {
     public void testInputException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.INPUT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -169,7 +169,7 @@ public class TestWeb {
     public void testClear() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLEAR);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -183,7 +183,7 @@ public class TestWeb {
     public void testClearException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CLEAR);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -200,7 +200,7 @@ public class TestWeb {
     public void testSelect() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.SELECT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -219,7 +219,7 @@ public class TestWeb {
     public void testSelectException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.SELECT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -236,7 +236,7 @@ public class TestWeb {
     public void testCapture() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CAPTURE);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -249,7 +249,7 @@ public class TestWeb {
     public void testCaptureException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CAPTURE);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -266,7 +266,7 @@ public class TestWeb {
     public void testAccept() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ACCEPT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -279,7 +279,7 @@ public class TestWeb {
     public void testAcceptException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ACCEPT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -296,7 +296,7 @@ public class TestWeb {
     public void testDismiss() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.DISMISS);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -309,7 +309,7 @@ public class TestWeb {
     public void testDismissException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.DISMISS);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -326,7 +326,7 @@ public class TestWeb {
     public void testUpload() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.UPLOAD);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -339,7 +339,7 @@ public class TestWeb {
     public void testUploadException() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.UPLOAD);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -356,7 +356,7 @@ public class TestWeb {
     public void testAssert() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ASSERT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -371,7 +371,7 @@ public class TestWeb {
     public void testAssertFailed() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ASSERT);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
@@ -391,7 +391,7 @@ public class TestWeb {
             .findFirst()
             .orElse(null);
 
-        Driver d = DriverFactory.getDriver(test);
+        Driver d = context.getDriver(test);
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 

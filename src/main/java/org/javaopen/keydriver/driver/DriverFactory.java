@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DriverFactory {
-    private static List<Keyword> WEB_KEYWORDS = Arrays.asList(new Keyword[]{
+    public static List<Keyword> WEB_KEYWORDS = Arrays.asList(new Keyword[]{
         Keyword.OPEN,
         Keyword.CLICK,
         Keyword.INPUT,
@@ -19,12 +19,13 @@ public class DriverFactory {
         Keyword.ACCEPT,
         Keyword.DISMISS,
         Keyword.UPLOAD,
+        Keyword._DIRECTIVE,
     });
 
     private static final Driver web = new Web();
     private static final Driver database = new Database();
 
-    public static Driver getDriver(Test test) {
+    static Driver getDriver(Test test) {
         if (WEB_KEYWORDS.contains(test.getKeyword())) {
             return web;
         } else if (test.getKeyword().equals(Keyword.EXECUTE)) {

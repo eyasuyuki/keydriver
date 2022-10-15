@@ -1,6 +1,8 @@
 package org.javaopen.keydriver.driver;
 
 import org.apache.commons.lang.StringUtils;
+import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.Test;
 import org.openqa.selenium.WebDriver;
 
 import java.sql.Connection;
@@ -31,11 +33,12 @@ public class Context {
     public static Context getContext() {
         return context;
     }
-    private WebDriver driver;
+    private WebDriver webDriver;
     private Connection connection;
     private ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
     private Map<String, String> dic = new HashMap<>();
     private String inputFileName;
+    private Map<String, Section> sectionMap = new HashMap<>();
 
     public Context() {
         this.getBundle();
@@ -48,12 +51,16 @@ public class Context {
         }
     }
 
-    public WebDriver getDriver() {
-        return driver;
+    public Driver getDriver(Test test) {
+        return DriverFactory.getDriver(test);
     }
 
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
+    public WebDriver getWebDriver() {
+        return webDriver;
+    }
+
+    public void setWebDriver(WebDriver webDriver) {
+        this.webDriver = webDriver;
     }
 
     public Connection getConnection() {
@@ -78,5 +85,15 @@ public class Context {
 
     public void setInputFileName(String inputFileName) {
         this.inputFileName = inputFileName;
+    }
+
+    public void setSectionMap(List<Section> sections) {
+        for (Section s: sections) {
+            sectionMap.put(s.getName(), s);
+        }
+    }
+
+    public Map<String, Section> getSectionMap() {
+        return sectionMap;
     }
 }

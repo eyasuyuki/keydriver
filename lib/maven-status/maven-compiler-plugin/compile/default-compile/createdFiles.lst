@@ -1,8 +1,10 @@
 org/javaopen/keydriver/data/DataType.class
 org/javaopen/keydriver/driver/Context.class
+org/javaopen/keydriver/report/Summary.class
 org/javaopen/keydriver/data/Tag.class
 org/javaopen/keydriver/reader/ExcelReader.class
 org/javaopen/keydriver/data/Section.class
+org/javaopen/keydriver/report/Usage.class
 org/javaopen/keydriver/driver/Web.class
 org/javaopen/keydriver/report/ExcelWriter.class
 org/javaopen/keydriver/report/Writer.class
@@ -10,9 +12,14 @@ org/javaopen/keydriver/data/Param.class
 org/javaopen/keydriver/reader/ReaderFactory.class
 org/javaopen/keydriver/driver/Driver.class
 org/javaopen/keydriver/data/Keyword.class
+org/javaopen/keydriver/report/SystemInformation.class
+org/javaopen/keydriver/data/Test.class
+org/javaopen/keydriver/browser/WebDriverFactory.class
+org/javaopen/keydriver/browser/Browser.class
 org/javaopen/keydriver/reader/Reader.class
 org/javaopen/keydriver/driver/Database.class
 org/javaopen/keydriver/driver/DriverFactory.class
+org/javaopen/keydriver/report/Report.class
 org/javaopen/keydriver/App.class
 org/javaopen/keydriver/report/WriterFactory.class
 org/javaopen/keydriver/data/Matches.class

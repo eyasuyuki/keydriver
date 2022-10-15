@@ -28,7 +28,7 @@ public class TestSummary {
     public void setUp() {
         Locale.setDefault(Locale.US);
 
-        context = new Context();
+        context = Context.getContext();
         dummyTests = new DummyTests();
         for (org.javaopen.keydriver.data.Test t: dummyTests.getTests()) {
             if (t.getKeyword().equals(Keyword.ASSERT) && t.getArgument().getTag().equals(Matches.FAIL)) {
@@ -104,7 +104,7 @@ public class TestSummary {
         setStartEnd(test);
         test.setExecuted(true);
         test.setSuccess(false);
-              test.setExpectingFailure(true);
+        test.setExpectingFailure(true);
         test.setMatchFailed("dummy");
         test.setExpected("dummy");
         test.setActual("wrong");

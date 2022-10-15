@@ -8,6 +8,7 @@ import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
+import org.javaopen.keydriver.data.Tag;
 import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.browser.WebDriverFactory;
@@ -92,6 +93,21 @@ public class Web implements Driver {
                 doUpload(driver, argument, object);
             } else if (key.equals(Keyword.ASSERT)) {
                 doAssert(section, test, driver, object, argument);
+            } else if (key.equals(Keyword._DIRECTIVE)) {
+                Tag tag = null;
+                String sheetName = null;
+                if (object != null) {
+                    tag = object.getTag();
+                    sheetName = object.getValue();
+                }
+                if (tag == null && argument != null) {
+                    tag = argument.getTag();
+                    sheetName = argument.getValue();
+                }
+                if (tag != null && tag.equals(DataType.SHEET)) {
+                    Section s = context.getSectionMap().get(sheetName);
+                    s.run(context);
+                }
             }
             // manual capture or auto
             if (key.equals(Keyword.CAPTURE) || autoCapture) {
@@ -121,7 +137,7 @@ public class Web implements Driver {
 
     @Override
     public void quit(Context context) {
-        WebDriver driver = context.getDriver();
+        WebDriver driver = context.getWebDriver();
         boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(BROWSER_QUIT_KEY));
         if (driver != null && quit) {
             driver.quit();
@@ -188,14 +204,14 @@ public class Web implements Driver {
     }
 
     private WebDriver getDriver(Context context, int wait) {
-        WebDriver driver = context.getDriver();
+        WebDriver driver = context.getWebDriver();
         if (driver == null) {
             String browser = context.getBundle().getString(WebDriverFactory.BROWSER_KEY);
             driver = WebDriverFactory.getInstance(context, browser);
             // set browser wait
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));
             // set driver
-            context.setDriver(driver);
+            context.setWebDriver(driver);
         }
         return driver;
     }

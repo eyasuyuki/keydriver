@@ -2,10 +2,7 @@ package org.javaopen.keydriver;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.driver.Context;
-import org.javaopen.keydriver.driver.Driver;
-import org.javaopen.keydriver.driver.DriverFactory;
 import org.javaopen.keydriver.driver.Web;
 import org.javaopen.keydriver.reader.Reader;
 import org.javaopen.keydriver.reader.ReaderFactory;
@@ -21,7 +18,6 @@ public class App {
     private static Logger logger = LoggerFactory.getLogger(App.class);
     private static Context context;
     private static List<Section> sections;
-    private static Driver driver;
     private static Summary summary;
     private static Writer writer;
     public static void main(String args[]) {
@@ -29,20 +25,13 @@ public class App {
         context.setInputFileName(args[0]);
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
-            sections = reader.read(context, args[0]);
-            driver = null;
-            for (Section s: sections) {
-                for (Test t: s.getTests()) {
-                    driver = DriverFactory.getDriver(t);
-                    driver.perform(context, s, t);
-                }
-            }
+            execute(context, reader);
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
             boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(Web.BROWSER_QUIT_KEY));
-            if (driver != null && quit) {
-                driver.quit(context);
+            if (context.getWebDriver() != null && quit) {
+                context.getWebDriver().quit();
             }
         }
         // report
@@ -50,4 +39,13 @@ public class App {
         writer = WriterFactory.getWriter(context);
         writer.write(context, summary, summary);
     }
+
+    static void execute(Context context, Reader reader) throws Exception {
+        sections = reader.read(context, context.getInputFileName());
+        context.setSectionMap(sections);
+        for (Section s: sections) {
+            s.execute(context);
+        }
+    }
+
 }
