@@ -9,7 +9,7 @@ JDK 11 and below.
 
 Because Flee Spire.XLS 5.1.0 does not work JDK 16 or above.
 
-# diagram
+# Sequence diagram
 
 ```mermaid
 sequenceDiagram
