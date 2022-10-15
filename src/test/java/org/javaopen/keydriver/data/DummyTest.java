@@ -50,9 +50,9 @@ public class DummyTest {
 
     private static Test getDirective() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String keyword = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(20)+1);
-        String sheetName = Integer.toString(random.nextInt(20)+1);
+        String keyword = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
+        String sheetName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", keyword},
@@ -73,8 +73,8 @@ public class DummyTest {
 
     private static Test getClick() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(10)+1);
-        String buttonName = Integer.toString(random.nextInt(20)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
+        String buttonName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "click" },
@@ -85,9 +85,9 @@ public class DummyTest {
 
     private static Test getSelect() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(10)+1);
-        String argument = Integer.toString(random.nextInt(10)+1);
-        String inputName = Integer.toString(random.nextInt(20)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
+        String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
+        String inputName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "select"},
@@ -100,9 +100,9 @@ public class DummyTest {
 
     private static Test getInput() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(10)+1);
-        String argument = Integer.toString(random.nextInt(10)+1);
-        String inputName = Integer.toString(random.nextInt(20)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
+        String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
+        String inputName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "input" },
@@ -114,8 +114,8 @@ public class DummyTest {
 
     private static Test getClear() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(10)+1);
-        String inputName = Integer.toString(random.nextInt(20)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
+        String inputName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "clear" },
@@ -126,7 +126,7 @@ public class DummyTest {
 
     private static Test getAccept() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String comment = Integer.toString(random.nextInt(20)+1);
+        String comment = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "accept" },
@@ -136,7 +136,7 @@ public class DummyTest {
 
     private static Test getDismiss() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String comment = Integer.toString(random.nextInt(20)+1);
+        String comment = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "dismiss" },
@@ -146,7 +146,7 @@ public class DummyTest {
 
     private static Test getCapture() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String comment = Integer.toString(random.nextInt(20)+1);
+        String comment = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "capture" },
@@ -156,10 +156,10 @@ public class DummyTest {
 
     private static Test getAssert() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(20)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String argument = Boolean.toString(random.nextBoolean());
-        String elementName = Integer.toString(random.nextInt(20)+1);
-        String attribute = Integer.toString(random.nextInt(10)+1);
+        String elementName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
+        String attribute = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         return new Test(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "assert"},
@@ -171,10 +171,10 @@ public class DummyTest {
 
     private static Test getExecute() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(20)+1);
-        String argument = Integer.toString(random.nextInt(60)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
+        String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(60)+1);
         String sql = Integer.toString(random.nextInt(20)+1);
-        String url = Integer.toString(random.nextInt(20)+1);
+        String url = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         return new Test(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "execute"},
@@ -187,10 +187,10 @@ public class DummyTest {
 
     private static Test getUpload() {
         String num = Integer.toString(random.nextInt(20)+1);
-        String target = Integer.toString(random.nextInt(20)+1);
-        String argument = Integer.toString(random.nextInt(60)+1);
-        String elementName = Integer.toString(random.nextInt(20)+1);
-        String attribute = Integer.toString(random.nextInt(10)+1);
+        String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
+        String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(60)+1);
+        String elementName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
+        String attribute = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         return new Test(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "upload"},

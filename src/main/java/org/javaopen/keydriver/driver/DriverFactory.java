@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DriverFactory {
-    private static List<Keyword> WEB_KEYWORDS = Arrays.asList(new Keyword[]{
+    public static List<Keyword> WEB_KEYWORDS = Arrays.asList(new Keyword[]{
         Keyword.OPEN,
         Keyword.CLICK,
         Keyword.INPUT,

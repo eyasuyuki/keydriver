@@ -18,10 +18,7 @@ public class Section {
     private boolean ran;
 
     public void run(Context context) {
-        for (Test t : getTests()) {
-            Driver driver = context.getDriver(t);
-            driver.perform(context, this, t);
-        }
+        loop(context);
         setRan(true);
     }
 
@@ -29,8 +26,15 @@ public class Section {
         if (isExecuted() || isRan()) {
             return;
         }
-        run(context);
+        loop(context);
         setExecuted(true);
+    }
+
+    private void loop(Context context) {
+        for (Test t : getTests()) {
+            Driver driver = context.getDriver(t);
+            driver.perform(context, this, t);
+        }
     }
 
     public String getName() {

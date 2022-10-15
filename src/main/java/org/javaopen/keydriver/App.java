@@ -25,7 +25,7 @@ public class App {
         context.setInputFileName(args[0]);
         Reader reader = ReaderFactory.getReader(args[0]);
         try {
-            run(context, reader);
+            execute(context, reader);
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -40,7 +40,7 @@ public class App {
         writer.write(context, summary, summary);
     }
 
-    static void run(Context context, Reader reader) throws Exception {
+    static void execute(Context context, Reader reader) throws Exception {
         sections = reader.read(context, context.getInputFileName());
         context.setSectionMap(sections);
         for (Section s: sections) {
