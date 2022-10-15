@@ -64,51 +64,11 @@ public class Web implements Driver {
 
         // get test fields
         Keyword key = test.getKeyword();
-        Param target = test.getTarget();
-        Param argument = test.getArgument();
-        Param object = test.getObject();
-        Param option = test.getOption();
 
         try {
             test.setExecuted(true);
             // perform
-            if (key.equals(Keyword.OPEN)) {
-                driver.get(target.getValue());
-            } else if (key.equals(Keyword.CLICK)) {
-                findElement(driver, object).click();
-            } else if (key.equals(Keyword.INPUT)) {
-                findElement(driver, object).sendKeys(argument.getValue());
-            } else if (key.equals(Keyword.CLEAR)) {
-                findElement(driver, object).clear();
-            } else if (key.equals(Keyword.SELECT)) {
-                Select select = new Select(findElement(driver, object));
-                select.selectByValue(option.getValue());
-            } else if (key.equals(Keyword.ACCEPT)) {
-                Alert alert = waitAlert(driver, wait);
-                alert.accept();
-            } else if (key.equals(Keyword.DISMISS)) {
-                Alert alert = waitAlert(driver, wait);
-                alert.dismiss();
-            } else if (key.equals(Keyword.UPLOAD)) {
-                doUpload(driver, argument, object);
-            } else if (key.equals(Keyword.ASSERT)) {
-                doAssert(section, test, driver, object, argument);
-            } else if (key.equals(Keyword._DIRECTIVE)) {
-                Tag tag = null;
-                String sheetName = null;
-                if (object != null) {
-                    tag = object.getTag();
-                    sheetName = object.getValue();
-                }
-                if (tag == null && argument != null) {
-                    tag = argument.getTag();
-                    sheetName = argument.getValue();
-                }
-                if (tag != null && tag.equals(DataType.SHEET)) {
-                    Section s = context.getSectionMap().get(sheetName);
-                    s.run(context);
-                }
-            }
+            dispatch(context, driver, wait, section, test);
             // manual capture or auto
             if (key.equals(Keyword.CAPTURE) || autoCapture) {
                 capture(driver, context, section, test);
@@ -117,21 +77,41 @@ public class Web implements Driver {
             // set end
             test.setEnd(new Timestamp(System.currentTimeMillis()));
         } catch (Throwable t) {
-            test.setSuccess(false);
-
-            StringWriter writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            t.printStackTrace(printWriter);
-            test.setStackTrace(writer.toString());
-
-            try {
-                capture(driver, context, section, test, true);
-            } catch (Exception e) {
-                // do nothing
-            }
-
-            test.setEnd(new Timestamp(System.currentTimeMillis()));
+            setFailure(context, driver, t, section, test);
             throw new RuntimeException(t);
+        }
+    }
+
+    private void dispatch(Context context, WebDriver driver, int wait, Section section, Test test) {
+        Keyword key = test.getKeyword();
+        Param target = test.getTarget();
+        Param argument = test.getArgument();
+        Param object = test.getObject();
+        Param option = test.getOption();
+
+        if (key.equals(Keyword.OPEN)) {
+            driver.get(target.getValue());
+        } else if (key.equals(Keyword.CLICK)) {
+            findElement(driver, object).click();
+        } else if (key.equals(Keyword.INPUT)) {
+            findElement(driver, object).sendKeys(argument.getValue());
+        } else if (key.equals(Keyword.CLEAR)) {
+            findElement(driver, object).clear();
+        } else if (key.equals(Keyword.SELECT)) {
+            Select select = new Select(findElement(driver, object));
+            select.selectByValue(option.getValue());
+        } else if (key.equals(Keyword.ACCEPT)) {
+            Alert alert = waitAlert(driver, wait);
+            alert.accept();
+        } else if (key.equals(Keyword.DISMISS)) {
+            Alert alert = waitAlert(driver, wait);
+            alert.dismiss();
+        } else if (key.equals(Keyword.UPLOAD)) {
+            doUpload(driver, argument, object);
+        } else if (key.equals(Keyword.ASSERT)) {
+            doAssert(section, test, driver, object, argument);
+        } else if (key.equals(Keyword._DIRECTIVE)) {
+            doDirective(context, argument, object);
         }
     }
 
@@ -141,6 +121,23 @@ public class Web implements Driver {
         boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(BROWSER_QUIT_KEY));
         if (driver != null && quit) {
             driver.quit();
+        }
+    }
+
+    private void doDirective(Context context, Param argument, Param object) {
+        Tag tag = null;
+        String sheetName = null;
+        if (object != null) {
+            tag = object.getTag();
+            sheetName = object.getValue();
+        }
+        if (tag == null && argument != null) {
+            tag = argument.getTag();
+            sheetName = argument.getValue();
+        }
+        if (tag != null && tag.equals(DataType.SHEET)) {
+            Section s = context.getSectionMap().get(sheetName);
+            s.run(context);
         }
     }
 
@@ -187,6 +184,23 @@ public class Web implements Driver {
         } else {
             test.setSuccess(true);
         }
+    }
+
+    void setFailure(Context context, WebDriver driver, Throwable t, Section section, Test test) {
+        test.setSuccess(false);
+
+        StringWriter writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        t.printStackTrace(printWriter);
+        test.setStackTrace(writer.toString());
+
+        try {
+            capture(driver, context, section, test, true);
+        } catch (Exception e) {
+            // do nothing
+        }
+
+        test.setEnd(new Timestamp(System.currentTimeMillis()));
     }
 
     private String getValue(WebElement element, String attribute) {
