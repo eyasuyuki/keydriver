@@ -49,3 +49,4 @@ test-classes
 archive-tmp
 maven-archiver
 maven-status
+native-image-maven-plugin 
