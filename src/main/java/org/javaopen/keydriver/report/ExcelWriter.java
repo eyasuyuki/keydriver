@@ -7,9 +7,18 @@ import com.spire.xls.Workbook;
 import com.spire.xls.Worksheet;
 import com.spire.xls.charts.ChartSerie;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javaopen.keydriver.driver.Context;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -72,77 +81,100 @@ public class ExcelWriter implements Writer {
         init(context);
         String baseName = FilenameUtils.getBaseName(context.getInputFileName());
 
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.getWorksheets().get(0);
-        sheet.setName(summarySheetName);
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(summarySheetName);
+
+        Row[] r = new Row[20];
+        Cell[] a = new Cell[20];
+        Cell[] b = new Cell[20];
+        for (int i=0; i<r.length; i++) {
+            r[i] = sheet.createRow(i);
+            a[i] = r[i].createCell(0);
+            b[i] = r[i].createCell(1);
+        }
 
         // set labels
-        sheet.getCellRange("A1").setValue(testFileNameLabel);
-        sheet.getCellRange("A2").setValue(expectingTestCountLabel);
-        sheet.getCellRange("A3").setValue(expectingFailureCountLabel);
-        sheet.getCellRange("A4").setValue(executedTestCountLabel);
-        sheet.getCellRange("A5").setValue(successTestCountLabel);
-        sheet.getCellRange("A6").setValue(failedTestCountLabel);
-        sheet.getCellRange("A7").setValue(notExecutedTestCount);
+        a[0].setCellValue(testFileNameLabel);
+        a[1].setCellValue(expectingTestCountLabel);
+        a[2].setCellValue(expectingFailureCountLabel);
+        a[3].setCellValue(executedTestCountLabel);
+        a[4].setCellValue(successTestCountLabel);
+        a[5].setCellValue(failedTestCountLabel);
+        a[6].setCellValue(notExecutedTestCount);
 
-        sheet.getCellRange("A9").setValue(startTimeLabel);
-        sheet.getCellRange("A10").setValue(durationLabel);
+        a[8].setCellValue(startTimeLabel);
+        a[9].setCellValue(durationLabel);
 
-        sheet.getCellRange("A12").setValue(archLabel);
-        sheet.getCellRange("A13").setValue(processorCountLabel);
-        sheet.getCellRange("A14").setValue(loadAverageLabel);
-        sheet.getCellRange("A15").setValue(maxMemoryLabel);
-        sheet.getCellRange("A16").setValue(freeMemoryLabel);
-        sheet.getCellRange("A17").setValue(totalMemoryLabel);
-        sheet.getCellRange("A18").setValue(usableDiskLabel);
-        sheet.getCellRange("A19").setValue(freeDiskLabel);
-        sheet.getCellRange("A20").setValue(totalDiskLabel);
+        a[11].setCellValue(archLabel);
+        a[12].setCellValue(processorCountLabel);
+        a[13].setCellValue(loadAverageLabel);
+        a[14].setCellValue(maxMemoryLabel);
+        a[15].setCellValue(freeMemoryLabel);
+        a[16].setCellValue(totalMemoryLabel);
+        a[17].setCellValue(usableDiskLabel);
+        a[18].setCellValue(freeDiskLabel);
+        a[19].setCellValue(totalDiskLabel);
 
         // set values
-        sheet.getCellRange("B1").setValue(context.getInputFileName());
-        sheet.getCellRange("B2").setNumberValue(report.getExpectingTestCount());
-        sheet.getCellRange("B3").setNumberValue(report.getExpectingFailureCount());
-        sheet.getCellRange("B4").setNumberValue(report.getExecutedTestCount());
-        sheet.getCellRange("B5").setNumberValue(report.getSucceedTestCount());
-        sheet.getCellRange("B6").setNumberValue(report.getFailedTestCount());
-        sheet.getCellRange("B7").setNumberValue(report.getNotExecutedTestCount());
+        b[0].setCellValue(context.getInputFileName());
+        b[1].setCellValue(report.getExpectingTestCount());
+        b[2].setCellValue(report.getExpectingFailureCount());
+        b[3].setCellValue(report.getExecutedTestCount());
+        b[4].setCellValue(report.getSucceedTestCount());
+        b[5].setCellValue(report.getFailedTestCount());
+        b[6].setCellValue(report.getNotExecutedTestCount());
 
+        CreationHelper helper = workbook.getCreationHelper();
         if (report.getStartTime() != null) {
-            sheet.getCellRange("B9").setNumberFormat(timestampFormat);
+            CellStyle cellStyle = workbook.createCellStyle();
+            short style = helper.createDataFormat().getFormat(timestampFormat);
+            cellStyle.setDataFormat(style);
+            b[8].setCellStyle(cellStyle);
             double startTime = DateUtil.getExcelDate(report.getStartTime().toLocalDateTime());
-            sheet.getCellRange("B9").setNumberValue(startTime);
+            b[8].setCellValue(startTime);
         }
         if (report.getDuration() != null) {
-            double duration = (double)(report.getDuration().toMillis() / 1000.0);
-            sheet.getCellRange("B10").setNumberValue(duration);
+            double duration = report.getDuration().toMillis() / 1000.0;
+            b[9].setCellValue(duration);
         }
 
-        sheet.getCellRange("B12").setValue(usage.getArch());
-        sheet.getCellRange("B13").setNumberValue(usage.getProcessorCount());
-        sheet.getCellRange("B14").setNumberValue(usage.getLoadAverage());
-        sheet.getCellRange("B15").setNumberFormat(COMMA_FORMAT);
-        sheet.getCellRange("B15").setNumberValue(usage.getMaxMemory());
-        sheet.getCellRange("B16").setNumberFormat(COMMA_FORMAT);
-        sheet.getCellRange("B16").setNumberValue(usage.getFreeMemory());
-        sheet.getCellRange("B17").setNumberFormat(COMMA_FORMAT);
-        sheet.getCellRange("B17").setNumberValue(usage.getTotalMemory());
-        sheet.getCellRange("B18").setNumberFormat(COMMA_FORMAT);
-        sheet.getCellRange("B18").setNumberValue(usage.getUsableDisk());
-        sheet.getCellRange("B19").setNumberFormat(COMMA_FORMAT);
-        sheet.getCellRange("B19").setNumberValue(usage.getFreeMemory());
-        sheet.getCellRange("B20").setNumberFormat(COMMA_FORMAT);
-        sheet.getCellRange("B20").setNumberValue(usage.getTotalDisk());
+        CellStyle commaStyle = workbook.createCellStyle();
+        short comma = helper.createDataFormat().getFormat(COMMA_FORMAT);
+        commaStyle.setDataFormat(comma);
+        b[11].setCellValue(usage.getArch());
+        b[12].setCellValue(usage.getProcessorCount());
+        b[13].setCellValue(usage.getLoadAverage());
+        b[14].setCellStyle(commaStyle);
+        b[14].setCellValue(usage.getMaxMemory());
+        b[15].setCellStyle(commaStyle);
+        b[15].setCellValue(usage.getFreeMemory());
+        b[16].setCellStyle(commaStyle);
+        b[16].setCellValue(usage.getTotalMemory());
+        b[17].setCellStyle(commaStyle);
+        b[17].setCellValue(usage.getUsableDisk());
+        b[18].setCellStyle(commaStyle);
+        b[18].setCellValue(usage.getFreeMemory());
+        b[19].setCellStyle(commaStyle);
+        b[19].setCellValue(usage.getTotalDisk());
 
-        sheet.getAllocatedRange().autoFitColumns();
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
 
         // chart
-        chart(sheet, report, usage);
+        //chart(sheet, report, usage);
 
         // TODO error sheet
 
         Path path = Paths.get(outputDirectory, outputPrefix+baseName+"."+outputExtension);
-        workbook.saveToFile(path.toFile().getAbsolutePath(), ExcelVersion.Version2007);
-        workbook.dispose();
+        try (FileOutputStream out = new FileOutputStream(path.toFile())) {
+            workbook.write(out);;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);//TODO
+        } catch (IOException e) {
+            throw new RuntimeException(e);//TODO
+        } finally {
+            //workbook.close();
+        }
     }
 
     private void init(Context context) {
