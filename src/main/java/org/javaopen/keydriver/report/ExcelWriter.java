@@ -1,17 +1,22 @@
 package org.javaopen.keydriver.report;
 
-import com.spire.xls.Chart;
-import com.spire.xls.ExcelChartType;
-import com.spire.xls.ExcelVersion;
-import com.spire.xls.Workbook;
-import com.spire.xls.Worksheet;
-import com.spire.xls.charts.ChartSerie;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.chart.ChartTypes;
+import org.apache.poi.xddf.usermodel.chart.LegendPosition;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartLegend;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
+import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
+import org.apache.poi.xssf.usermodel.XSSFChart;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javaopen.keydriver.driver.Context;
@@ -21,8 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 
 public class ExcelWriter implements Writer {
     public static final String COMMA_FORMAT = "#,##0";
@@ -161,7 +164,7 @@ public class ExcelWriter implements Writer {
         sheet.autoSizeColumn(1);
 
         // chart
-        //chart(sheet, report, usage);
+        chart(sheet, report, usage);
 
         // TODO error sheet
 
@@ -204,25 +207,25 @@ public class ExcelWriter implements Writer {
         totalDiskLabel =                context.getBundle().getString(TOTAL_DISK_LABEL_KEY);
     }
 
-    private void chart(Worksheet sheet, Report report, Usage usage) {
-        // pie chart
-        Chart chart = sheet.getCharts().add(ExcelChartType.Pie);
+    private void chart(XSSFSheet sheet, Report report, Usage usage) {
+        XSSFDrawing drawing = sheet.createDrawingPatriarch();
+        XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 2, 0, 7, 7);
 
-        // chart data range
-        chart.setDataRange(sheet.getCellRange("B5:B7"));
+        XSSFChart chart = drawing.createChart(anchor);
 
-        // chart rectangle
-        chart.setLeftColumn(3);
-        chart.setRightColumn(8);
-        chart.setTopRow(2);
-        chart.setBottomRow(8);
+        XDDFChartLegend legend = chart.getOrAddLegend();
+        legend.setPosition(LegendPosition.TOP_RIGHT);
 
-        // TODO chart labels
-        ChartSerie cs = chart.getSeries().get(0);
-        cs.setCategoryLabels(sheet.getCellRange("A5:A7"));
-        cs.setValues(sheet.getCellRange("B5:B7"));
-        cs.getDataPoints().getDefaultDataPoint().getDataLabels().hasValue(true);
-        chart.getPlotArea().getFill().setVisible(true);
+        XDDFDataSource<String> labels = XDDFDataSourcesFactory.fromStringCellRange(sheet,
+                new CellRangeAddress(4, 6, 0, 0));
 
+        XDDFNumericalDataSource<Double> values = XDDFDataSourcesFactory.fromNumericCellRange(sheet,
+                new CellRangeAddress(4, 6, 1, 1));
+
+        XDDFChartData data = chart.createData(ChartTypes.PIE, null, null);
+
+        data.setVaryColors(true);
+        data.addSeries(labels, values);
+        chart.plot(data);
     }
 }
