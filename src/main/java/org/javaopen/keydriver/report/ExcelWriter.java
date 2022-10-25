@@ -226,6 +226,17 @@ public class ExcelWriter implements Writer {
 
         data.setVaryColors(true);
         data.addSeries(labels, values);
+
+        // Add data labels
+        if (!chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).isSetDLbls()) {
+            chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).addNewDLbls();
+        }
+        chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).getDLbls().addNewShowVal().setVal(true);
+        chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).getDLbls().addNewShowSerName().setVal(false);
+        chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).getDLbls().addNewShowCatName().setVal(false);
+        chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).getDLbls().addNewShowPercent().setVal(false);
+        chart.getCTChart().getPlotArea().getPieChartArray(0).getSerArray(0).getDLbls().addNewShowLegendKey().setVal(false);
+
         chart.plot(data);
     }
 }
