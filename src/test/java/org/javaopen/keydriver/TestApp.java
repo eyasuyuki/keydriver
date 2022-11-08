@@ -85,6 +85,8 @@ public class TestApp {
         when(element.getTagName()).thenReturn("select");
         WebElement option = mock(WebElement.class);
         when(element.findElements(anyObject())).thenReturn(Arrays.asList(option));
+        when(element.isEnabled()).thenReturn(true);// selenium-java 4.5.3
+        when(option.isEnabled()).thenReturn(true);// selenium-java 5.5.3
         // mock alert
         WebDriver.TargetLocator locator = mock(WebDriver.TargetLocator.class);
         Alert alert = mock(Alert.class);

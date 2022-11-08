@@ -209,6 +209,8 @@ public class TestWeb {
         WebElement option = mock(WebElement.class);
         when(option.getAttribute(anyObject())).thenReturn("1");
         when(element.findElements(anyObject())).thenReturn(Arrays.asList(option));
+        when(element.isEnabled()).thenReturn(true); // selenium-java 4.5.3
+        when(option.isEnabled()).thenReturn(true); // selenium-java 4.5.3
 
         d.perform(context, section, test);
 
