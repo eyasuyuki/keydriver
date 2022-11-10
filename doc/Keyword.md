@@ -14,5 +14,6 @@ Keyword
 | upload | Any text | url or full-path filename string | Param | null | Upload filename to type of file input element                |
 |assert|Any text | Param                            | Param | Param | Assert object value compare to argument matcher              |
 |execute|Any text| null                             | sql Param | jdbc url Param | Execute object sql by option connection                      |
+| _DIRECTIVE | Any text | null | Param | null | Execute other sheet |
 
 see [Param](Param.md)
