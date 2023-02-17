@@ -26,8 +26,8 @@ public class Database implements Driver {
     private java.sql.Driver driver;
 
     private void initDriver(Context context) {
-        String path = context.getBundle().getString(JDBC_DRIVER_PATH);
-        String classname = context.getBundle().getString(JDBC_CLASS_NAME);
+        String path = context.getConfig().getString(JDBC_DRIVER_PATH);
+        String classname = context.getConfig().getString(JDBC_CLASS_NAME);
         if (driver != null || StringUtils.isEmpty(path) || StringUtils.isEmpty(classname)) {
             return;
         }
