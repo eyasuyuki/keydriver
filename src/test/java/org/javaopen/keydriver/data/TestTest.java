@@ -15,7 +15,7 @@ public class TestTest {
     @org.junit.Test
     public void testTest() {
         Locale.setDefault(Locale.US);
-        Context context = Context.getContext();
+        Context context = Context.getContext(null);
         Map<String, String> map = Stream.of(new String[][] {
                 { "No", "1" },
                 { "Keyword", "open" },

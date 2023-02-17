@@ -1,5 +1,6 @@
 package org.javaopen.keydriver;
 
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.lang.RandomStringUtils;
 import org.javaopen.keydriver.data.DummyKeyword;
 import org.javaopen.keydriver.data.DummyTest;
@@ -24,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +36,7 @@ import java.util.ResourceBundle;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.javaopen.keydriver.driver.Context.CONFIG;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -43,7 +46,7 @@ import static org.mockito.Mockito.withSettings;
 public class TestApp {
     private static final Random random = new Random();
     private Context context;
-    private ResourceBundle bundle = ResourceBundle.getBundle(Context.CONFIG);
+    private PropertiesConfiguration config = new PropertiesConfiguration();
     private Driver web;
     private Driver database;
     private WebDriver driver;
@@ -58,8 +61,10 @@ public class TestApp {
         database = mock(Database.class);
         driver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
         element = mock(WebElement.class);
-        // mock getBundle
-        when(context.getBundle()).thenReturn(bundle);
+        // mock getConfig
+        ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
+        Collections.list(bundle.getKeys()).forEach(x -> config.addProperty(x, bundle.getObject(x)));
+        when(context.getConfig()).thenReturn(config);
         // mock getDriver
         ArgumentMatcher<org.javaopen.keydriver.data.Test> matcher = new ArgumentMatcher<org.javaopen.keydriver.data.Test>() {
             @Override

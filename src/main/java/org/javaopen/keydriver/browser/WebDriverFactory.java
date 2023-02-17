@@ -46,9 +46,9 @@ public class WebDriverFactory {
             options.setCapability("ignoreZoomSetting", true);
             options.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
             options.attachToEdgeChrome();
-            String edge = context.getBundle().getString(EDGE_EXECUTABLE_KEY);
+            String edge = context.getConfig().getString(EDGE_EXECUTABLE_KEY);
             options.withEdgeExecutablePath(edge);
-            String path = context.getBundle().getString(IE_DRIVER_PATH_KEY);
+            String path = context.getConfig().getString(IE_DRIVER_PATH_KEY);
             System.setProperty(WEBDRIVER_IE_DRIVER, path);
             webdriver = new InternetExplorerDriver(options);
         } else {

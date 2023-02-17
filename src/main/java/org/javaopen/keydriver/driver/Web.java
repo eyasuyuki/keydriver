@@ -49,12 +49,12 @@ public class Web implements Driver {
         // set test properties
         test.setStart(new Timestamp(System.currentTimeMillis()));
         // set wait
-        int wait = PropertyConverter.toInteger(context.getBundle().getObject(BROWSER_WAIT_KEY));
+        int wait = context.getConfig().getInt(BROWSER_WAIT_KEY);
 
         // auto capture mode
-        boolean autoCapture = PropertyConverter.toBoolean(context.getBundle().getObject(AUTO_CAPTURE_KEY));
+        boolean autoCapture = context.getConfig().getBoolean(AUTO_CAPTURE_KEY);
         // error suffix
-        errorSuffix = context.getBundle().getString(ERROR_SUFFIX_KEY);
+        errorSuffix = context.getConfig().getString(ERROR_SUFFIX_KEY);
         if (StringUtils.isEmpty(errorSuffix)) {
             errorSuffix = ERROR_SUFFIX_DEFAULT;
         }
@@ -118,7 +118,7 @@ public class Web implements Driver {
     @Override
     public void quit(Context context) {
         WebDriver driver = context.getWebDriver();
-        boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(BROWSER_QUIT_KEY));
+        boolean quit = context.getConfig().getBoolean(BROWSER_QUIT_KEY);
         if (driver != null && quit) {
             driver.quit();
         }
@@ -220,7 +220,7 @@ public class Web implements Driver {
     private WebDriver getDriver(Context context, int wait) {
         WebDriver driver = context.getWebDriver();
         if (driver == null) {
-            String browser = context.getBundle().getString(WebDriverFactory.BROWSER_KEY);
+            String browser = context.getConfig().getString(WebDriverFactory.BROWSER_KEY);
             driver = WebDriverFactory.getInstance(context, browser);
             // set browser wait
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));

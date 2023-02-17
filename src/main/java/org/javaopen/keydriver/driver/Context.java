@@ -1,16 +1,32 @@
 package org.javaopen.keydriver.driver;
 
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.grid.config.Config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class Context {
     public static final String NUMBER_KEY = "number";
@@ -29,19 +45,24 @@ public class Context {
             OBJECT_KEY,
             OPTION_KEY});
     public static final String CONFIG = "config";
-    private static final Context context = new Context();
-    public static Context getContext() {
+    private static Context context;
+    public static Context getContext(String configPath) {
+        if (context == null) {
+            context = new Context(configPath);
+        }
         return context;
     }
     private WebDriver webDriver;
     private Connection connection;
     private ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
+    private PropertiesConfiguration config = new PropertiesConfiguration();
     private Map<String, String> dic = new HashMap<>();
     private String inputFileName;
     private Map<String, Section> sectionMap = new HashMap<>();
 
-    public Context() {
-        this.getBundle();
+    private Context(String configPath) {
+        Collections.list(bundle.getKeys()).forEach(x -> config.addProperty(x, bundle.getObject(x)));
+        read(configPath);
         for (String k: KEYS) {
             String s = bundle.getString(k);
             if (StringUtils.isEmpty(s)) {
@@ -51,8 +72,25 @@ public class Context {
         }
     }
 
+    private void read(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            return;
+        }
+        Configurations configurations = new Configurations();
+        try {
+            Configuration cfg = configurations.properties(new File(filePath));
+            StreamSupport.stream(Spliterators.spliteratorUnknownSize(cfg.getKeys(), Spliterator.ORDERED), false).forEach(x -> config.setProperty(x, cfg.getProperty(x)));
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Driver getDriver(Test test) {
         return DriverFactory.getDriver(test);
+    }
+
+    public PropertiesConfiguration getConfig() {
+        return config;
     }
 
     public WebDriver getWebDriver() {
@@ -71,7 +109,7 @@ public class Context {
         this.connection = connection;
     }
 
-    public ResourceBundle getBundle() {
+    private ResourceBundle getBundle() {
         return bundle;
     }
 

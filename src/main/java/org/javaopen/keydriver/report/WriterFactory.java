@@ -12,7 +12,7 @@ public class WriterFactory {
         writerMap.put("xlsx", new ExcelWriter());
     }
     public static Writer getWriter(Context context) {
-        String ext = context.getBundle().getString(OUTPUT_EXTENSION_KEY);
+        String ext = context.getConfig().getString(OUTPUT_EXTENSION_KEY);
         Writer result = writerMap.get(ext);
         if (result == null) throw new IllegalArgumentException(ext);
         return result;

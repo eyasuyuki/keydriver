@@ -1,5 +1,12 @@
 package org.javaopen.keydriver;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;
@@ -20,16 +27,40 @@ public class App {
     private static List<Section> sections;
     private static Summary summary;
     private static Writer writer;
-    public static void main(String args[]) {
-        context = Context.getContext();
-        context.setInputFileName(args[0]);
-        Reader reader = ReaderFactory.getReader(args[0]);
+    public static void main(String args[]) throws ParseException {
+        Options options = new Options();
+        Option configPath = Option.builder("c")
+                .argName("configFile")
+                .desc("Configuration file path")
+                .hasArg(true)
+                .longOpt("config")
+                .build();
+        Option help = Option.builder("h")
+                .desc("Help")
+                .hasArg(false)
+                .longOpt("help")
+                .build();
+        options.addOption(configPath);
+        options.addOption(help);
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd = parser.parse(options, args);
+        if (cmd.hasOption("h")) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("keydriver [options] <Excel file>", options);
+            System.exit(0);
+        }
+        String path = cmd.hasOption("c") ? cmd.getOptionValue("c"): "";
+        context = Context.getContext(path);
+
+        String inputFileName = cmd.getArgs()[0];
+        context.setInputFileName(inputFileName);
+        Reader reader = ReaderFactory.getReader(inputFileName);
         try {
             execute(context, reader);
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
-            boolean quit = PropertyConverter.toBoolean(context.getBundle().getObject(Web.BROWSER_QUIT_KEY));
+            boolean quit = context.getConfig().getBoolean(Web.BROWSER_QUIT_KEY);
             if (context.getWebDriver() != null && quit) {
                 context.getWebDriver().quit();
             }

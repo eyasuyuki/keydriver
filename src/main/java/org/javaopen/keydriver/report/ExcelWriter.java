@@ -181,30 +181,30 @@ public class ExcelWriter implements Writer {
     }
 
     private void init(Context context) {
-        timestampFormat =               context.getBundle().getString(TIMESTAMP_FORMAT_KEY);
-        outputDirectory =               context.getBundle().getString(OUTPUT_DIRECTORY_KEY);
-        outputExtension =               context.getBundle().getString(OUTPUT_EXTENSION_KEY);
-        outputPrefix =                  context.getBundle().getString(OUTPUT_PREFIX_KEY);
-        summarySheetName =              context.getBundle().getString(SUMMARY_SHEET_NAME_KEY);
-        errorSheetPrefix =              context.getBundle().getString(ERROR_SHEET_PREFIX_KEY);
-        testFileNameLabel =             context.getBundle().getString(TEST_FILE_NAME_LABEL_KEY);
-        expectingTestCountLabel =       context.getBundle().getString(EXPECTING_TEST_COUNT_LABEL_KEY);
-        expectingFailureCountLabel =    context.getBundle().getString(EXPECTING_FAILURE_COUNT_LABEL_KEY);
-        executedTestCountLabel =        context.getBundle().getString(EXECUTED_TEST_COUNT_LABEL_KEY);
-        successTestCountLabel =         context.getBundle().getString(SUCCESS_TEST_COUNT_LABEL_KEY);
-        failedTestCountLabel =          context.getBundle().getString(FAILED_TEST_COUNT_LABEL_KEY);
-        notExecutedTestCount =          context.getBundle().getString(NOT_EXECUTED_TEST_COUNT_KEY);
-        startTimeLabel =                context.getBundle().getString(START_TIME_LABEL_KEY);
-        durationLabel =                 context.getBundle().getString(DURATION_LABEL_KEY);
-        archLabel =                     context.getBundle().getString(ARCH_LABEL_KEY);
-        processorCountLabel =           context.getBundle().getString(PROCESSOR_COUNT_LABEL_KEY);
-        loadAverageLabel =              context.getBundle().getString(LOAD_AVERAGE_LABEL_KEY);
-        maxMemoryLabel =                context.getBundle().getString(MAX_MEMORY_LABEL_KEY);
-        freeMemoryLabel =               context.getBundle().getString(FREE_MEMORY_LABEL_KEY);
-        totalMemoryLabel =              context.getBundle().getString(TOTAL_MEMORY_LABEL_KEY);
-        usableDiskLabel =               context.getBundle().getString(USABLE_DISK_LABEL_KEY);
-        freeDiskLabel =                 context.getBundle().getString(FREE_DISK_LABEL_KEY);
-        totalDiskLabel =                context.getBundle().getString(TOTAL_DISK_LABEL_KEY);
+        timestampFormat =               context.getConfig().getString(TIMESTAMP_FORMAT_KEY);
+        outputDirectory =               context.getConfig().getString(OUTPUT_DIRECTORY_KEY);
+        outputExtension =               context.getConfig().getString(OUTPUT_EXTENSION_KEY);
+        outputPrefix =                  context.getConfig().getString(OUTPUT_PREFIX_KEY);
+        summarySheetName =              context.getConfig().getString(SUMMARY_SHEET_NAME_KEY);
+        errorSheetPrefix =              context.getConfig().getString(ERROR_SHEET_PREFIX_KEY);
+        testFileNameLabel =             context.getConfig().getString(TEST_FILE_NAME_LABEL_KEY);
+        expectingTestCountLabel =       context.getConfig().getString(EXPECTING_TEST_COUNT_LABEL_KEY);
+        expectingFailureCountLabel =    context.getConfig().getString(EXPECTING_FAILURE_COUNT_LABEL_KEY);
+        executedTestCountLabel =        context.getConfig().getString(EXECUTED_TEST_COUNT_LABEL_KEY);
+        successTestCountLabel =         context.getConfig().getString(SUCCESS_TEST_COUNT_LABEL_KEY);
+        failedTestCountLabel =          context.getConfig().getString(FAILED_TEST_COUNT_LABEL_KEY);
+        notExecutedTestCount =          context.getConfig().getString(NOT_EXECUTED_TEST_COUNT_KEY);
+        startTimeLabel =                context.getConfig().getString(START_TIME_LABEL_KEY);
+        durationLabel =                 context.getConfig().getString(DURATION_LABEL_KEY);
+        archLabel =                     context.getConfig().getString(ARCH_LABEL_KEY);
+        processorCountLabel =           context.getConfig().getString(PROCESSOR_COUNT_LABEL_KEY);
+        loadAverageLabel =              context.getConfig().getString(LOAD_AVERAGE_LABEL_KEY);
+        maxMemoryLabel =                context.getConfig().getString(MAX_MEMORY_LABEL_KEY);
+        freeMemoryLabel =               context.getConfig().getString(FREE_MEMORY_LABEL_KEY);
+        totalMemoryLabel =              context.getConfig().getString(TOTAL_MEMORY_LABEL_KEY);
+        usableDiskLabel =               context.getConfig().getString(USABLE_DISK_LABEL_KEY);
+        freeDiskLabel =                 context.getConfig().getString(FREE_DISK_LABEL_KEY);
+        totalDiskLabel =                context.getConfig().getString(TOTAL_DISK_LABEL_KEY);
     }
 
     private void chart(XSSFSheet sheet, Report report, Usage usage) {
