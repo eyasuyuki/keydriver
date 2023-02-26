@@ -5,13 +5,13 @@ import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Test;
 import org.javaopen.keydriver.data.Section;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,17 +25,16 @@ public class Database implements Driver {
 
     private java.sql.Driver driver;
 
-    private void initDriver(Context context) {
+    private Connection getConnection(Context context, String jdbcUrl) {
         String path = context.getConfig().getString(JDBC_DRIVER_PATH);
         String classname = context.getConfig().getString(JDBC_CLASS_NAME);
-        if (driver != null || StringUtils.isEmpty(path) || StringUtils.isEmpty(classname)) {
-            return;
-        }
         try {
-            URL u = new URL("jar:file:"+path+"!/");
+            URL u = new File(path).toURI().toURL();
             URLClassLoader loader = new URLClassLoader(new URL[]{ u });
-            driver = (java.sql.Driver)Class.forName(classname, true, loader).newInstance();
-            DriverManager.registerDriver(driver);
+            Class<Driver> clazz = (Class<Driver>) loader.loadClass(classname);
+            driver = (java.sql.Driver) clazz.newInstance();
+            Connection conn = driver.connect(jdbcUrl, null);
+            return conn;
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -51,8 +50,7 @@ public class Database implements Driver {
     @Override
     public void perform(Context context, Section section, Test test) {
         test.setStart(new Timestamp(System.currentTimeMillis()));
-        initDriver(context);
-        try (Connection conn = DriverManager.getConnection(test.getOption().getValue())) {
+        try (Connection conn = getConnection(context, test.getOption().getValue())) {
             Statement st = conn.createStatement();
             String sql = test.getObject().getValue();
             if (StringUtils.isEmpty(sql)) {
