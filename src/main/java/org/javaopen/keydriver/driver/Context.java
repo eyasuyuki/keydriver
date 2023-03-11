@@ -46,9 +46,9 @@ public class Context {
             OPTION_KEY});
     public static final String CONFIG = "config";
     private static Context context;
-    public static Context getContext(String configPath) {
+    public static Context getContext(String configPath, String driverPath, String jdbcClassName) {
         if (context == null) {
-            context = new Context(configPath);
+            context = new Context(configPath, driverPath, jdbcClassName);
         }
         return context;
     }
@@ -60,8 +60,14 @@ public class Context {
     private String inputFileName;
     private Map<String, Section> sectionMap = new HashMap<>();
 
-    private Context(String configPath) {
-        Collections.list(bundle.getKeys()).forEach(x -> config.addProperty(x, bundle.getObject(x)));
+    private Context(String configPath, String driverPath, String jdbcClassName) {
+        Collections.list(bundle.getKeys()).forEach(x -> config.setProperty(x, bundle.getObject(x)));
+        if (StringUtils.isNotEmpty(driverPath)) {
+            config.setProperty(Database.JDBC_DRIVER_PATH, driverPath);
+        }
+        if (StringUtils.isNotEmpty(jdbcClassName)) {
+            config.setProperty(Database.JDBC_CLASS_NAME, jdbcClassName);
+        }
         read(configPath);
         for (String k: KEYS) {
             String s = bundle.getString(k);

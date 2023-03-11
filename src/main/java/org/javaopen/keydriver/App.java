@@ -35,12 +35,26 @@ public class App {
                 .hasArg(true)
                 .longOpt("config")
                 .build();
+        Option driverPath = Option.builder("d")
+                .argName("driverFile")
+                .desc("JDBC Driver file path")
+                .hasArg(true)
+                .longOpt("driver")
+                .build();
+        Option jdbcClassName = Option.builder("j")
+                .argName("jdbcClassName")
+                .desc("JDBC Class name")
+                .hasArg(true)
+                .longOpt("jdbcClass")
+                .build();
         Option help = Option.builder("h")
                 .desc("Help")
                 .hasArg(false)
                 .longOpt("help")
                 .build();
         options.addOption(configPath);
+        options.addOption(driverPath);
+        options.addOption(jdbcClassName);
         options.addOption(help);
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
@@ -49,8 +63,10 @@ public class App {
             formatter.printHelp("keydriver [options] <Excel file>", options);
             System.exit(0);
         }
-        String path = cmd.hasOption("c") ? cmd.getOptionValue("c"): "";
-        context = Context.getContext(path);
+        String config = cmd.hasOption("c") ? cmd.getOptionValue("c"): "";
+        String driver = cmd.hasOption("d") ? cmd.getOptionValue("d"): "";
+        String jdbc = cmd.hasOption("j") ? cmd.getOptionValue("j"): "";
+        context = Context.getContext(config, driver, jdbc);
 
         String inputFileName = cmd.getArgs()[0];
         context.setInputFileName(inputFileName);
