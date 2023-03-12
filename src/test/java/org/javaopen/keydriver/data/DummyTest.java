@@ -17,7 +17,7 @@ public class DummyTest {
     static {
         Locale.setDefault(Locale.US);
     }
-    private static final Context context = Context.getContext(null);
+    private static final Context context = Context.getContext(null, null, null);
     private static final Random random = new Random();
     public static Test getDummy(Keyword keyword) {
         switch(keyword) {

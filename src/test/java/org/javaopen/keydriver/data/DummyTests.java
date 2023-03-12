@@ -9,7 +9,11 @@ import java.util.stream.Stream;
 
 public class DummyTests {
     private List<Test> tests = new ArrayList<>();
-    private Context context = Context.getContext(null);
+    private Context context;
+
+    public DummyTests(Context context) {
+        this.context = context;
+    }
 
     public DummyTests() {
         tests.add(new Test(context, Stream.of(new String[][] {
