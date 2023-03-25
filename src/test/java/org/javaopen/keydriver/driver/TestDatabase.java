@@ -1,6 +1,9 @@
 package org.javaopen.keydriver.driver;
 
 import org.h2.tools.Server;
+import org.javaopen.keydriver.data.DummyTest;
+import org.javaopen.keydriver.data.Keyword;
+import org.javaopen.keydriver.data.Section;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +40,11 @@ public class TestDatabase {
 
     @Test
     public void testExecute() {
-
+        org.javaopen.keydriver.data.Test test = DummyTest.getDummy(Keyword.EXECUTE);
+        Driver d = context.getDriver(test);
+        Section section = new Section("Sheet1");
+        d.perform(context, section, test);
+        // TODO assert
     }
 
     @Test
