@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.Locale;
 
 public class TestDatabase {
 
@@ -18,11 +19,14 @@ public class TestDatabase {
     private Server h2server;
     @Before
     public void setUp() throws SQLException {
+        Locale.setDefault(Locale.US);//important
+
         context = Context.getContext(null, "asset/postgresql-42.5.4.jar", "org.postgresql.Driver");
         tests = new DummyTests(context);
         // run h2 postgresql mode
-        String[] options = new String[]{"-pg"};
-        h2server = Server.createPgServer(options);
+        //String[] options = new String[]{"-pgAllowOthers","-baseDir=./."};
+        //h2server = Server.createPgServer(options);
+        h2server = Server.createPgServer("-baseDir", "./asset");
         h2server.start();
     }
     @Test

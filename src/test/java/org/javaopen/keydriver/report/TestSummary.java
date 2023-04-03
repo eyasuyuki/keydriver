@@ -29,7 +29,7 @@ public class TestSummary {
         Locale.setDefault(Locale.US);
 
         context = Context.getContext(null, null, null);
-        dummyTests = new DummyTests();
+        dummyTests = new DummyTests(context);
         for (org.javaopen.keydriver.data.Test t: dummyTests.getTests()) {
             if (t.getKeyword().equals(Keyword.ASSERT) && t.getArgument().getTag().equals(Matches.FAIL)) {
                 expectingFailure(t);
