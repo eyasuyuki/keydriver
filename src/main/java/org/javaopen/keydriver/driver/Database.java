@@ -52,8 +52,8 @@ public class Database implements Driver {
         test.setStart(new Timestamp(System.currentTimeMillis()));
         try (Connection conn = getConnection(context, test.getObject().getValue())) {
             Statement st = conn.createStatement();
-            String sql = test.getObject().getValue();
-            if (StringUtils.isEmpty(sql)) {
+            String sql = test.getArgument().getValue();
+                      if (StringUtils.isEmpty(sql)) {
                 sql = test.getArgument().getValue();
             }
             if (test.getKeyword().equals(Keyword.ASSERT)) {

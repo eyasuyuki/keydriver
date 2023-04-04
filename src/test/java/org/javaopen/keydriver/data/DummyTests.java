@@ -83,7 +83,7 @@ public class DummyTests {
         tests.add(new Test(context, Stream.of(new String[][] {
                 {"No", "14"},
                 {"Keyword", "execute"},
-                {"Argument", "CREATE TABLE test (id int not null primary key, name varchar(50) not null);"},
+                {"Argument", "CREATE TABLE IF NOT EXISTS test (id int not null primary key, name varchar(50) not null);"},
                 {"Object", "jdbc:postgresql://127.0.0.1:5435/test?user=sa&password=sa"}
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1]))));
     }
