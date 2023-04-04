@@ -53,7 +53,7 @@ public class Database implements Driver {
         try (Connection conn = getConnection(context, test.getObject().getValue())) {
             Statement st = conn.createStatement();
             String sql = test.getArgument().getValue();
-                      if (StringUtils.isEmpty(sql)) {
+            if (StringUtils.isEmpty(sql)) {
                 sql = test.getArgument().getValue();
             }
             if (test.getKeyword().equals(Keyword.ASSERT)) {
