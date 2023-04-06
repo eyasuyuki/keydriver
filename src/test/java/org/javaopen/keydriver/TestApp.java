@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -35,83 +36,75 @@ import java.util.ResourceBundle;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
 import static org.javaopen.keydriver.driver.Context.CONFIG;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
+import static org.mockito.AdditionalMatchers.not;
 
 public class TestApp {
     private static final Random random = new Random();
-    private Context context;
+    private Context mockContext = mock(Context.class);
     private PropertiesConfiguration config = new PropertiesConfiguration();
-    private Driver web;
-    private Driver database;
-    private WebDriver driver;
-    private WebElement element;
+    private Driver mockWeb = new Web();;
+    private Driver mockDatabase = mock(Database.class);
+    private WebDriver mockDriver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
+    private WebElement mockElement = mock(WebElement.class);
 
     @Before
     public void setUp() {
         Locale.setDefault(Locale.US);//important
 
-        context = mock(Context.class);
-        web = new Web();
-        database = mock(Database.class);
-        driver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
-        element = mock(WebElement.class);
         // mock getConfig
         ResourceBundle bundle = ResourceBundle.getBundle(CONFIG);
         Collections.list(bundle.getKeys()).forEach(x -> config.addProperty(x, bundle.getObject(x)));
-        when(context.getConfig()).thenReturn(config);
+        when(mockContext.getConfig()).thenReturn(config);
         // mock getDriver
-        ArgumentMatcher<org.javaopen.keydriver.data.Test> matcher = new ArgumentMatcher<org.javaopen.keydriver.data.Test>() {
-            @Override
-            public boolean matches(Object o) {
-                if (o == null) {
-                    return false;
-                }
-                org.javaopen.keydriver.data.Test t = (org.javaopen.keydriver.data.Test)o;
-                Keyword k = t.getKeyword();
-                return DriverFactory.WEB_KEYWORDS.contains(k);
+        ArgumentMatcher<org.javaopen.keydriver.data.Test> matcher = test -> {
+            if (test == null) {
+                return false;
             }
+            org.javaopen.keydriver.data.Test t = test;
+            Keyword k = t.getKeyword();
+            return DriverFactory.WEB_KEYWORDS.contains(k);
         };
-        when(context.getDriver(argThat(matcher))).thenReturn(web);
-        when(context.getDriver(argThat(not(matcher)))).thenReturn(database);
+        when(mockContext.getDriver(argThat(matcher))).thenReturn(mockWeb);
+        when(mockContext.getDriver(not(argThat(matcher)))).thenReturn(mockDatabase);
         // mock getWebDriver
-        when(context.getWebDriver()).thenReturn(driver);
+        when(mockContext.getWebDriver()).thenReturn(mockDriver);
         // mock screenshot
-        when(((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE))
+        when(((TakesScreenshot) mockDriver).getScreenshotAs(OutputType.FILE))
                 .thenReturn(new File("./src/test/resources/screenshot.png"));
         // mock findElement
-        when(driver.findElement(anyObject())).thenReturn(element);
+        when(mockDriver.findElement(any(By.class))).thenReturn(mockElement);
         // mock select
-        when(element.getTagName()).thenReturn("select");
+        when(mockElement.getTagName()).thenReturn("select");
         WebElement option = mock(WebElement.class);
-        when(element.findElements(anyObject())).thenReturn(Arrays.asList(option));
-        when(element.isEnabled()).thenReturn(true);// selenium-java 4.5.3
+        when(mockElement.findElements(any(By.class))).thenReturn(Arrays.asList(option));
+        when(mockElement.isEnabled()).thenReturn(true);// selenium-java 4.5.3
         when(option.isEnabled()).thenReturn(true);// selenium-java 5.5.3
         // mock alert
         WebDriver.TargetLocator locator = mock(WebDriver.TargetLocator.class);
         Alert alert = mock(Alert.class);
         when(locator.alert()).thenReturn(alert);
-        when(driver.switchTo()).thenReturn(locator);
+        when(mockDriver.switchTo()).thenReturn(locator);
     }
 
     @Test
     public void testExecute() throws Exception {
         List<Section> sections = generateSections();
         Reader reader = mock(ExcelReader.class);
-        when(reader.read(anyObject(), anyObject())).thenReturn(sections);
+        when(reader.read(any(Context.class), any(String.class))).thenReturn(sections);
         Map<String, Section> sectionMap = new HashMap<>();
         for (Section s: sections) {
             sectionMap.put(s.getName(), s);
         }
-        when(context.getSectionMap()).thenReturn(sectionMap);
+        when(mockContext.getSectionMap()).thenReturn(sectionMap);
 
         // execute
-        App.execute(context, reader);
+        App.execute(mockContext, reader);
 
         Section top = sections.get(0);
         assertThat(top.isExecuted(), is(true));

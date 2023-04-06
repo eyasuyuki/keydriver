@@ -19,15 +19,16 @@ import java.sql.Timestamp;
 import java.util.logging.Logger;
 
 public class Database implements Driver {
+    private static Logger logger = Logger.getLogger(Database.class.getName());
     public static final String JDBC_DRIVER_PATH = "jdbc_driver_path";
     public static final String JDBC_CLASS_NAME = "jdbc_class_name";
-    private static final Logger logger = Logger.getLogger(Database.class.getName());
 
     private java.sql.Driver driver;
 
     private Connection getConnection(Context context, String jdbcUrl) {
         String path = context.getConfig().getString(JDBC_DRIVER_PATH);
         String classname = context.getConfig().getString(JDBC_CLASS_NAME);
+        logger.info("path="+path+", classname="+classname);
         try {
             URL u = new File(path).toURI().toURL();
             URLClassLoader loader = new URLClassLoader(new URL[]{ u });

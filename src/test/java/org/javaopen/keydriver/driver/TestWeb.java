@@ -7,6 +7,7 @@ import org.javaopen.keydriver.data.Section;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +23,8 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,7 +49,7 @@ public class TestWeb {
         when(((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE))
             .thenReturn(new File("./src/test/resources/screenshot.png"));
         // mock findElement
-        when(driver.findElement(anyObject())).thenReturn(element);
+        when(driver.findElement(any(By.class))).thenReturn(element);
         // mock alert
         WebDriver.TargetLocator locator = mock(WebDriver.TargetLocator.class);
         Alert alert = mock(Alert.class);
@@ -86,7 +88,7 @@ public class TestWeb {
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
-        doThrow(new RuntimeException()).when(driver).get(anyObject());
+        doThrow(new RuntimeException()).when(driver).get(anyString());
         try {
             d.perform(context, section, test);
             assertThat(null, false);//fail if no-exception
@@ -156,7 +158,7 @@ public class TestWeb {
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
-        doThrow(new RuntimeException()).when(element).sendKeys(anyObject());
+        doThrow(new RuntimeException()).when(element).sendKeys(any(CharSequence.class));
         try {
             d.perform(context, section, test);
             assertThat(null, false);
@@ -207,8 +209,8 @@ public class TestWeb {
         // prepare select element
         when(element.getTagName()).thenReturn("select");
         WebElement option = mock(WebElement.class);
-        when(option.getAttribute(anyObject())).thenReturn("1");
-        when(element.findElements(anyObject())).thenReturn(Arrays.asList(option));
+        when(option.getAttribute(anyString())).thenReturn("1");
+        when(element.findElements(any(By.class))).thenReturn(Arrays.asList(option));
         when(element.isEnabled()).thenReturn(true); // selenium-java 4.5.3
         when(option.isEnabled()).thenReturn(true); // selenium-java 4.5.3
 
@@ -225,7 +227,7 @@ public class TestWeb {
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
-        doThrow(new RuntimeException()).when(element).findElements(anyObject());
+        doThrow(new RuntimeException()).when(element).findElements(any(By.class));
         try {
             d.perform(context, section, test);
             assertThat(null, false);
@@ -255,7 +257,7 @@ public class TestWeb {
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
-        doThrow(new RuntimeException()).when((TakesScreenshot)driver).getScreenshotAs(anyObject());
+        doThrow(new RuntimeException()).when((TakesScreenshot)driver).getScreenshotAs(any());
         try {
             d.perform(context, section, test);
             assertThat(null, false);
@@ -345,7 +347,7 @@ public class TestWeb {
         assertThat(d, is(instanceOf(Web.class)));
         Section section = new Section("Section1");
 
-        doThrow(new RuntimeException()).when(element).sendKeys(anyObject());
+        doThrow(new RuntimeException()).when(element).sendKeys(anyString());
         try {
             d.perform(context, section, test);
             assertThat(null, false);
