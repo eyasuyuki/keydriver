@@ -1,6 +1,6 @@
 package org.javaopen.keydriver.report;
 
-import org.javaopen.keydriver.data.DummyTests;
+import org.javaopen.keydriver.data.DummyTestList;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Section;
@@ -21,7 +21,7 @@ import static org.hamcrest.core.Is.is;
 
 public class TestSummary {
     private Context context;
-    private DummyTests dummyTests;
+    private DummyTestList dummyTests;
     private Summary summary;
     private int testCount;
     @Before
@@ -29,7 +29,7 @@ public class TestSummary {
         Locale.setDefault(Locale.US);
 
         context = Context.getContext(null, null, null);
-        dummyTests = new DummyTests(context);
+        dummyTests = new DummyTestList(context);
         for (org.javaopen.keydriver.data.Test t: dummyTests.getTests()) {
             if (t.getKeyword().equals(Keyword.ASSERT) && t.getArgument().getTag().equals(Matches.FAIL)) {
                 expectingFailure(t);

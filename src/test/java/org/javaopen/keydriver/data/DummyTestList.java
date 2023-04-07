@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DummyTests {
+public class DummyTestList {
     private List<Test> tests = new ArrayList<>();
     private Context context;
 
-    public DummyTests(Context context) {
+    public DummyTestList(Context context) {
         this.context = context;
         tests.add(new Test(context, Stream.of(new String[][] {
                 { "No", "1" },

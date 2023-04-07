@@ -1,6 +1,6 @@
 package org.javaopen.keydriver.driver;
 
-import org.javaopen.keydriver.data.DummyTests;
+import org.javaopen.keydriver.data.DummyTestList;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Section;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 public class TestWeb {
-    private DummyTests dummyTests;
+    private DummyTestList dummyTests;
     private Context context;
     private WebDriver driver;
     private WebElement element;
@@ -41,7 +41,7 @@ public class TestWeb {
         Locale.setDefault(Locale.US);//important
 
         context = Context.getContext(null, null, null);
-        dummyTests = new DummyTests(context);
+        dummyTests = new DummyTestList(context);
         driver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
         element = mock(WebElement.class);
         context.setWebDriver(driver);

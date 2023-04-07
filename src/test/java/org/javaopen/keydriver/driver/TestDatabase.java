@@ -4,7 +4,7 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.h2.tools.Server;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.DummyTests;
+import org.javaopen.keydriver.data.DummyTestList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class TestDatabase {
 
     private PropertiesConfiguration mockConfig = mock(PropertiesConfiguration.class);
     private Context mockContext = mock(Context.class);
-    private DummyTests tests;
+    private DummyTestList tests;
 
     private Server h2server;
     @Before
@@ -36,7 +36,7 @@ public class TestDatabase {
         when(mockContext.getConfig()).thenReturn(mockConfig);
         when(mockContext.getDic()).thenReturn(con.getDic());
 
-        tests = new DummyTests(mockContext);
+        tests = new DummyTestList(mockContext);
 
         when(mockContext.getDriver(any())).thenReturn(DriverFactory.getDriver(tests.getTest(Keyword.EXECUTE)));
 

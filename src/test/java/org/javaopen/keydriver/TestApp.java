@@ -3,7 +3,7 @@ package org.javaopen.keydriver;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.lang.RandomStringUtils;
 import org.javaopen.keydriver.data.DummyKeyword;
-import org.javaopen.keydriver.data.DummyTest;
+import org.javaopen.keydriver.data.DummyTestFactory;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.driver.Context;
@@ -132,9 +132,9 @@ public class TestApp {
 
         // top section
         Section top = new Section(RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1));
-        org.javaopen.keydriver.data.Test dir1 = DummyTest.getDummy(Keyword._DIRECTIVE);
-        org.javaopen.keydriver.data.Test dir2  = DummyTest.getDummy(Keyword._DIRECTIVE);
-        org.javaopen.keydriver.data.Test dir3 = DummyTest.getDummy(Keyword._DIRECTIVE);
+        org.javaopen.keydriver.data.Test dir1 = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
+        org.javaopen.keydriver.data.Test dir2  = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
+        org.javaopen.keydriver.data.Test dir3 = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
         top.getTests().addAll(Arrays.asList(dir1, dir2, dir3));
         sections.add(top);
 
@@ -157,7 +157,7 @@ public class TestApp {
             if (keyword.equals(Keyword._DIRECTIVE)) {
                 continue;
             }
-            org.javaopen.keydriver.data.Test test = DummyTest.getDummy(keyword);
+            org.javaopen.keydriver.data.Test test = DummyTestFactory.getDummy(keyword);
             section.getTests().add(test);
         }
 

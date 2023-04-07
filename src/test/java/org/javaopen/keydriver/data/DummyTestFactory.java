@@ -13,7 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 
-public class DummyTest {
+public class DummyTestFactory {
     static {
         Locale.setDefault(Locale.US);
     }
