@@ -38,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.javaopen.keydriver.driver.Context.CONFIG;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -94,9 +95,9 @@ public class TestApp {
 
     @Test
     public void testExecute() throws Exception {
-        List<Section> sections = generateSections();
-        Reader reader = mock(ExcelReader.class);
-        when(reader.read(any(Context.class), any(String.class))).thenReturn(sections);
+        final List<Section> sections = generateSections();
+        Reader mockReader = mock(ExcelReader.class);
+        when(mockReader.read(any(), any())).thenReturn(sections);// anyString() does not match null
         Map<String, Section> sectionMap = new HashMap<>();
         for (Section s: sections) {
             sectionMap.put(s.getName(), s);
@@ -104,7 +105,7 @@ public class TestApp {
         when(mockContext.getSectionMap()).thenReturn(sectionMap);
 
         // execute
-        App.execute(mockContext, reader);
+        App.execute(mockContext, mockReader);
 
         Section top = sections.get(0);
         assertThat(top.isExecuted(), is(true));
