@@ -83,9 +83,16 @@ public class DummyTestList {
         tests.add(new Test(context, Stream.of(new String[][] {
                 {"No", "14"},
                 {"Keyword", "execute"},
-                {"Argument", "CREATE TABLE IF NOT EXISTS test (id int not null primary key, name varchar(50) not null);"},
+                {"Target", "INSERT INTO test (id, name) VALUES (2, 'jazz');"},
                 {"Object", "jdbc:postgresql://127.0.0.1:5435/test?user=sa&password=sa"}
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1]))));
+        tests.add(new Test(context, Stream.of(new String[][] {
+                {"No", "15"},
+                {"Keyword", "assert"},
+                {"Target", "SELECT name FROM test WHERE id=1;"},
+                {"Argument", "is[pop]"},
+                {"Object", "jdbc:postgresql://127.0.0.1:5435/test?user=sa&password=sa"}
+        }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
     }
 
     public List<Test> getTests() {

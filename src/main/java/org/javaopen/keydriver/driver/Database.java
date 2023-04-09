@@ -48,26 +48,38 @@ public class Database implements Driver {
             throw new RuntimeException(e);
         }
     }
+
+    private void checkAssert(Statement st, String sql, Section section, Test test) throws SQLException {
+        ResultSet res = st.executeQuery(sql);
+        if (res.next()) {
+            String value = res.getString(1);
+            if (!match(value, test.getArgument())) {
+                test.setSuccess(false);
+                test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+test.getArgument().toString()+", but got: "+value);
+                logger.severe(test.getMatchFailed());
+                throw new AssertionError(test.getMatchFailed());
+            } else {
+                test.setSuccess(true);
+            }
+        } else {
+            test.setSuccess(false);
+            final String msg = "Section: "+section.getName()+", Test: "+ test.getNumber() + " fetch failed: result empty.";
+            test.setMatchFailed(msg);
+            logger.severe(msg);
+            throw new IllegalArgumentException(msg);
+        }
+    }
     @Override
     public void perform(Context context, Section section, Test test) {
         test.setStart(new Timestamp(System.currentTimeMillis()));
         try (Connection conn = getConnection(context, test.getObject().getValue())) {
             Statement st = conn.createStatement();
-            String sql = test.getArgument().getValue();
+            String sql = test.getTarget().getValue();// target as sql
             if (StringUtils.isEmpty(sql)) {
                 sql = test.getArgument().getValue();
             }
             if (test.getKeyword().equals(Keyword.ASSERT)) {
-                ResultSet res = st.executeQuery(sql);
-                String value = res.getString(0);
-                if (!match(value, test.getArgument())) {
-                    test.setSuccess(false);
-                    test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+test.getArgument().toString()+", but got: "+value);
-                    logger.severe(test.getMatchFailed());
-                    throw new AssertionError(test.getMatchFailed());
-                } else {
-                    test.setSuccess(true);
-                }
+                checkAssert(st, sql, section, test);
             } else if (test.getKeyword().equals(Keyword.EXECUTE)) {
                 st.execute(sql);
                 test.setSuccess(true);

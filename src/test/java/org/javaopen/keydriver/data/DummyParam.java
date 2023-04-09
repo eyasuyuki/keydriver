@@ -15,7 +15,7 @@ public class DummyParam {
     }
 
     public static Param getRandomDataType() {
-        Tag tag = DummyDataType.getRandom();
+        Tag tag = RandomDataType.getRandom();
         String value = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String attribute = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         return new Param(tag.toString()+"["+value+"#"+attribute+"]");
