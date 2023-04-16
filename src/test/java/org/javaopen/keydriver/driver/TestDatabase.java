@@ -3,12 +3,10 @@ package org.javaopen.keydriver.driver;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.h2.tools.Server;
+import org.javaopen.keydriver.data.DummyTestList;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.DummyTestList;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,16 +15,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.logging.Logger;
 
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
 public class TestDatabase {
     private static final String TEST_JDBC_DRIVER_PATH = "asset/postgresql-42.5.4.jar";
@@ -64,16 +60,16 @@ public class TestDatabase {
 
         // create table
         final String createTable = "CREATE TABLE IF NOT EXISTS test (id int not null primary key, name varchar(50) not null);";
-        boolean result = st.execute(createTable);
+        int result = st.executeUpdate(createTable);
         logger.info("create table: "+result);
 
         final String deleteAll = "DELETE FROM test;";
-        result = st.execute(deleteAll);
+        result = st.executeUpdate(deleteAll);
         logger.info("delete all: "+result);
 
         // insert into
         final String insertInto = "INSERT INTO test (id, name) VALUES (1, 'pop');";
-        result = st.execute(insertInto);
+        result = st.executeUpdate(insertInto);
         logger.info("insert into: "+result);
 
         // close connection
