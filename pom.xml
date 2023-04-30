@@ -112,6 +112,11 @@
       <version>2.1.214</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>0.8.9</version>
+    </dependency>
   </dependencies>
   <profiles>
     <profile>
@@ -149,7 +154,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>3.4.1</version>
+            <version>3.2.4</version>
             <executions>
               <execution>
                 <phase>package</phase>
@@ -262,6 +267,11 @@
             </manifest>
           </archive>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.9</version>
       </plugin>
     </plugins>
   </build>
