@@ -69,6 +69,12 @@ see [Config](doc/Config.md)
 mvn jacoco:prepare-agent test jacoco:report
 ```
 
+# Use maven local repository
+
+```shell
+mvn <command> -Dmaven.repo.local=./lib
+```
+
 # ToDo
 
 - Add JavaDoc comment
