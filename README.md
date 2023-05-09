@@ -63,8 +63,13 @@ java -jar keydriver-<version>.jar <test_directive>.xlsx
 
 see [Config](doc/Config.md)
 
+# Jacoco coverage report
+
+```shell
+mvn jacoco:prepare-agent test jacoco:report
+```
+
 # ToDo
 
 - Add JavaDoc comment
 - More unit tests
-- Dynamic loading ```config.properties```
