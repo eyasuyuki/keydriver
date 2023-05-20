@@ -6,6 +6,7 @@ public enum DataType implements Tag {
     ID("id"),
     NAME("name"),
     XPATH("xpath"),
+    CSS("sss"),
     URL("url"),
     SHEET("sheet"),
     SQL("sql"),
