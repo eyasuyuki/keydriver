@@ -32,6 +32,7 @@ public class WebDriverFactory {
         if (CHROME.getName().equals(browser)) {
             ChromeOptions options = new ChromeOptions();
             options.setLogLevel(ChromeDriverLogLevel.SEVERE);
+            options.addArguments("--remote-allow-origins=*");
             webdriver = new ChromeDriver(options);
         } else if (FIREFOX.getName().equals(browser)) {
             webdriver = new FirefoxDriver();

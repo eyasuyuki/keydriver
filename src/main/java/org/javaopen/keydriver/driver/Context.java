@@ -2,20 +2,14 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.grid.config.Config;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +19,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Context {

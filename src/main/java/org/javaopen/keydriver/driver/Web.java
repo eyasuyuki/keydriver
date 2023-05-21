@@ -246,13 +246,16 @@ public class Web implements Driver {
             throw new IllegalArgumentException(object.toString());
         }
         // find from IFRAMEs
-        List<WebElement> frames = driver.findElements(By.tagName("iframe"));
         Duration duration = Duration.ofSeconds(wait);
         WebDriverWait w = new WebDriverWait(driver, duration);
         try {
             return w.until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (Exception e) {
+            driver.switchTo().defaultContent();
+            List<WebElement> frames = driver.findElements(By.tagName("iframe"));
             for (WebElement f: frames) {
+                driver.switchTo().defaultContent();
+                driver.switchTo().frame(f);
                 try {
                     return w.until(ExpectedConditions.presenceOfElementLocated(by));
                 } catch (Exception ex) {}
