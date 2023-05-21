@@ -31,6 +31,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Web implements Driver {
@@ -92,13 +93,13 @@ public class Web implements Driver {
         if (key.equals(Keyword.OPEN)) {
             driver.get(target.getValue());
         } else if (key.equals(Keyword.CLICK)) {
-            findElement(driver, object).click();
+            findElement(driver, object, wait).click();
         } else if (key.equals(Keyword.INPUT)) {
-            findElement(driver, object).sendKeys(argument.getValue());
+            findElement(driver, object, wait).sendKeys(argument.getValue());
         } else if (key.equals(Keyword.CLEAR)) {
-            findElement(driver, object).clear();
+            findElement(driver, object, wait).clear();
         } else if (key.equals(Keyword.SELECT)) {
-            Select select = new Select(findElement(driver, object));
+            Select select = new Select(findElement(driver, object, wait));
             select.selectByValue(option.getValue());
         } else if (key.equals(Keyword.ACCEPT)) {
             Alert alert = waitAlert(driver, wait);
@@ -107,9 +108,9 @@ public class Web implements Driver {
             Alert alert = waitAlert(driver, wait);
             alert.dismiss();
         } else if (key.equals(Keyword.UPLOAD)) {
-            doUpload(driver, argument, object);
+            doUpload(driver, argument, object, wait);
         } else if (key.equals(Keyword.ASSERT)) {
-            doAssert(section, test, driver, object, argument);
+            doAssert(section, test, driver, object, argument, wait);
         } else if (key.equals(Keyword._DIRECTIVE)) {
             doDirective(context, argument, object);
         }
@@ -141,7 +142,7 @@ public class Web implements Driver {
         }
     }
 
-    private void doUpload(WebDriver driver, Param argument, Param object) {
+    private void doUpload(WebDriver driver, Param argument, Param object, int wait) {
         String filename;
         if (argument.getTag().equals(DataType.URL)) {
             try {
@@ -156,15 +157,15 @@ public class Web implements Driver {
         } else {
             filename = argument.getValue();
         }
-        findElement(driver, object).sendKeys(filename);
+        findElement(driver, object, wait).sendKeys(filename);
     }
 
-    private void doAssert(Section section, Test test, WebDriver driver, Param object, Param argument) {
+    private void doAssert(Section section, Test test, WebDriver driver, Param object, Param argument, int wait) {
         String attribute = DEFAULT_ATTRIBUTE;
         if (object != null && StringUtils.isNotEmpty(object.getAttribute())) {
             attribute = object.getAttribute();
         }
-        WebElement element = findElement(driver, object);
+        WebElement element = findElement(driver, object, wait);
         test.setExpected(argument.getValue());
 
         String value = getValue(element, attribute);
@@ -229,18 +230,38 @@ public class Web implements Driver {
         }
         return driver;
     }
-    private WebElement findElement(WebDriver driver, Param object) {
+    private WebElement findElement(WebDriver driver, Param object, int wait) {
+        By by = null;
         if (driver == null || object == null) {
             return null;
         } else if (object.getTag() == DataType.ID) {
-            return driver.findElement(By.id(object.getValue()));
+            by = By.id(object.getValue());
         } else if (object.getTag() == DataType.NAME) {
-            return driver.findElement(By.name(object.getValue()));
+            by = By.name(object.getValue());
         } else if (object.getTag() == DataType.XPATH) {
-            return driver.findElement(By.xpath(object.getValue()));
+            by = By.xpath(object.getValue());
+        } else if (object.getTag() ==  DataType.CSS) {
+            by = By.cssSelector(object.getValue());
         } else {
             throw new IllegalArgumentException(object.toString());
         }
+        // find from IFRAMEs
+        Duration duration = Duration.ofSeconds(wait);
+        WebDriverWait w = new WebDriverWait(driver, duration);
+        try {
+            return w.until(ExpectedConditions.presenceOfElementLocated(by));
+        } catch (Exception e) {
+            driver.switchTo().defaultContent();
+            List<WebElement> frames = driver.findElements(By.tagName("iframe"));
+            for (WebElement f: frames) {
+                driver.switchTo().defaultContent();
+                driver.switchTo().frame(f);
+                try {
+                    return w.until(ExpectedConditions.presenceOfElementLocated(by));
+                } catch (Exception ex) {}
+            }
+        }
+        throw new RuntimeException("Element not found. "+object.toString());
     }
 
     private Alert waitAlert(WebDriver driver, int wait) {
