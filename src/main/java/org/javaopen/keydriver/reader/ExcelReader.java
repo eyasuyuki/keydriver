@@ -90,7 +90,12 @@ public class ExcelReader implements Reader {
             boolean value = cell.getBooleanCellValue();
             return Boolean.toString(value);
         } else if (type == CellType.FORMULA) {
-            final boolean isDate = DateUtil.isCellDateFormatted(cell);
+            boolean isDate = false;
+            try {
+                isDate = DateUtil.isCellDateFormatted(cell);
+            } catch (Throwable t) {
+                //logger.severe(t.getLocalizedMessage());
+            }
             CreationHelper helper = workbook.getCreationHelper();
             FormulaEvaluator evaluator = helper.createFormulaEvaluator();
             CellValue value = evaluator.evaluate(cell);
