@@ -6,11 +6,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverLogLevel;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 
 import static org.javaopen.keydriver.browser.Browser.CHROME;
 import static org.javaopen.keydriver.browser.Browser.EDGE;
@@ -35,9 +38,13 @@ public class WebDriverFactory {
             options.addArguments("--remote-allow-origins=*");
             webdriver = new ChromeDriver(options);
         } else if (FIREFOX.getName().equals(browser)) {
-            webdriver = new FirefoxDriver();
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("--remote-allow-origins=*");
+            webdriver = new FirefoxDriver(options);
         } else if (EDGE.getName().equals(browser)) {
-            webdriver = new EdgeDriver();
+            EdgeOptions options = new EdgeOptions();
+            options.addArguments("--remote-allow-origins=*");
+            webdriver = new EdgeDriver(options);
         } else if (SAFARI.getName().equals(browser)) {
             webdriver = new SafariDriver();
         } else if (IE.getName().equals(browser)) {
