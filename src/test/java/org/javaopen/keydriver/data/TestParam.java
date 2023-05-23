@@ -33,5 +33,9 @@ public class TestParam {
         param = new Param("sheet[Sheet1]");
         assertThat(param.getTag(), is(DataType.SHEET));
         assertThat(param.getValue(), is("Sheet1"));
+
+        param = new Param("window[1]");
+        assertThat(param.getTag(), is(DataType.WINDOW));
+        assertThat(param.getValue(), is("1"));
     }
 }

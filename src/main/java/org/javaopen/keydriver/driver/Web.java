@@ -1,17 +1,16 @@
 package org.javaopen.keydriver.driver;
 
 
-import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
+import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Tag;
 import org.javaopen.keydriver.data.Test;
-import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -32,7 +31,10 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 public class Web implements Driver {
     public static final String BROWSER_WAIT_KEY = "browser_wait";
@@ -101,6 +103,8 @@ public class Web implements Driver {
         } else if (key.equals(Keyword.SELECT)) {
             Select select = new Select(findElement(driver, object, wait));
             select.selectByValue(option.getValue());
+        } else if (key.equals(Keyword.SWITCH)) {
+            doSwitch(driver, argument, wait);
         } else if (key.equals(Keyword.ACCEPT)) {
             Alert alert = waitAlert(driver, wait);
             alert.accept();
@@ -230,26 +234,30 @@ public class Web implements Driver {
         }
         return driver;
     }
+
+    private By by(Param object) {
+        if (object.getTag() == DataType.ID) {
+            return By.id(object.getValue());
+        } else if (object.getTag() == DataType.NAME) {
+            return By.name(object.getValue());
+        } else if (object.getTag() == DataType.XPATH) {
+            return By.xpath(object.getValue());
+        } else if (object.getTag() ==  DataType.CSS) {
+            return By.cssSelector(object.getValue());
+        } else {
+            throw new IllegalArgumentException(object.toString());
+        }
+    }
     private WebElement findElement(WebDriver driver, Param object, int wait) {
         By by = null;
         if (driver == null || object == null) {
             return null;
-        } else if (object.getTag() == DataType.ID) {
-            by = By.id(object.getValue());
-        } else if (object.getTag() == DataType.NAME) {
-            by = By.name(object.getValue());
-        } else if (object.getTag() == DataType.XPATH) {
-            by = By.xpath(object.getValue());
-        } else if (object.getTag() ==  DataType.CSS) {
-            by = By.cssSelector(object.getValue());
-        } else {
-            throw new IllegalArgumentException(object.toString());
         }
         // find from IFRAMEs
         Duration duration = Duration.ofSeconds(wait);
         WebDriverWait w = new WebDriverWait(driver, duration);
         try {
-            return w.until(ExpectedConditions.presenceOfElementLocated(by));
+            return w.until(ExpectedConditions.presenceOfElementLocated(by(object)));
         } catch (Exception e) {
             driver.switchTo().defaultContent();
             List<WebElement> frames = driver.findElements(By.tagName("iframe"));
@@ -264,6 +272,34 @@ public class Web implements Driver {
         throw new RuntimeException("Element not found. "+object.toString());
     }
 
+    private void doSwitch(WebDriver driver, Param argument, int wait) {
+        WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(wait));
+        String current = "";
+        // for NoSuchWindowException
+        try {
+            current = driver.getWindowHandle();
+            w.until(numberOfWindowsToBe(2));
+        } catch (Exception e) {
+            logger.severe(e.getLocalizedMessage());
+        }
+        if (argument != null && StringUtils.isNotEmpty(current) && current.equals(argument.getValue())) {
+            return;
+        }
+        Set<String> handles = driver.getWindowHandles();
+        for (String h: handles) {
+            if (argument != null && h.contentEquals(argument.getValue())) {
+                driver.switchTo().window(h);
+                break;
+            }
+            if (h.contentEquals(current)) {
+                continue;
+            }
+            // switch to another window
+            driver.switchTo().window(h);
+            break;
+        }
+    }
+
     private Alert waitAlert(WebDriver driver, int wait) {
         WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(wait));
         return w.until(ExpectedConditions.alertIsPresent());
@@ -274,12 +310,17 @@ public class Web implements Driver {
         return new File(section.getName()+"_"+num+suffix+".png");
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Test test) throws IOException {
+    private void capture(WebDriver driver, Context context, Section section, Test test) {
         capture(driver, context, section, test, false);
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Test test, boolean isError) throws IOException {
-        File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(f, getCaptureFile(context, section, test, isError));
+    private void capture(WebDriver driver, Context context, Section section, Test test, boolean isError) {
+        // for NoSuchWindowException
+        try {
+            File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(f, getCaptureFile(context, section, test, isError));
+        } catch (Exception e) {
+            logger.severe(e.getLocalizedMessage());
+        }
     }
 }
