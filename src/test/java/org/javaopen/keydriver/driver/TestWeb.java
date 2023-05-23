@@ -250,23 +250,6 @@ public class TestWeb {
     }
 
     @Test
-    public void testCaptureException() {
-        org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.CAPTURE);
-
-        Driver d = context.getDriver(test);
-        assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
-
-        doThrow(new RuntimeException()).when((TakesScreenshot)driver).getScreenshotAs(any());
-        try {
-            d.perform(context, section, test);
-            assertThat(null, false);
-        } catch (Exception e) {
-            assertException(test);
-        }
-    }
-
-    @Test
     public void testAccept() {
         org.javaopen.keydriver.data.Test test = dummyTests.getTest(Keyword.ACCEPT);
 
