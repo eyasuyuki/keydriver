@@ -6,11 +6,14 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.javaopen.keydriver.browser.Browser;
+import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.javaopen.keydriver.data.Section;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +37,13 @@ public class TestIframe {
     @Before
     public void setUp() {
         Locale.setDefault(Locale.US);//important
+        // context
+        context = Context.getContext(null, null, null);
+        // use force non-mock WebDriver
+        WebDriver webDriver = WebDriverFactory.getInstance(context, Browser.CHROME.getName());
+        context.setWebDriver(webDriver);
+        // browser quit
+        context.getConfig().setProperty(Web.BROWSER_QUIT_KEY, true);
 
         assertThat(rule.getOptions().portNumber(), is(8888));
         // start mock server
@@ -50,9 +60,6 @@ public class TestIframe {
             aResponse().withStatus(404)
         ));
         rule.start();
-
-        // context
-        context = Context.getContext(null, null, null);
     }
 
     @Test

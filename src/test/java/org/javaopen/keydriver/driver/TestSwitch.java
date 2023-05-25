@@ -1,11 +1,14 @@
 package org.javaopen.keydriver.driver;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.javaopen.keydriver.browser.Browser;
+import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.javaopen.keydriver.data.Section;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -26,6 +29,14 @@ public class TestSwitch {
     public void setUp() {
         Locale.setDefault(Locale.US);//important
 
+        // context
+        context = Context.getContext(null, null, null);
+        // use force non-mock WebDriver
+        WebDriver webDriver = WebDriverFactory.getInstance(context, Browser.CHROME.getName());
+        context.setWebDriver(webDriver);
+        // browser quit
+        context.getConfig().setProperty(Web.BROWSER_QUIT_KEY, true);
+
         assertThat(rule.getOptions().portNumber(), is(8888));
         // start mock server
         rule.stubFor(get(urlEqualTo("/main.html")).willReturn(
@@ -38,9 +49,6 @@ public class TestSwitch {
                 aResponse().withStatus(404)
         ));
         rule.start();
-
-        // context
-        context = Context.getContext(null, null, null);
     }
 
     @Test
