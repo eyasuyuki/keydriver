@@ -33,17 +33,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.javaopen.keydriver.driver.Context.CONFIG;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
-import static org.mockito.AdditionalMatchers.not;
 
 public class TestApp {
     private static final Random random = new Random();
@@ -153,14 +153,15 @@ public class TestApp {
     private Section generateSection(String name) {
         Section section = new Section(name);
         int size = random.nextInt(40)+1;
+        List<org.javaopen.keydriver.data.Test> tests = new ArrayList<>();
         for (int i=0; i<size; i++) {
             Keyword keyword = DummyKeyword.getRandom();
-            if (keyword.equals(Keyword._DIRECTIVE)) {
-                continue;
-            }
             org.javaopen.keydriver.data.Test test = DummyTestFactory.getDummy(keyword);
-            section.getTests().add(test);
+            tests.add(test);
         }
+        // remove _DIRECTIVE
+        List<org.javaopen.keydriver.data.Test> ts = section.getTests().stream().filter(x -> !x.getKeyword().equals(Keyword._DIRECTIVE)).collect(Collectors.toList());
+        section.getTests().addAll(ts);
 
         return section;
     }

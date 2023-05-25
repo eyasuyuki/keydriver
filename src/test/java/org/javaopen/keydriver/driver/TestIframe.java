@@ -1,24 +1,20 @@
 package org.javaopen.keydriver.driver;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.javaopen.keydriver.browser.Browser;
+import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.javaopen.keydriver.data.Section;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
-import java.io.IOException;
-import java.net.http.HttpClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -28,11 +24,8 @@ import java.util.stream.Stream;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.withSettings;
 
 public class TestIframe {
 
@@ -44,6 +37,13 @@ public class TestIframe {
     @Before
     public void setUp() {
         Locale.setDefault(Locale.US);//important
+        // context
+        context = Context.getContext(null, null, null);
+        // use force non-mock WebDriver
+        WebDriver webDriver = WebDriverFactory.getInstance(context, Browser.CHROME.getName());
+        context.setWebDriver(webDriver);
+        // browser quit
+        context.getConfig().setProperty(Web.BROWSER_QUIT_KEY, true);
 
         assertThat(rule.getOptions().portNumber(), is(8888));
         // start mock server
@@ -60,9 +60,6 @@ public class TestIframe {
             aResponse().withStatus(404)
         ));
         rule.start();
-
-        // context
-        context = Context.getContext(null, null, null);
     }
 
     @Test
@@ -111,6 +108,13 @@ public class TestIframe {
                 {"Keyword", "click"},
                 {"Target", "button"},
                 {"Object", "id[send]"}
+        }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
+        section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
+                {"No", "4"},
+                {"Keyword", "assert"},
+                {"Target", "button"},
+                {"Argument", "is[That's it]"},
+                {"Object", "id[hidden_0]"}
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
 
         // open

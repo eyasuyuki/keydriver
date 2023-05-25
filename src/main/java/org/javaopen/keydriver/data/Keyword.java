@@ -15,6 +15,7 @@ public enum Keyword {
     ASSERT("assert"),
     EXECUTE("execute"),
     UPLOAD("upload"),
+    SWITCH("switch"),
     ;
 
     private final String text;

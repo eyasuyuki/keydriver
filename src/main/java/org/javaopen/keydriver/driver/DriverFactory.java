@@ -19,6 +19,7 @@ public class DriverFactory {
         Keyword.ACCEPT,
         Keyword.DISMISS,
         Keyword.UPLOAD,
+        Keyword.SWITCH,
         Keyword._DIRECTIVE,
     });
 

@@ -1,7 +1,5 @@
 package org.javaopen.keydriver.browser;
 
-import org.javaopen.keydriver.data.Keyword;
-
 import java.util.Arrays;
 
 public enum Browser {
