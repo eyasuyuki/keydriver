@@ -45,7 +45,7 @@ public class TestSwitch {
 
     @Test
     public void testSwitch() {
-        Section section = new Section("Sheet1");
+        Section section = new Section("TestSwitch1");
         section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
                 { "No", "1" },
                 { "Keyword", "open" },
@@ -83,9 +83,9 @@ public class TestSwitch {
         section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
                 {"No", "7"},
                 {"Keyword", "assert"},
-                {"Target", "Window title"},
-                {"Argument", "is[Main window]"},
-                {"Object", "xpath[/html/head/title]"},
+                {"Target", "Hidden input"},
+                {"Argument", "is[Test me]"},
+                {"Object", "id[hidden_1#value]"},
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
 
         // open

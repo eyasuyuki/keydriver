@@ -2,7 +2,6 @@ package org.javaopen.keydriver.data;
 
 import org.javaopen.keydriver.driver.Context;
 import org.javaopen.keydriver.driver.Driver;
-import org.javaopen.keydriver.driver.DriverFactory;
 
 import java.util.ArrayList;
 import java.util.List;

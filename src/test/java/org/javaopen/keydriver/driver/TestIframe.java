@@ -102,6 +102,13 @@ public class TestIframe {
                 {"Target", "button"},
                 {"Object", "id[send]"}
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
+        section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
+                {"No", "4"},
+                {"Keyword", "assert"},
+                {"Target", "button"},
+                {"Argument", "is[That's it]"},
+                {"Object", "id[hidden_0]"}
+        }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
 
         // open
         Driver driver = context.getDriver(section.getTests().get(0));

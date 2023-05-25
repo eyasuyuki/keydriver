@@ -22,7 +22,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -235,7 +234,7 @@ public class Web implements Driver {
         return driver;
     }
 
-    private By by(Param object) {
+    private By getBy(Param object) {
         if (object.getTag() == DataType.ID) {
             return By.id(object.getValue());
         } else if (object.getTag() == DataType.NAME) {
@@ -249,7 +248,6 @@ public class Web implements Driver {
         }
     }
     private WebElement findElement(WebDriver driver, Param object, int wait) {
-        By by = null;
         if (driver == null || object == null) {
             return null;
         }
@@ -257,7 +255,7 @@ public class Web implements Driver {
         Duration duration = Duration.ofSeconds(wait);
         WebDriverWait w = new WebDriverWait(driver, duration);
         try {
-            return w.until(ExpectedConditions.presenceOfElementLocated(by(object)));
+            return w.until(ExpectedConditions.presenceOfElementLocated(getBy(object)));
         } catch (Exception e) {
             driver.switchTo().defaultContent();
             List<WebElement> frames = driver.findElements(By.tagName("iframe"));
@@ -265,7 +263,7 @@ public class Web implements Driver {
                 driver.switchTo().defaultContent();
                 driver.switchTo().frame(f);
                 try {
-                    return w.until(ExpectedConditions.presenceOfElementLocated(by));
+                    return w.until(ExpectedConditions.presenceOfElementLocated(getBy(object)));
                 } catch (Exception ex) {}
             }
         }
@@ -286,6 +284,7 @@ public class Web implements Driver {
             return;
         }
         Set<String> handles = driver.getWindowHandles();
+        logger.info("handles="+handles.toString());
         for (String h: handles) {
             if (argument != null && h.contentEquals(argument.getValue())) {
                 driver.switchTo().window(h);
