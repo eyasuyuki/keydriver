@@ -86,7 +86,8 @@ public class TestCase {
         if (number == null) {
             return;
         }
-        int n = Integer.parseInt(number);
+        double x = Double.parseDouble(number);
+        int n = (int)x;
         this.number = n;
     }
 
