@@ -12,7 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
 import org.javaopen.keydriver.driver.Context;
 
 import java.io.File;
@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.javaopen.keydriver.driver.Context.KEYS;
+import static org.javaopen.keydriver.driver.Context.SECTION_KEY;
 
 public class ExcelReader implements Reader {
     private static final Logger logger = Logger.getLogger(ExcelReader.class.getName());
@@ -60,11 +61,12 @@ public class ExcelReader implements Reader {
                 }
             } else {
                 Map<String, String> cols = new HashMap<>();
+                cols.put(SECTION_KEY, section.getName());
                 for (int i = 0; i < keys.length; i++) {
                         Cell c = r.getCell(i);
                         cols.put(keys[i], getCellString(c));
                 }
-                section.getTests().add(new Test(context, cols));
+                section.getTestCaseList().add(new TestCase(context, cols));
             }
         }
     }

@@ -45,7 +45,7 @@ buildNumber.properties
 # IntelliJ IDEA
 .idea
 classes
-test-classes
+testCase-classes
 archive-tmp
 maven-archiver
 maven-status

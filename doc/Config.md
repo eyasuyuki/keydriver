@@ -80,12 +80,12 @@ Dynamic loading JDBC driver settings
 ----- |-------------------------------|--------------
 | timestamp_format | Excel timestamp format        | ex. ```yyyy-mm-dd hh:mm:ss.000``` |
 | test_file_name_label | Test file name label | ex. ```Test file name``` |
-| expecting_test_count_label | Expecting test count label    | ex. ```Expecting test count``` |
+| expecting_test_count_label | Expecting testCase count label    | ex. ```Expecting testCase count``` |
 | expecting_failure_count_label | Expecting failure count label | ex. ```Expecting failure count``` |
-| executed_test_count_label | Executed test count label     | ex. ```Executed test count``` |
-| success_test_count_label | Success test count label      | ex. ```Success test count``` |
-| failed_test_count_label | Failed test count label       | ex. ```Failed test count``` |
-| uncompleted_test_count_label | Uncompleted test count label  | ex. ```Uncompleted test count``` |
+| executed_test_count_label | Executed testCase count label     | ex. ```Executed testCase count``` |
+| success_test_count_label | Success testCase count label      | ex. ```Success testCase count``` |
+| failed_test_count_label | Failed testCase count label       | ex. ```Failed testCase count``` |
+| uncompleted_test_count_label | Uncompleted testCase count label  | ex. ```Uncompleted testCase count``` |
 | start_time_label | Start time label              | ex. ```Start time``` |
 | duration_label | Duration label                | ex. ```Duration``` |
 

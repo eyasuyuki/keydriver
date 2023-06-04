@@ -19,7 +19,7 @@ public class DummyTestFactory {
     }
     private static final Context context = Context.getContext(null, null, null);
     private static final Random random = new Random();
-    public static Test getDummy(Keyword keyword) {
+    public static TestCase getDummy(Keyword keyword) {
         switch(keyword) {
             case OPEN:
                 return getOpen();
@@ -48,12 +48,12 @@ public class DummyTestFactory {
         }
     }
 
-    private static Test getDirective() {
+    private static TestCase getDirective() {
         String num = Integer.toString(random.nextInt(20)+1);
         String keyword = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String sheetName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", keyword},
                 {"Target", target},
@@ -61,21 +61,21 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getOpen()  {
+    private static TestCase getOpen()  {
         String num = Integer.toString(random.nextInt(20)+1);
         String url = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "open" },
                 { "Target", "url[https://"+url+"]" },
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getClick() {
+    private static TestCase getClick() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         String buttonName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "click" },
                 { "Target", target },
@@ -83,12 +83,12 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getSelect() {
+    private static TestCase getSelect() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         String inputName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "select"},
                 {"Target", target},
@@ -98,12 +98,12 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getInput() {
+    private static TestCase getInput() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         String inputName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "input" },
                 { "Target", target },
@@ -112,11 +112,11 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getClear() {
+    private static TestCase getClear() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
         String inputName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "clear" },
                 { "Target", target },
@@ -124,43 +124,43 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getAccept() {
+    private static TestCase getAccept() {
         String num = Integer.toString(random.nextInt(20)+1);
         String comment = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "accept" },
                 { "Comment", comment},
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getDismiss() {
+    private static TestCase getDismiss() {
         String num = Integer.toString(random.nextInt(20)+1);
         String comment = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "dismiss" },
                 { "Comment", comment},
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getCapture() {
+    private static TestCase getCapture() {
         String num = Integer.toString(random.nextInt(20)+1);
         String comment = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 { "No", num },
                 { "Keyword", "capture" },
                 { "Comment", comment},
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getAssert() {
+    private static TestCase getAssert() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String argument = Boolean.toString(random.nextBoolean());
         String elementName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String attribute = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "assert"},
                 {"Target", target},
@@ -169,13 +169,13 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getExecute() {
+    private static TestCase getExecute() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(60)+1);
         String sql = Integer.toString(random.nextInt(20)+1);
         String url = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "execute"},
                 {"Target", target},
@@ -185,13 +185,13 @@ public class DummyTestFactory {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1])));
     }
 
-    private static Test getUpload() {
+    private static TestCase getUpload() {
         String num = Integer.toString(random.nextInt(20)+1);
         String target = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String argument = RandomStringUtils.randomAlphanumeric(random.nextInt(60)+1);
         String elementName = RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1);
         String attribute = RandomStringUtils.randomAlphanumeric(random.nextInt(10)+1);
-        return new Test(context, Stream.of(new String[][] {
+        return new TestCase(context, Stream.of(new String[][] {
                 {"No", num},
                 {"Keyword", "upload"},
                 {"Target", target},
@@ -202,7 +202,7 @@ public class DummyTestFactory {
 
     @org.junit.Test
     public void testGetDirective() {
-        Test directive = getDirective();
+        TestCase directive = getDirective();
         assertThat(directive, is(not(nullValue())));
         assertThat(directive.getKeyword(), is(Keyword._DIRECTIVE));
         assertThat(directive.getObject(), is(not(nullValue())));

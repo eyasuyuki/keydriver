@@ -1,7 +1,7 @@
 package org.javaopen.keydriver.report;
 
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -24,14 +24,14 @@ public class Summary implements Report, Usage {
         if (sections == null || sections.size() < 1) {
             return;
         }
-        expectingTestCount = (int)sections.stream().mapToLong(x -> x.getTests().size()).sum();
-        executedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExecuted).count();
-        successTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isSuccess).count();
-        failedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> x.isExecuted() && !x.isSuccess()).count();
-        expectingFailureCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(Test::isExpectingFailure).count();
-        notExecutedTestCount = (int)sections.stream().flatMap(x -> x.getTests().stream()).filter(x -> !x.isExecuted()).count();
-        Optional<Test> min = sections.stream().flatMap(x -> x.getTests().stream().filter(y -> y.getStart() != null)).min(Comparator.comparingLong(x -> x.getStart().getTime()));
-        Optional<Test> max = sections.stream().flatMap(x -> x.getTests().stream().filter(y -> y.getEnd() != null)).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
+        expectingTestCount = (int)sections.stream().mapToLong(x -> x.getTestCaseList().size()).sum();
+        executedTestCount = (int)sections.stream().flatMap(x -> x.getTestCaseList().stream()).filter(TestCase::isExecuted).count();
+        successTestCount = (int)sections.stream().flatMap(x -> x.getTestCaseList().stream()).filter(TestCase::isSuccess).count();
+        failedTestCount = (int)sections.stream().flatMap(x -> x.getTestCaseList().stream()).filter(x -> x.isExecuted() && !x.isSuccess()).count();
+        expectingFailureCount = (int)sections.stream().flatMap(x -> x.getTestCaseList().stream()).filter(TestCase::isExpectingFailure).count();
+        notExecutedTestCount = (int)sections.stream().flatMap(x -> x.getTestCaseList().stream()).filter(x -> !x.isExecuted()).count();
+        Optional<TestCase> min = sections.stream().flatMap(x -> x.getTestCaseList().stream().filter(y -> y.getStart() != null)).min(Comparator.comparingLong(x -> x.getStart().getTime()));
+        Optional<TestCase> max = sections.stream().flatMap(x -> x.getTestCaseList().stream().filter(y -> y.getEnd() != null)).max(Comparator.comparingLong(x -> x.getEnd().getTime()));
         min.ifPresent(test -> startTime = test.getStart());
 
         if (min.isPresent() && max.isPresent()) {

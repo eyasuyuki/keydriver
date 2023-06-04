@@ -6,6 +6,7 @@ import org.javaopen.keydriver.data.DummyKeyword;
 import org.javaopen.keydriver.data.DummyTestFactory;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.TestCase;
 import org.javaopen.keydriver.driver.Context;
 import org.javaopen.keydriver.driver.Database;
 import org.javaopen.keydriver.driver.Driver;
@@ -63,11 +64,11 @@ public class TestApp {
         Collections.list(bundle.getKeys()).forEach(x -> config.addProperty(x, bundle.getObject(x)));
         when(mockContext.getConfig()).thenReturn(config);
         // mock getDriver
-        ArgumentMatcher<org.javaopen.keydriver.data.Test> matcher = test -> {
+        ArgumentMatcher<TestCase> matcher = test -> {
             if (test == null) {
                 return false;
             }
-            org.javaopen.keydriver.data.Test t = test;
+            TestCase t = test;
             Keyword k = t.getKeyword();
             return DriverFactory.WEB_KEYWORDS.contains(k);
         };
@@ -133,10 +134,10 @@ public class TestApp {
 
         // top section
         Section top = new Section(RandomStringUtils.randomAlphanumeric(random.nextInt(20)+1));
-        org.javaopen.keydriver.data.Test dir1 = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
-        org.javaopen.keydriver.data.Test dir2  = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
-        org.javaopen.keydriver.data.Test dir3 = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
-        top.getTests().addAll(Arrays.asList(dir1, dir2, dir3));
+        TestCase dir1 = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
+        TestCase dir2  = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
+        TestCase dir3 = DummyTestFactory.getDummy(Keyword._DIRECTIVE);
+        top.getTestCaseList().addAll(Arrays.asList(dir1, dir2, dir3));
         sections.add(top);
 
         // subroutine sections
@@ -153,15 +154,15 @@ public class TestApp {
     private Section generateSection(String name) {
         Section section = new Section(name);
         int size = random.nextInt(40)+1;
-        List<org.javaopen.keydriver.data.Test> tests = new ArrayList<>();
+        List<TestCase> testCases = new ArrayList<>();
         for (int i=0; i<size; i++) {
             Keyword keyword = DummyKeyword.getRandom();
-            org.javaopen.keydriver.data.Test test = DummyTestFactory.getDummy(keyword);
-            tests.add(test);
+            TestCase testCase = DummyTestFactory.getDummy(keyword);
+            testCases.add(testCase);
         }
         // remove _DIRECTIVE
-        List<org.javaopen.keydriver.data.Test> ts = section.getTests().stream().filter(x -> !x.getKeyword().equals(Keyword._DIRECTIVE)).collect(Collectors.toList());
-        section.getTests().addAll(ts);
+        List<TestCase> ts = section.getTestCaseList().stream().filter(x -> !x.getKeyword().equals(Keyword._DIRECTIVE)).collect(Collectors.toList());
+        section.getTestCaseList().addAll(ts);
 
         return section;
     }

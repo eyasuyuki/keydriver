@@ -10,7 +10,8 @@ import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
 import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.Tag;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
+import org.javaopen.keydriver.data.TestException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -47,9 +48,9 @@ public class Web implements Driver {
     private String errorSuffix;
 
     @Override
-    public void perform(Context context, Section section, Test test) {
+    public void perform(Context context, Section section, TestCase testCase) {
         // set test properties
-        test.setStart(new Timestamp(System.currentTimeMillis()));
+        testCase.setStart(new Timestamp(System.currentTimeMillis()));
         // set wait
         int wait = context.getConfig().getInt(BROWSER_WAIT_KEY);
 
@@ -65,31 +66,31 @@ public class Web implements Driver {
         WebDriver driver = getDriver(context, wait);
 
         // get test fields
-        Keyword key = test.getKeyword();
+        Keyword key = testCase.getKeyword();
 
         try {
-            test.setExecuted(true);
+            testCase.setExecuted(true);
             // perform
-            dispatch(context, driver, wait, section, test);
+            dispatch(context, driver, wait, section, testCase);
             // manual capture or auto
             if (key.equals(Keyword.CAPTURE) || autoCapture) {
-                capture(driver, context, section, test);
+                capture(driver, context, section, testCase);
             }
-            test.setSuccess(true);
+            testCase.setSuccess(true);
             // set end
-            test.setEnd(new Timestamp(System.currentTimeMillis()));
+            testCase.setEnd(new Timestamp(System.currentTimeMillis()));
         } catch (Throwable t) {
-            setFailure(context, driver, t, section, test);
-            throw new RuntimeException(t);
+            setFailure(context, driver, t, section, testCase);
+            throw new TestException(t, testCase);
         }
     }
 
-    private void dispatch(Context context, WebDriver driver, int wait, Section section, Test test) {
-        Keyword key = test.getKeyword();
-        Param target = test.getTarget();
-        Param argument = test.getArgument();
-        Param object = test.getObject();
-        Param option = test.getOption();
+    private void dispatch(Context context, WebDriver driver, int wait, Section section, TestCase testCase) {
+        Keyword key = testCase.getKeyword();
+        Param target = testCase.getTarget();
+        Param argument = testCase.getArgument();
+        Param object = testCase.getObject();
+        Param option = testCase.getOption();
 
         if (key.equals(Keyword.OPEN)) {
             driver.get(target.getValue());
@@ -113,7 +114,7 @@ public class Web implements Driver {
         } else if (key.equals(Keyword.UPLOAD)) {
             doUpload(driver, argument, object, wait);
         } else if (key.equals(Keyword.ASSERT)) {
-            doAssert(section, test, driver, object, argument, wait);
+            doAssert(section, testCase, driver, object, argument, wait);
         } else if (key.equals(Keyword._DIRECTIVE)) {
             doDirective(context, argument, object);
         }
@@ -163,48 +164,48 @@ public class Web implements Driver {
         findElement(driver, object, wait).sendKeys(filename);
     }
 
-    private void doAssert(Section section, Test test, WebDriver driver, Param object, Param argument, int wait) {
+    private void doAssert(Section section, TestCase testCase, WebDriver driver, Param object, Param argument, int wait) {
         String attribute = DEFAULT_ATTRIBUTE;
         if (object != null && StringUtils.isNotEmpty(object.getAttribute())) {
             attribute = object.getAttribute();
         }
         WebElement element = findElement(driver, object, wait);
-        test.setExpected(argument.getValue());
+        testCase.setExpected(argument.getValue());
 
         String value = getValue(element, attribute);
-        test.setActual(value);
+        testCase.setActual(value);
 
-        test.setExpectingFailure(argument != null && argument.getTag() == Matches.FAIL);
+        testCase.setExpectingFailure(argument != null && argument.getTag() == Matches.FAIL);
 
         if (!match(value, argument)) {
-            test.setSuccess(false);
-            if (test.isExpectingFailure()) {
-                test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+argument.toString());
+            testCase.setSuccess(false);
+            if (testCase.isExpectingFailure()) {
+                testCase.setMatchFailed("Section: "+section.getName()+", Test: "+ testCase.getNumber() + " failed: expected: "+argument.toString());
             } else {
-                test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+argument.toString()+", but got: "+value);
+                testCase.setMatchFailed("Section: "+section.getName()+", Test: "+ testCase.getNumber() + " failed: expected: "+argument.toString()+", but got: "+value);
             }
-            logger.severe(test.getMatchFailed());
-            throw new AssertionError(test.getMatchFailed());
+            logger.severe(testCase.getMatchFailed());
+            throw new AssertionError(testCase.getMatchFailed());
         } else {
-            test.setSuccess(true);
+            testCase.setSuccess(true);
         }
     }
 
-    void setFailure(Context context, WebDriver driver, Throwable t, Section section, Test test) {
-        test.setSuccess(false);
+    void setFailure(Context context, WebDriver driver, Throwable t, Section section, TestCase testCase) {
+        testCase.setSuccess(false);
 
         StringWriter writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
         t.printStackTrace(printWriter);
-        test.setStackTrace(writer.toString());
+        testCase.setStackTrace(writer.toString());
 
         try {
-            capture(driver, context, section, test, true);
+            capture(driver, context, section, testCase, true);
         } catch (Exception e) {
             // do nothing
         }
 
-        test.setEnd(new Timestamp(System.currentTimeMillis()));
+        testCase.setEnd(new Timestamp(System.currentTimeMillis()));
     }
 
     private String getValue(WebElement element, String attribute) {
@@ -303,21 +304,21 @@ public class Web implements Driver {
         WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(wait));
         return w.until(ExpectedConditions.alertIsPresent());
     }
-    private File getCaptureFile(Context context, Section section, Test test, boolean isError) {
+    private File getCaptureFile(Context context, Section section, TestCase testCase, boolean isError) {
         String suffix = isError ? errorSuffix : "";
-        String num = String.format("%03d", test.getNumber());
+        String num = String.format("%03d", testCase.getNumber());
         return new File(section.getName()+"_"+num+suffix+".png");
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Test test) {
-        capture(driver, context, section, test, false);
+    private void capture(WebDriver driver, Context context, Section section, TestCase testCase) {
+        capture(driver, context, section, testCase, false);
     }
 
-    private void capture(WebDriver driver, Context context, Section section, Test test, boolean isError) {
+    private void capture(WebDriver driver, Context context, Section section, TestCase testCase, boolean isError) {
         // for NoSuchWindowException
         try {
             File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(f, getCaptureFile(context, section, test, isError));
+            FileUtils.copyFile(f, getCaptureFile(context, section, testCase, isError));
         } catch (Exception e) {
             logger.severe(e.getLocalizedMessage());
         }

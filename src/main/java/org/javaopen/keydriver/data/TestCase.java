@@ -11,9 +11,11 @@ import static org.javaopen.keydriver.driver.Context.KEYWORD_KEY;
 import static org.javaopen.keydriver.driver.Context.NUMBER_KEY;
 import static org.javaopen.keydriver.driver.Context.OBJECT_KEY;
 import static org.javaopen.keydriver.driver.Context.OPTION_KEY;
+import static org.javaopen.keydriver.driver.Context.SECTION_KEY;
 import static org.javaopen.keydriver.driver.Context.TARGET_KEY;
 
-public class Test {
+public class TestCase {
+    private String section;
     private int number;
     private Keyword keyword;
     private Param target;
@@ -32,8 +34,9 @@ public class Test {
     private String matchFailed;
     private String stackTrace;
 
-    public Test(Context context, Map<String, String> record) {
+    public TestCase(Context context, Map<String, String> record) {
         final Map<String, String> dic = context.getDic();
+        setSection(record.get(dic.get(SECTION_KEY)));
         setNumber(record.get(dic.get(NUMBER_KEY)));
         setKeyword(record.get(dic.get(KEYWORD_KEY)));
         setTarget(record.get(dic.get(TARGET_KEY)));
@@ -41,6 +44,14 @@ public class Test {
         setComment(record.get(dic.get(COMMENT_KEY)));
         setObject(record.get(dic.get(OBJECT_KEY)));
         setOption(record.get(dic.get(OPTION_KEY)));
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 
     public int getNumber() {

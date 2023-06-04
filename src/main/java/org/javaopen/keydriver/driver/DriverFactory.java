@@ -3,7 +3,7 @@ package org.javaopen.keydriver.driver;
 import org.javaopen.keydriver.data.DataType;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Param;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,15 +26,15 @@ public class DriverFactory {
     private static final Driver web = new Web();
     private static final Driver database = new Database();
 
-    static Driver getDriver(Test test) {
-        if (WEB_KEYWORDS.contains(test.getKeyword())) {
+    static Driver getDriver(TestCase testCase) {
+        if (WEB_KEYWORDS.contains(testCase.getKeyword())) {
             return web;
-        } else if (test.getKeyword().equals(Keyword.EXECUTE)) {
+        } else if (testCase.getKeyword().equals(Keyword.EXECUTE)) {
             return database;
-        } else if (test.getKeyword().equals(Keyword.ASSERT)) {
-            Param param = test.getObject();
+        } else if (testCase.getKeyword().equals(Keyword.ASSERT)) {
+            Param param = testCase.getObject();
             if (param == null) {
-                param = test.getArgument();
+                param = testCase.getArgument();
             }
             if (param.getTag().equals(DataType.SQL)) {
                 return database;
@@ -42,7 +42,7 @@ public class DriverFactory {
                 return web;
             }
         } else {
-            throw new IllegalArgumentException(test.toString());
+            throw new IllegalArgumentException(testCase.toString());
         }
     }
 }

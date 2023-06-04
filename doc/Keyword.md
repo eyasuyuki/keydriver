@@ -15,6 +15,6 @@ Keyword
 | assert     | Any text              | Param                            | Param             | Param          | Assert object value compare to argument matcher                         |
 | execute    | Any text              | null                             | sql Param         | jdbc url Param | Execute object sql by option connection                                 |
 | switch     | Any text              | Any Text                         | Any text          | Any text       | Switch to child window. If child window closed, switch to parent window |
-| _DIRECTIVE | Any text              | null                             | Param             | null           | Execute other sheet                                                     |
+| _DIRECTIVE | Any text              | null                             | Param             | null           | Execute other sheet (default)                                           |
 
 see [Param](Param.md)

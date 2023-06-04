@@ -2,7 +2,7 @@ package org.javaopen.keydriver.driver;
 
 import org.javaopen.keydriver.data.Matches;
 import org.javaopen.keydriver.data.Param;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
 import org.javaopen.keydriver.data.Section;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -15,7 +15,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 
 public interface Driver {
-    void perform(Context context, Section section, Test test);
+    void perform(Context context, Section section, TestCase testCase);
     void quit(Context context);
     default boolean match(String value, Param param) throws NumberFormatException {
         if (param.getTag().equals(Matches.IS)) {
