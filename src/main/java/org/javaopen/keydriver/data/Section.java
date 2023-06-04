@@ -12,7 +12,7 @@ public class Section {
     }
 
     private String name;
-    private List<Test> tests = new ArrayList<>();
+    private List<TestCase> testCaseList = new ArrayList<>();
     private boolean executed;
     private boolean ran;
 
@@ -30,7 +30,7 @@ public class Section {
     }
 
     private void loop(Context context) {
-        for (Test t : getTests()) {
+        for (TestCase t : getTestCaseList()) {
             Driver driver = context.getDriver(t);
             driver.perform(context, this, t);
         }
@@ -40,8 +40,8 @@ public class Section {
         return name;
     }
 
-    public List<Test> getTests() {
-        return tests;
+    public List<TestCase> getTestCaseList() {
+        return testCaseList;
     }
 
     public boolean isExecuted() {

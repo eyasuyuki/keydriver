@@ -6,7 +6,7 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Section;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -22,6 +22,7 @@ import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
 public class Context {
+    public static final String SECTION_KEY = "section";
     public static final String NUMBER_KEY = "number";
     public static final String KEYWORD_KEY = "keyword";
     public static final String TARGET_KEY = "target";
@@ -30,6 +31,7 @@ public class Context {
     public static final String OBJECT_KEY = "object";
     public static final String OPTION_KEY = "option";
     public static final List<String> KEYS = Arrays.asList(new String[]{
+            SECTION_KEY,
             NUMBER_KEY,
             KEYWORD_KEY,
             TARGET_KEY,
@@ -84,8 +86,8 @@ public class Context {
         }
     }
 
-    public Driver getDriver(Test test) {
-        return DriverFactory.getDriver(test);
+    public Driver getDriver(TestCase testCase) {
+        return DriverFactory.getDriver(testCase);
     }
 
     public PropertiesConfiguration getConfig() {

@@ -6,6 +6,7 @@ import org.h2.tools.Server;
 import org.javaopen.keydriver.data.DummyTestList;
 import org.javaopen.keydriver.data.Keyword;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.TestCase;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class TestDatabase {
     }
     @Test
     public void testAssert() {
-        org.javaopen.keydriver.data.Test test = tests.getTests()
+        TestCase testCase = tests.getTests()
                 .stream()
                 .filter(x -> x.getKeyword().equals(Keyword.ASSERT)
                     && x.getTarget() != null
@@ -85,9 +86,9 @@ public class TestDatabase {
                     && x.getTarget().getValue().startsWith("SELECT"))
                 .findFirst()
                 .orElse(null);
-        Driver d = mockContext.getDriver(test);
+        Driver d = mockContext.getDriver(testCase);
         Section section = new Section("Sheet1");
-        d.perform(mockContext, section, test);
+        d.perform(mockContext, section, testCase);
     }
 
     @Test
@@ -102,11 +103,11 @@ public class TestDatabase {
 
     @Test
     public void testExecute() {
-        org.javaopen.keydriver.data.Test test = tests.getTest(Keyword.EXECUTE);
-        Driver d = mockContext.getDriver(test);
+        TestCase testCase = tests.getTest(Keyword.EXECUTE);
+        Driver d = mockContext.getDriver(testCase);
         Section section = new Section("Sheet1");
         logger.info("path="+ mockContext.getConfig().getString(Database.JDBC_DRIVER_PATH)+", classname="+ mockContext.getConfig().getString(Database.JDBC_CLASS_NAME));
-        d.perform(mockContext, section, test);
+        d.perform(mockContext, section, testCase);
     }
 
     @Test

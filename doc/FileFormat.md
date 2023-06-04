@@ -14,9 +14,9 @@ ex. ```Sheet1_001.png```
 
 | name    | default column name | date type                                          | description                                  |
 ---------|---------------------|----------------------------------------------------|----------------------------------------------
-| number  | No                 | Integer                                            | Integer numeric of test number               |
+| number  | No                 | Integer                                            | Integer numeric of testCase number               |
 | keyword | Keyword             | Keyword                                            | Test keywords                                |
-|target| Target              | String or Param                                    | Human readable test target                   |
+|target| Target              | String or Param                                    | Human readable testCase target                   |
 |argument| Argument            | String or Param                                    | Test argument                                |
 |comment|Comment| String                                             | Comment text                                 |
 |object|Object| Param                                              | HTML Element selector or something           |

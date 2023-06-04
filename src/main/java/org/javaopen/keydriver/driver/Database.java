@@ -2,8 +2,9 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.lang.StringUtils;
 import org.javaopen.keydriver.data.Keyword;
-import org.javaopen.keydriver.data.Test;
+import org.javaopen.keydriver.data.TestCase;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.TestException;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -49,52 +50,52 @@ public class Database implements Driver {
         }
     }
 
-    private void checkAssert(Statement st, String sql, Section section, Test test) throws SQLException {
+    private void checkAssert(Statement st, String sql, Section section, TestCase testCase) throws SQLException {
         ResultSet res = st.executeQuery(sql);
         if (res.next()) {
             String value = res.getString(1);
-            if (!match(value, test.getArgument())) {
-                test.setSuccess(false);
-                test.setMatchFailed("Section: "+section.getName()+", Test: "+ test.getNumber() + " failed: expected: "+test.getArgument().toString()+", but got: "+value);
-                logger.severe(test.getMatchFailed());
-                throw new AssertionError(test.getMatchFailed());
+            if (!match(value, testCase.getArgument())) {
+                testCase.setSuccess(false);
+                testCase.setMatchFailed("Section: "+section.getName()+", Test: "+ testCase.getNumber() + " failed: expected: "+ testCase.getArgument().toString()+", but got: "+value);
+                logger.severe(testCase.getMatchFailed());
+                throw new AssertionError(testCase.getMatchFailed());
             } else {
-                test.setSuccess(true);
+                testCase.setSuccess(true);
             }
         } else {
-            test.setSuccess(false);
-            final String msg = "Section: "+section.getName()+", Test: "+ test.getNumber() + " fetch failed: result empty.";
-            test.setMatchFailed(msg);
+            testCase.setSuccess(false);
+            final String msg = "Section: "+section.getName()+", Test: "+ testCase.getNumber() + " fetch failed: result empty.";
+            testCase.setMatchFailed(msg);
             logger.severe(msg);
             throw new IllegalArgumentException(msg);
         }
     }
     @Override
-    public void perform(Context context, Section section, Test test) {
-        test.setStart(new Timestamp(System.currentTimeMillis()));
-        try (Connection conn = getConnection(context, test.getObject().getValue())) {
+    public void perform(Context context, Section section, TestCase testCase) {
+        testCase.setStart(new Timestamp(System.currentTimeMillis()));
+        try (Connection conn = getConnection(context, testCase.getObject().getValue())) {
             Statement st = conn.createStatement();
-            String sql = test.getTarget().getValue();// target as sql
+            String sql = testCase.getTarget().getValue();// target as sql
             if (StringUtils.isEmpty(sql)) {
-                sql = test.getArgument().getValue();
+                sql = testCase.getArgument().getValue();
             }
-            if (test.getKeyword().equals(Keyword.ASSERT)) {
-                checkAssert(st, sql, section, test);
-            } else if (test.getKeyword().equals(Keyword.EXECUTE)) {
+            if (testCase.getKeyword().equals(Keyword.ASSERT)) {
+                checkAssert(st, sql, section, testCase);
+            } else if (testCase.getKeyword().equals(Keyword.EXECUTE)) {
                 st.execute(sql);
-                test.setSuccess(true);
+                testCase.setSuccess(true);
             }
-            test.setEnd(new Timestamp(System.currentTimeMillis()));
+            testCase.setEnd(new Timestamp(System.currentTimeMillis()));
         } catch (Throwable t) {
-            test.setSuccess(false);
+            testCase.setSuccess(false);
 
             StringWriter writer = new StringWriter();
             t.printStackTrace(new PrintWriter(writer));
-            test.setStackTrace(writer.toString());
+            testCase.setStackTrace(writer.toString());
 
-            test.setEnd(new Timestamp(System.currentTimeMillis()));
+            testCase.setEnd(new Timestamp(System.currentTimeMillis()));
 
-            throw new RuntimeException(t);
+            throw new TestException(t, testCase);
         }
     }
 

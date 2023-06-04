@@ -9,6 +9,7 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.javaopen.keydriver.browser.Browser;
 import org.javaopen.keydriver.browser.WebDriverFactory;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -91,25 +92,25 @@ public class TestIframe {
     @Test
     public void testFindElementFromIframe() {
         Section section = new Section("Sheet1");
-        section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
+        section.getTestCaseList().add(new TestCase(context, Stream.of(new String[][] {
                 { "No", "1" },
                 { "Keyword", "open" },
                 { "Target", "url[http://localhost:8888/index.html]" },
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data -> ((String[])data)[1]))));
-        section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
+        section.getTestCaseList().add(new TestCase(context, Stream.of(new String[][] {
                 {"No", "2"},
                 {"Keyword", "input"},
                 {"Target", "textbox"},
                 {"Argument", "This is it"},
                 {"Object", "id[name]"}
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
-        section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
+        section.getTestCaseList().add(new TestCase(context, Stream.of(new String[][] {
                 {"No", "3"},
                 {"Keyword", "click"},
                 {"Target", "button"},
                 {"Object", "id[send]"}
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
-        section.getTests().add(new org.javaopen.keydriver.data.Test(context, Stream.of(new String[][] {
+        section.getTestCaseList().add(new TestCase(context, Stream.of(new String[][] {
                 {"No", "4"},
                 {"Keyword", "assert"},
                 {"Target", "button"},
@@ -118,14 +119,14 @@ public class TestIframe {
         }).collect(Collectors.toMap(data -> ((String[])data)[0], data-> ((String[])data)[1]))));
 
         // open
-        Driver driver = context.getDriver(section.getTests().get(0));
-        driver.perform(context, section, section.getTests().get(0));
+        Driver driver = context.getDriver(section.getTestCaseList().get(0));
+        driver.perform(context, section, section.getTestCaseList().get(0));
         // input
-        driver = context.getDriver(section.getTests().get(1));
-        driver.perform(context, section, section.getTests().get(1));
+        driver = context.getDriver(section.getTestCaseList().get(1));
+        driver.perform(context, section, section.getTestCaseList().get(1));
         // click
-        driver = context.getDriver(section.getTests().get(2));
-        driver.perform(context, section, section.getTests().get(2));
+        driver = context.getDriver(section.getTestCaseList().get(2));
+        driver.perform(context, section, section.getTestCaseList().get(2));
     }
 
     @After

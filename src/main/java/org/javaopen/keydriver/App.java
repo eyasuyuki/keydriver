@@ -8,6 +8,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.javaopen.keydriver.data.Section;
+import org.javaopen.keydriver.data.TestCase;
+import org.javaopen.keydriver.data.TestException;
 import org.javaopen.keydriver.driver.Context;
 import org.javaopen.keydriver.driver.Web;
 import org.javaopen.keydriver.reader.Reader;
@@ -72,8 +74,12 @@ public class App {
         Reader reader = ReaderFactory.getReader(inputFileName);
         try {
             execute(context, reader);
+        } catch (TestException e) {
+            TestCase testCase = e.getTestCase();
+            String message = "Sheet: " + testCase.getSection()+", Number: "+testCase.getNumber()+", "+e.getMessage();
+            logger.error(message, e);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             boolean quit = context.getConfig().getBoolean(Web.BROWSER_QUIT_KEY);
             if (context.getWebDriver() != null && quit) {
