@@ -79,6 +79,8 @@ public class Web implements Driver {
             testCase.setSuccess(true);
             // set end
             testCase.setEnd(new Timestamp(System.currentTimeMillis()));
+        } catch (TestException t) {
+            throw t; // to fix origin problem #32
         } catch (Throwable t) {
             setFailure(context, driver, t, section, testCase);
             throw new TestException(t, testCase);
