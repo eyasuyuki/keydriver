@@ -57,6 +57,10 @@ public class Context {
     public static final String ATTRIBUTE_SEPARATOR_KEY = "keydriver.attribute.separator";
     public static final String ERROR_SUFFIX_KEY = "keydriver.error.suffix";
 
+    // Reader
+    public static final String SKIP_SHEETS_KEY = "keybriver.skip.sheets";
+    public static final String SKIP_HEADERS_KEY = "keydriver.skip.headers";
+
     // Report
     public static final String OUTPUT_DIRECTORY_KEY = "keydriver.output.directory";
     public static final String OUTPUT_EXTENSION_KEY = "keydriver.output.extension";

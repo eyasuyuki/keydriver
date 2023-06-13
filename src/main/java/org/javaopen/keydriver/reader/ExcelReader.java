@@ -30,18 +30,27 @@ import static org.javaopen.keydriver.driver.Context.SECTION_KEY;
 public class ExcelReader implements Reader {
     private static final Logger logger = Logger.getLogger(ExcelReader.class.getName());
     private static final int MAX_SHEETS = 1000;
+    private int skipSheets;
+    private int skipHeaders;
 
     private XSSFWorkbook workbook;
     @Override
     public List<Section> read(Context context, String path) throws IOException {
+        skipSheets = context.getConfig().getInt(Context.SKIP_SHEETS_KEY, 0);
+        skipHeaders = context.getConfig().getInt(Context.SKIP_HEADERS_KEY, 0);
         List<Section> sections = new ArrayList<>();
         final FileInputStream in = new FileInputStream(new File(path));
         workbook = new XSSFWorkbook(in);
         final Iterable<Sheet> sheetIter = () -> workbook.sheetIterator();
+        int i = 0;
         for (Sheet s: sheetIter) {
+            if (i < skipSheets) {
+                continue;
+            }
             Section section = new Section(s.getSheetName());
             setRecords(context, section, s);
             sections.add(section);
+            i++;
         }
         return sections;
     }
@@ -49,7 +58,11 @@ public class ExcelReader implements Reader {
     private void setRecords(Context context, Section section, Sheet sheet) {
         final Iterable<Row> iter = () -> sheet.iterator();
         String[] keys = null;
+        int n = 0;
         for (Row r: iter) {
+            if (n < skipHeaders) {
+                continue;
+            }
             if (keys == null) {
                 keys = new String[KEYS.size()];
                 for (int i=0; i<keys.length; i++) {
@@ -68,6 +81,7 @@ public class ExcelReader implements Reader {
                 }
                 section.getTestCaseList().add(new TestCase(context, cols));
             }
+            n++;
         }
     }
 
