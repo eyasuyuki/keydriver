@@ -87,7 +87,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section2");
 
         doThrow(new RuntimeException()).when(driver).get(anyString());
         try {
@@ -114,7 +114,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section3");
 
         d.perform(context, section, testCase);
 
@@ -127,7 +127,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section4");
 
         doThrow(new RuntimeException()).when(element).click();
         try {
@@ -144,7 +144,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section5");
 
         d.perform(context, section, testCase);
 
@@ -157,7 +157,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section6");
 
         doThrow(new RuntimeException()).when(element).sendKeys(any(CharSequence.class));
         try {
@@ -174,7 +174,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section7");
 
         d.perform(context, section, testCase);
 
@@ -188,7 +188,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section8");
 
         doThrow(new RuntimeException()).when(element).clear();
         try {
@@ -205,7 +205,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section9");
 
         // prepare select element
         when(element.getTagName()).thenReturn("select");
@@ -226,7 +226,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section10");
 
         doThrow(new RuntimeException()).when(element).findElements(any(By.class));
         try {
@@ -243,7 +243,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section11");
 
         d.perform(context, section, testCase);
 
@@ -256,7 +256,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section12");
 
         d.perform(context, section, testCase);
 
@@ -269,7 +269,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section13");
 
         doThrow(new RuntimeException()).when(driver).switchTo();
         try {
@@ -286,7 +286,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section14");
 
         d.perform(context, section, testCase);
 
@@ -299,7 +299,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section15");
 
         doThrow(new RuntimeException()).when(driver).switchTo();
         try {
@@ -316,7 +316,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section16");
 
         d.perform(context, section, testCase);
 
@@ -329,7 +329,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section17");
 
         doThrow(new RuntimeException()).when(element).sendKeys(anyString());
         try {
@@ -346,7 +346,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section18");
 
         when(element.isEnabled()).thenReturn(true);
 
@@ -361,7 +361,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section19");
 
         when(element.isEnabled()).thenReturn(false);
         try {
@@ -381,7 +381,7 @@ public class TestWeb {
 
         Driver d = context.getDriver(testCase);
         assertThat(d, is(instanceOf(Web.class)));
-        Section section = new Section("Section1");
+        Section section = new Section("Section20");
 
         when(element.isEnabled()).thenReturn(false);
         try {
