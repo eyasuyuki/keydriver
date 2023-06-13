@@ -118,6 +118,9 @@ public class TestSwitch {
         // assert
         driver = context.getDriver(section.getTestCaseList().get(6));
         driver.perform(context, section, section.getTestCaseList().get(6));
+
+        // quit
+        driver.quit(context);
     }
 
     @After
