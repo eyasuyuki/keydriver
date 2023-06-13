@@ -11,7 +11,6 @@ import org.javaopen.keydriver.data.Section;
 import org.javaopen.keydriver.data.TestCase;
 import org.javaopen.keydriver.data.TestException;
 import org.javaopen.keydriver.driver.Context;
-import org.javaopen.keydriver.driver.Web;
 import org.javaopen.keydriver.reader.Reader;
 import org.javaopen.keydriver.reader.ReaderFactory;
 import org.javaopen.keydriver.report.Summary;
@@ -81,7 +80,7 @@ public class App {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
-            boolean quit = context.getConfig().getBoolean(Web.BROWSER_QUIT_KEY);
+            boolean quit = context.getConfig().getBoolean(Context.BROWSER_QUIT_KEY);
             if (context.getWebDriver() != null && quit) {
                 context.getWebDriver().quit();
             }

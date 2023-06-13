@@ -44,7 +44,7 @@ public class TestIframe {
         WebDriver webDriver = WebDriverFactory.getInstance(context, Browser.CHROME.getName());
         context.setWebDriver(webDriver);
         // browser quit
-        context.getConfig().setProperty(Web.BROWSER_QUIT_KEY, true);
+        context.getConfig().setProperty(Context.BROWSER_QUIT_KEY, true);
 
         assertThat(rule.getOptions().portNumber(), is(8888));
         // start mock server

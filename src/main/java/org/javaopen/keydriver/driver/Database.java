@@ -21,14 +21,12 @@ import java.util.logging.Logger;
 
 public class Database implements Driver {
     private static Logger logger = Logger.getLogger(Database.class.getName());
-    public static final String JDBC_DRIVER_PATH = "jdbc_driver_path";
-    public static final String JDBC_CLASS_NAME = "jdbc_class_name";
 
     private java.sql.Driver driver;
 
     private Connection getConnection(Context context, String jdbcUrl) {
-        String path = context.getConfig().getString(JDBC_DRIVER_PATH);
-        String classname = context.getConfig().getString(JDBC_CLASS_NAME);
+        String path = context.getConfig().getString(Context.JDBC_DRIVER_PATH);
+        String classname = context.getConfig().getString(Context.JDBC_CLASS_NAME);
         logger.info("path="+path+", classname="+classname);
         try {
             URL u = new File(path).toURI().toURL();
