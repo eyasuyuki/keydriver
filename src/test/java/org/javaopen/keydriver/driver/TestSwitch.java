@@ -120,7 +120,7 @@ public class TestSwitch {
         driver.perform(context, section, section.getTestCaseList().get(6));
 
         // quit
-        //driver.quit(context);
+        //driver.quit(context); // crash with mvn test
     }
 
     @After

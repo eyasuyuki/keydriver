@@ -129,7 +129,7 @@ public class TestIframe {
         driver.perform(context, section, section.getTestCaseList().get(2));
 
         // quit
-        //driver.quit(context);
+        //driver.quit(context); // crash with mvn test
     }
 
     @After
