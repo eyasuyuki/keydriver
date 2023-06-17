@@ -2,6 +2,7 @@ package org.javaopen.keydriver.driver;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.SystemConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +15,7 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -135,6 +137,10 @@ public class Context {
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
+        // override by system configuration
+        SystemConfiguration systemConfiguration = new SystemConfiguration();
+        Iterator<String> keys = systemConfiguration.getKeys("keydriver");
+        keys.forEachRemaining(k -> config.setProperty(k, systemConfiguration.getString(k)));
     }
 
     public Driver getDriver(TestCase testCase) {
