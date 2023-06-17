@@ -91,4 +91,17 @@ public class Param {
         }
         return tag.getString()+"["+value+attr+"]";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        return this.toString().equals(obj.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
 }

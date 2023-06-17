@@ -36,6 +36,7 @@ public class ExcelReader implements Reader {
     private XSSFWorkbook workbook;
     @Override
     public List<Section> read(Context context, String path) throws IOException {
+
         skipSheets = context.getConfig().getInt(Context.SKIP_SHEETS_KEY, 0);
         skipHeaders = context.getConfig().getInt(Context.SKIP_HEADERS_KEY, 0);
         List<Section> sections = new ArrayList<>();
@@ -45,6 +46,7 @@ public class ExcelReader implements Reader {
         int i = 0;
         for (Sheet s: sheetIter) {
             if (i < skipSheets) {
+                i++;
                 continue;
             }
             Section section = new Section(s.getSheetName());
@@ -61,6 +63,7 @@ public class ExcelReader implements Reader {
         int n = 0;
         for (Row r: iter) {
             if (n < skipHeaders) {
+                n++;
                 continue;
             }
             if (keys == null) {
