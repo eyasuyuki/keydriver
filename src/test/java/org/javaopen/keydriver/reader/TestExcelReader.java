@@ -24,7 +24,7 @@ public class TestExcelReader {
         Locale.setDefault(Locale.JAPAN);//important
 
         // context
-        context = Context.getContext(null, null, null);
+        context = Context.createContext(null, null, null);
     }
 
     @Test

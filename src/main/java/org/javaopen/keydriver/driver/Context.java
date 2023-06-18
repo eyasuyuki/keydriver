@@ -96,8 +96,13 @@ public class Context {
     private static Context context;
     public static Context getContext(String configPath, String driverPath, String jdbcClassName) {
         if (context == null) {
-            context = new Context(configPath, driverPath, jdbcClassName);
+            context = createContext(configPath, driverPath, jdbcClassName);
         }
+        return context;
+    }
+
+    public static Context createContext(String configPath, String driverPath, String jdbcClassName) {
+        context = new Context(configPath, driverPath, jdbcClassName);
         return context;
     }
     private WebDriver webDriver;

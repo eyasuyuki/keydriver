@@ -41,7 +41,7 @@ public class TestWeb {
     public void setUp() {
         Locale.setDefault(Locale.US);//important
 
-        context = Context.getContext(null, null, null);
+        context = Context.createContext(null, null, null);
         dummyTests = new DummyTestList(context);
         driver = mock(WebDriver.class, withSettings().extraInterfaces(TakesScreenshot.class));
         element = mock(WebElement.class);

@@ -40,7 +40,7 @@ public class TestDatabase {
     public static void initClass() throws SQLException, MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         Locale.setDefault(Locale.US);//important
 
-        final Context con = Context.getContext(null, null, null);
+        final Context con = Context.createContext(null, null, null);
 
         when(mockConfig.getString(Context.JDBC_DRIVER_PATH)).thenReturn(TEST_JDBC_DRIVER_PATH);
         when(mockConfig.getString(Context.JDBC_CLASS_NAME)).thenReturn(TEST_JDBC_CLASS_NAME);

@@ -31,7 +31,7 @@ public class TestSwitch {
         Locale.setDefault(Locale.US);//important
 
         // context
-        context = Context.getContext(null, null, null);
+        context = Context.createContext(null, null, null);
         // use force non-mock WebDriver
         WebDriver webDriver = WebDriverFactory.getInstance(context, Browser.CHROME.getName());
         context.setWebDriver(webDriver);
