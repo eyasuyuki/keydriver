@@ -31,12 +31,12 @@ public class TestSwitch {
         Locale.setDefault(Locale.US);//important
 
         // context
-        context = Context.getContext(null, null, null);
+        context = Context.createContext(null, null, null);
         // use force non-mock WebDriver
         WebDriver webDriver = WebDriverFactory.getInstance(context, Browser.CHROME.getName());
         context.setWebDriver(webDriver);
         // browser quit
-        context.getConfig().setProperty(Web.BROWSER_QUIT_KEY, true);
+        context.getConfig().setProperty(Context.BROWSER_QUIT_KEY, true);
 
         assertThat(rule.getOptions().portNumber(), is(8888));
         // start mock server
@@ -118,6 +118,9 @@ public class TestSwitch {
         // assert
         driver = context.getDriver(section.getTestCaseList().get(6));
         driver.perform(context, section, section.getTestCaseList().get(6));
+
+        // quit
+        //driver.quit(context); // crash with mvn test
     }
 
     @After

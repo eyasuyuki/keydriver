@@ -40,10 +40,10 @@ public class TestDatabase {
     public static void initClass() throws SQLException, MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         Locale.setDefault(Locale.US);//important
 
-        final Context con = Context.getContext(null, null, null);
+        final Context con = Context.createContext(null, null, null);
 
-        when(mockConfig.getString(Database.JDBC_DRIVER_PATH)).thenReturn(TEST_JDBC_DRIVER_PATH);
-        when(mockConfig.getString(Database.JDBC_CLASS_NAME)).thenReturn(TEST_JDBC_CLASS_NAME);
+        when(mockConfig.getString(Context.JDBC_DRIVER_PATH)).thenReturn(TEST_JDBC_DRIVER_PATH);
+        when(mockConfig.getString(Context.JDBC_CLASS_NAME)).thenReturn(TEST_JDBC_CLASS_NAME);
         when(mockContext.getConfig()).thenReturn(mockConfig);
         when(mockContext.getDic()).thenReturn(con.getDic());
 
@@ -106,7 +106,7 @@ public class TestDatabase {
         TestCase testCase = tests.getTest(Keyword.EXECUTE);
         Driver d = mockContext.getDriver(testCase);
         Section section = new Section("Sheet1");
-        logger.info("path="+ mockContext.getConfig().getString(Database.JDBC_DRIVER_PATH)+", classname="+ mockContext.getConfig().getString(Database.JDBC_CLASS_NAME));
+        logger.info("path="+ mockContext.getConfig().getString(Context.JDBC_DRIVER_PATH)+", classname="+ mockContext.getConfig().getString(Context.JDBC_CLASS_NAME));
         d.perform(mockContext, section, testCase);
     }
 

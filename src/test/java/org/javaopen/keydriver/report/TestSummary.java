@@ -29,7 +29,7 @@ public class TestSummary {
     public void setUp() {
         Locale.setDefault(Locale.US);
 
-        context = Context.getContext(null, null, null);
+        context = Context.createContext(null, null, null);
         dummyTests = new DummyTestList(context);
         for (TestCase t: dummyTests.getTests()) {
             if (t.getKeyword().equals(Keyword.ASSERT) && t.getArgument().getTag().equals(Matches.FAIL)) {

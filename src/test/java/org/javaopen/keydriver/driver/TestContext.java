@@ -22,15 +22,15 @@ public class TestContext {
 
     @Before
     public void setUp() {
-        when(config.getString("jdbc_driver_path")).thenReturn("abc");
-        when(config.getString("jdbc_class_name")).thenReturn("123");
+        when(config.getString(Context.JDBC_DRIVER_PATH)).thenReturn("abc");
+        when(config.getString(Context.JDBC_CLASS_NAME)).thenReturn("123");
         when(context.getConfig()).thenReturn(config);
     }
 
     @Test
     public void test() {
-        assertThat(this.context.getConfig().getString("jdbc_driver_path"), is("abc"));
-        assertThat(this.context.getConfig().getString("jdbc_class_name"), is("123"));
+        assertThat(this.context.getConfig().getString(Context.JDBC_DRIVER_PATH), is("abc"));
+        assertThat(this.context.getConfig().getString(Context.JDBC_CLASS_NAME), is("123"));
     }
 
     @After

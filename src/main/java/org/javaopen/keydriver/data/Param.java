@@ -12,9 +12,6 @@ public class Param {
     public static final String ATTRIBUTE_DISPLAYED = "displayed";
     public static final String ATTRIBUTE_ENABLED = "enabled";
     public static final String ATTRIBUTE_SELECTED = "selected";
-    private static final String VALUE_HEAD_KEY = "value_head";
-    private static final String VALUE_TAIL_KEY = "value_tail";
-    private static final String ATTRIBUTE_SEPARATOR_KEY = "attribute_separator";
     private static final String VALUE_HEAD_DEFAULT = "\\[";
     private static final String VALUE_TAIL_DEFAULT = "]";
     private static final String ATTRIBUTE_SEPARATOR_DEFAULT = "#";
@@ -41,13 +38,13 @@ public class Param {
     }
 
     private String getValueHead() {
-        return getConfigValue(VALUE_HEAD_KEY, VALUE_HEAD_DEFAULT);
+        return getConfigValue(Context.VALUE_HEAD_KEY, VALUE_HEAD_DEFAULT);
     }
     private String getValueTail() {
-        return getConfigValue(VALUE_TAIL_KEY, VALUE_TAIL_DEFAULT);
+        return getConfigValue(Context.VALUE_TAIL_KEY, VALUE_TAIL_DEFAULT);
     }
     private String getAttributeSeparator() {
-        return getConfigValue(ATTRIBUTE_SEPARATOR_KEY, ATTRIBUTE_SEPARATOR_DEFAULT);
+        return getConfigValue(Context.ATTRIBUTE_SEPARATOR_KEY, ATTRIBUTE_SEPARATOR_DEFAULT);
     }
     private String getConfigValue(String key, String defValue) {
         ResourceBundle bundle = ResourceBundle.getBundle(Context.CONFIG);
@@ -93,5 +90,18 @@ public class Param {
             attr = getAttributeSeparator()+attribute;
         }
         return tag.getString()+"["+value+attr+"]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        return this.toString().equals(obj.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
     }
 }

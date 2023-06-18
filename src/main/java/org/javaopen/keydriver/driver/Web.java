@@ -37,10 +37,6 @@ import java.util.logging.Logger;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 public class Web implements Driver {
-    public static final String BROWSER_WAIT_KEY = "browser_wait";
-    public static final String BROWSER_QUIT_KEY = "browser_quit";
-    public static final String AUTO_CAPTURE_KEY = "auto_capture";
-    public static final String ERROR_SUFFIX_KEY = "error_suffix";
     public static final String ERROR_SUFFIX_DEFAULT = "__ERROR__";
     private static final String DEFAULT_ATTRIBUTE = "innerText";
     private Logger logger = Logger.getLogger(Web.class.getName());
@@ -52,12 +48,12 @@ public class Web implements Driver {
         // set test properties
         testCase.setStart(new Timestamp(System.currentTimeMillis()));
         // set wait
-        int wait = context.getConfig().getInt(BROWSER_WAIT_KEY);
+        int wait = context.getConfig().getInt(Context.BROWSER_WAIT_KEY);
 
         // auto capture mode
-        boolean autoCapture = context.getConfig().getBoolean(AUTO_CAPTURE_KEY);
+        boolean autoCapture = context.getConfig().getBoolean(Context.AUTO_CAPTURE_KEY);
         // error suffix
-        errorSuffix = context.getConfig().getString(ERROR_SUFFIX_KEY);
+        errorSuffix = context.getConfig().getString(Context.ERROR_SUFFIX_KEY);
         if (StringUtils.isEmpty(errorSuffix)) {
             errorSuffix = ERROR_SUFFIX_DEFAULT;
         }
@@ -125,7 +121,7 @@ public class Web implements Driver {
     @Override
     public void quit(Context context) {
         WebDriver driver = context.getWebDriver();
-        boolean quit = context.getConfig().getBoolean(BROWSER_QUIT_KEY);
+        boolean quit = context.getConfig().getBoolean(Context.BROWSER_QUIT_KEY);
         if (driver != null && quit) {
             driver.quit();
         }
@@ -227,7 +223,7 @@ public class Web implements Driver {
     private WebDriver getDriver(Context context, int wait) {
         WebDriver driver = context.getWebDriver();
         if (driver == null) {
-            String browser = context.getConfig().getString(WebDriverFactory.BROWSER_KEY);
+            String browser = context.getConfig().getString(Context.BROWSER_KEY);
             driver = WebDriverFactory.getInstance(context, browser);
             // set browser wait
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(wait));

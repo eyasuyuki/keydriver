@@ -29,30 +29,6 @@ import java.nio.file.Paths;
 
 public class ExcelWriter implements Writer {
     public static final String COMMA_FORMAT = "#,##0";
-    public static final String TIMESTAMP_FORMAT_KEY =               "timestamp_format";
-    public static final String OUTPUT_DIRECTORY_KEY =               "output_directory";
-    public static final String OUTPUT_EXTENSION_KEY =               "output_extension";
-    public static final String OUTPUT_PREFIX_KEY =                  "output_prefix";
-    public static final String SUMMARY_SHEET_NAME_KEY =             "summary_sheet_name";
-    public static final String ERROR_SHEET_PREFIX_KEY =             "error_sheet_prefix";
-    public static final String TEST_FILE_NAME_LABEL_KEY =           "test_file_name_label";
-    public static final String EXPECTING_TEST_COUNT_LABEL_KEY =     "expecting_test_count_label";
-    public static final String EXPECTING_FAILURE_COUNT_LABEL_KEY =  "expecting_failure_count_label";
-    public static final String EXECUTED_TEST_COUNT_LABEL_KEY =      "executed_test_count_label";
-    public static final String SUCCESS_TEST_COUNT_LABEL_KEY =       "success_test_count_label";
-    public static final String FAILED_TEST_COUNT_LABEL_KEY =        "failed_test_count_label";
-    public static final String NOT_EXECUTED_TEST_COUNT_KEY =        "not_executed_test_count";
-    public static final String START_TIME_LABEL_KEY =               "start_time_label";
-    public static final String DURATION_LABEL_KEY =                 "duration_label";
-    public static final String ARCH_LABEL_KEY =                     "arch_label";
-    public static final String PROCESSOR_COUNT_LABEL_KEY =          "processor_count_label";
-    public static final String LOAD_AVERAGE_LABEL_KEY =             "load_average_label";
-    public static final String MAX_MEMORY_LABEL_KEY =               "max_memory_label";
-    public static final String FREE_MEMORY_LABEL_KEY =              "free_memory_label";
-    public static final String TOTAL_MEMORY_LABEL_KEY =             "total_memory_label";
-    public static final String USABLE_DISK_LABEL_KEY =              "usable_disk_label";
-    public static final String FREE_DISK_LABEL_KEY =                "free_disk_label";
-    public static final String TOTAL_DISK_LABEL_KEY =               "total_disk_label";
 
     private String timestampFormat;
     private String outputDirectory;
@@ -181,30 +157,30 @@ public class ExcelWriter implements Writer {
     }
 
     private void init(Context context) {
-        timestampFormat =               context.getConfig().getString(TIMESTAMP_FORMAT_KEY);
-        outputDirectory =               context.getConfig().getString(OUTPUT_DIRECTORY_KEY);
-        outputExtension =               context.getConfig().getString(OUTPUT_EXTENSION_KEY);
-        outputPrefix =                  context.getConfig().getString(OUTPUT_PREFIX_KEY);
-        summarySheetName =              context.getConfig().getString(SUMMARY_SHEET_NAME_KEY);
-        errorSheetPrefix =              context.getConfig().getString(ERROR_SHEET_PREFIX_KEY);
-        testFileNameLabel =             context.getConfig().getString(TEST_FILE_NAME_LABEL_KEY);
-        expectingTestCountLabel =       context.getConfig().getString(EXPECTING_TEST_COUNT_LABEL_KEY);
-        expectingFailureCountLabel =    context.getConfig().getString(EXPECTING_FAILURE_COUNT_LABEL_KEY);
-        executedTestCountLabel =        context.getConfig().getString(EXECUTED_TEST_COUNT_LABEL_KEY);
-        successTestCountLabel =         context.getConfig().getString(SUCCESS_TEST_COUNT_LABEL_KEY);
-        failedTestCountLabel =          context.getConfig().getString(FAILED_TEST_COUNT_LABEL_KEY);
-        notExecutedTestCount =          context.getConfig().getString(NOT_EXECUTED_TEST_COUNT_KEY);
-        startTimeLabel =                context.getConfig().getString(START_TIME_LABEL_KEY);
-        durationLabel =                 context.getConfig().getString(DURATION_LABEL_KEY);
-        archLabel =                     context.getConfig().getString(ARCH_LABEL_KEY);
-        processorCountLabel =           context.getConfig().getString(PROCESSOR_COUNT_LABEL_KEY);
-        loadAverageLabel =              context.getConfig().getString(LOAD_AVERAGE_LABEL_KEY);
-        maxMemoryLabel =                context.getConfig().getString(MAX_MEMORY_LABEL_KEY);
-        freeMemoryLabel =               context.getConfig().getString(FREE_MEMORY_LABEL_KEY);
-        totalMemoryLabel =              context.getConfig().getString(TOTAL_MEMORY_LABEL_KEY);
-        usableDiskLabel =               context.getConfig().getString(USABLE_DISK_LABEL_KEY);
-        freeDiskLabel =                 context.getConfig().getString(FREE_DISK_LABEL_KEY);
-        totalDiskLabel =                context.getConfig().getString(TOTAL_DISK_LABEL_KEY);
+        timestampFormat =               context.getConfig().getString(Context.TIMESTAMP_FORMAT_KEY);
+        outputDirectory =               context.getConfig().getString(Context.OUTPUT_DIRECTORY_KEY);
+        outputExtension =               context.getConfig().getString(Context.OUTPUT_EXTENSION_KEY);
+        outputPrefix =                  context.getConfig().getString(Context.OUTPUT_PREFIX_KEY);
+        summarySheetName =              context.getConfig().getString(Context.SUMMARY_SHEET_NAME_KEY);
+        errorSheetPrefix =              context.getConfig().getString(Context.ERROR_SHEET_PREFIX_KEY);
+        testFileNameLabel =             context.getConfig().getString(Context.TEST_FILE_NAME_LABEL_KEY);
+        expectingTestCountLabel =       context.getConfig().getString(Context.EXPECTING_TEST_COUNT_LABEL_KEY);
+        expectingFailureCountLabel =    context.getConfig().getString(Context.EXPECTING_FAILURE_COUNT_LABEL_KEY);
+        executedTestCountLabel =        context.getConfig().getString(Context.EXECUTED_TEST_COUNT_LABEL_KEY);
+        successTestCountLabel =         context.getConfig().getString(Context.SUCCESS_TEST_COUNT_LABEL_KEY);
+        failedTestCountLabel =          context.getConfig().getString(Context.FAILED_TEST_COUNT_LABEL_KEY);
+        notExecutedTestCount =          context.getConfig().getString(Context.NOT_EXECUTED_TEST_COUNT_KEY);
+        startTimeLabel =                context.getConfig().getString(Context.START_TIME_LABEL_KEY);
+        durationLabel =                 context.getConfig().getString(Context.DURATION_LABEL_KEY);
+        archLabel =                     context.getConfig().getString(Context.ARCH_LABEL_KEY);
+        processorCountLabel =           context.getConfig().getString(Context.PROCESSOR_COUNT_LABEL_KEY);
+        loadAverageLabel =              context.getConfig().getString(Context.LOAD_AVERAGE_LABEL_KEY);
+        maxMemoryLabel =                context.getConfig().getString(Context.MAX_MEMORY_LABEL_KEY);
+        freeMemoryLabel =               context.getConfig().getString(Context.FREE_MEMORY_LABEL_KEY);
+        totalMemoryLabel =              context.getConfig().getString(Context.TOTAL_MEMORY_LABEL_KEY);
+        usableDiskLabel =               context.getConfig().getString(Context.USABLE_DISK_LABEL_KEY);
+        freeDiskLabel =                 context.getConfig().getString(Context.FREE_DISK_LABEL_KEY);
+        totalDiskLabel =                context.getConfig().getString(Context.TOTAL_DISK_LABEL_KEY);
     }
 
     private void chart(XSSFSheet sheet, Report report, Usage usage) {

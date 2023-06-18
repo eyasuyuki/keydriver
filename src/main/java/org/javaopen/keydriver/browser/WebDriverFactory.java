@@ -20,9 +20,6 @@ import static org.javaopen.keydriver.browser.Browser.IE;
 import static org.javaopen.keydriver.browser.Browser.SAFARI;
 
 public class WebDriverFactory {
-    public static final String BROWSER_KEY = "browser";
-    public static final String EDGE_EXECUTABLE_KEY = "edge_executable";
-    public static final String IE_DRIVER_PATH_KEY = "ie_driver_path";
     public static final String WEBDRIVER_IE_DRIVER = "webdriver.ie.driver";
     private static WebDriver webdriver;
 
@@ -52,9 +49,9 @@ public class WebDriverFactory {
             options.setCapability("ignoreZoomSetting", true);
             options.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
             options.attachToEdgeChrome();
-            String edge = context.getConfig().getString(EDGE_EXECUTABLE_KEY);
+            String edge = context.getConfig().getString(Context.EDGE_DRIVER_PATH_KEY);
             options.withEdgeExecutablePath(edge);
-            String path = context.getConfig().getString(IE_DRIVER_PATH_KEY);
+            String path = context.getConfig().getString(Context.IE_DRIVER_PATH_KEY);
             System.setProperty(WEBDRIVER_IE_DRIVER, path);
             webdriver = new InternetExplorerDriver(options);
         } else {
