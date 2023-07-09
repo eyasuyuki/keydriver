@@ -14,14 +14,21 @@ import org.javaopen.keydriver.data.TestCase;
 import org.javaopen.keydriver.data.TestException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -30,18 +37,21 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 public class Web implements Driver {
     public static final String ERROR_SUFFIX_DEFAULT = "__ERROR__";
     private static final String DEFAULT_ATTRIBUTE = "innerText";
-    private Logger logger = Logger.getLogger(Web.class.getName());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final List<Tag> ELEMENT_TAGS = Arrays.asList(new Tag[]{DataType.ID, DataType.NAME, DataType.XPATH, DataType.CSS});
+    private static final String FULLSCREEN = "fullscreen";
 
     private String errorSuffix;
+    private String rectSepataror;
 
     @Override
     public void perform(Context context, Section section, TestCase testCase) {
@@ -57,6 +67,7 @@ public class Web implements Driver {
         if (StringUtils.isEmpty(errorSuffix)) {
             errorSuffix = ERROR_SUFFIX_DEFAULT;
         }
+        rectSepataror = context.getConfig().getString(Context.RECT_SEPARATOR_KEY, Param.RECT_SEPARATOR_DEFAULT);
 
         // getDriver
         WebDriver driver = getDriver(context, wait);
@@ -69,8 +80,10 @@ public class Web implements Driver {
             // perform
             dispatch(context, driver, wait, section, testCase);
             // manual capture or auto
-            if (key.equals(Keyword.CAPTURE) || autoCapture) {
-                capture(driver, context, section, testCase);
+            if (autoCapture) {
+                capture(driver, context, section, null, wait);
+            } else if (key.equals(Keyword.CAPTURE)) {
+                capture(driver, context, section, testCase, wait);
             }
             testCase.setSuccess(true);
             // set end
@@ -78,7 +91,7 @@ public class Web implements Driver {
         } catch (TestException t) {
             throw t; // to fix origin problem #32
         } catch (Throwable t) {
-            setFailure(context, driver, t, section, testCase);
+            setFailure(context, driver, t, section, testCase, wait);
             throw new TestException(t, testCase);
         }
     }
@@ -182,14 +195,14 @@ public class Web implements Driver {
             } else {
                 testCase.setMatchFailed("Section: "+section.getName()+", Test: "+ testCase.getNumber() + " failed: expected: "+argument.toString()+", but got: "+value);
             }
-            logger.severe(testCase.getMatchFailed());
+            logger.error(testCase.getMatchFailed());
             throw new AssertionError(testCase.getMatchFailed());
         } else {
             testCase.setSuccess(true);
         }
     }
 
-    void setFailure(Context context, WebDriver driver, Throwable t, Section section, TestCase testCase) {
+    void setFailure(Context context, WebDriver driver, Throwable t, Section section, TestCase testCase, int wait) {
         testCase.setSuccess(false);
 
         StringWriter writer = new StringWriter();
@@ -198,7 +211,7 @@ public class Web implements Driver {
         testCase.setStackTrace(writer.toString());
 
         try {
-            capture(driver, context, section, testCase, true);
+            capture(driver, context, section, testCase, true, wait);
         } catch (Exception e) {
             // do nothing
         }
@@ -277,7 +290,7 @@ public class Web implements Driver {
             current = driver.getWindowHandle();
             w.until(numberOfWindowsToBe(2));
         } catch (Exception e) {
-            logger.severe(e.getLocalizedMessage());
+            logger.error(e.getLocalizedMessage(), e);
         }
         if (argument != null && StringUtils.isNotEmpty(current) && current.equals(argument.getValue())) {
             return;
@@ -308,17 +321,57 @@ public class Web implements Driver {
         return new File(section.getName()+"_"+num+suffix+".png");
     }
 
-    private void capture(WebDriver driver, Context context, Section section, TestCase testCase) {
-        capture(driver, context, section, testCase, false);
+    private void capture(WebDriver driver, Context context, Section section, TestCase testCase, int wait) {
+        capture(driver, context, section, testCase, false, wait);
     }
 
-    private void capture(WebDriver driver, Context context, Section section, TestCase testCase, boolean isError) {
+    private void capture(WebDriver driver, Context context, Section section, TestCase testCase, boolean isError, int wait)  {
+        Param param = testCase == null ? null : testCase.getObject();
+        final Rectangle rect = getRect(driver, param, wait);
         // for NoSuchWindowException
         try {
-            File f = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(f, getCaptureFile(context, section, testCase, isError));
+            final Robot robot = new Robot();
+            BufferedImage image = robot.createScreenCapture(rect);
+            File f = getCaptureFile(context, section, testCase, isError);
+            ImageIO.write(image, "png", f);
         } catch (Exception e) {
-            logger.severe(e.getLocalizedMessage());
+            logger.error(e.getLocalizedMessage(), e);
         }
+    }
+
+    private Rectangle getRect(WebDriver driver, Param param, int wait) {
+        if (param == null) {
+            return getWindowRect(driver);
+        } else if (ELEMENT_TAGS.contains(param.getTag())) {
+            return getElementRect(driver, param, wait);
+        } else if (DataType.TEXT.equals(param.getTag()) && FULLSCREEN.equals(param.getValue())) {
+            java.awt.Dimension screenRect = Toolkit.getDefaultToolkit().getScreenSize();
+            return new Rectangle(screenRect);
+        } else if (DataType.RECT.equals(param.getTag())) {
+            return getRect(param);
+        } else {
+            return getWindowRect(driver);
+        }
+    }
+
+    private Rectangle getWindowRect(WebDriver driver) {
+        Point point = driver.manage().window().getPosition();
+        Dimension dim = driver.manage().window().getSize();
+        return new Rectangle(point.getX(), point.getY(), dim.getWidth(), dim.getHeight());
+    }
+
+    private Rectangle getElementRect(WebDriver driver, Param param, int wait) {
+        WebElement element = findElement(driver, param, wait);
+        org.openqa.selenium.Rectangle r = element.getRect();
+        return new Rectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+    }
+
+    private Rectangle getRect(Param param) {
+        final String[] vals = param.getValue().split(rectSepataror);
+        final int x = Integer.parseInt(vals[0]);
+        final int y = Integer.parseInt(vals[1]);
+        final int w = Integer.parseInt(vals[2]);
+        final int h = Integer.parseInt(vals[3]);
+        return new Rectangle(x, y, w, h);
     }
 }
