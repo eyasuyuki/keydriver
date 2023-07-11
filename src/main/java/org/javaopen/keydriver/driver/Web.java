@@ -81,7 +81,7 @@ public class Web implements Driver {
             dispatch(context, driver, wait, section, testCase);
             // manual capture or auto
             if (autoCapture) {
-                capture(driver, context, section, null, wait);
+                captureWindow(driver, context, section, testCase, false);
             } else if (key.equals(Keyword.CAPTURE)) {
                 capture(driver, context, section, testCase, wait);
             }
@@ -211,9 +211,9 @@ public class Web implements Driver {
         testCase.setStackTrace(writer.toString());
 
         try {
-            capture(driver, context, section, testCase, true, wait);
+            captureWindow(driver, context, section, testCase, true);
         } catch (Exception e) {
-            // do nothing
+            logger.error(e.getLocalizedMessage(), e);
         }
 
         testCase.setEnd(new Timestamp(System.currentTimeMillis()));
@@ -322,12 +322,49 @@ public class Web implements Driver {
     }
 
     private void capture(WebDriver driver, Context context, Section section, TestCase testCase, int wait) {
-        capture(driver, context, section, testCase, false, wait);
+        Param param = testCase.getObject();
+        if (param == null) {
+            captureWindow(driver, context, section, testCase, false);
+        } else if (ELEMENT_TAGS.contains(param.getTag())) {
+            captureElement(driver, context, section, testCase, wait);
+        } else if (DataType.TEXT.equals(param.getTag()) && FULLSCREEN.equals(param.getValue())) {
+            java.awt.Dimension screenRect = Toolkit.getDefaultToolkit().getScreenSize();
+            new Rectangle(screenRect);
+            captureFullscreen(driver, context, section, testCase);
+        } else if (DataType.RECT.equals(param.getTag())) {
+            captureRect(driver, context, section, testCase);
+        } else {
+            captureWindow(driver, context, section, testCase, false);
+        }
     }
 
-    private void capture(WebDriver driver, Context context, Section section, TestCase testCase, boolean isError, int wait)  {
-        Param param = testCase == null ? null : testCase.getObject();
-        final Rectangle rect = getRect(driver, param, wait);
+    private void captureWindow(WebDriver driver, Context context, Section section, TestCase testCase, boolean isError) {
+        Rectangle rect = getWindowRect(driver);
+        capture(driver, context, section, testCase, isError, rect);
+    }
+
+    private void captureElement(WebDriver driver, Context context, Section section, TestCase testCase, int wait) {
+        try {
+            WebElement element = findElement(driver, testCase.getObject(), wait);
+            File f = element.getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(f, getCaptureFile(context, section, testCase, false));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+        }
+    }
+
+    private void captureFullscreen(WebDriver driver, Context context, Section section, TestCase testCase) {
+        java.awt.Dimension screenRect = Toolkit.getDefaultToolkit().getScreenSize();
+        Rectangle rect = new Rectangle(screenRect);
+        capture(driver, context, section, testCase, false, rect);
+    }
+
+    private void captureRect(WebDriver driver, Context context, Section section, TestCase testCase) {
+        Rectangle rect = getRect(testCase.getObject());
+        capture(driver, context, section, testCase, false, rect);
+    }
+
+    private void capture(WebDriver driver, Context context, Section section, TestCase testCase, boolean isError, Rectangle rect)  {
         // for NoSuchWindowException
         try {
             final Robot robot = new Robot();
@@ -336,21 +373,6 @@ public class Web implements Driver {
             ImageIO.write(image, "png", f);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
-        }
-    }
-
-    private Rectangle getRect(WebDriver driver, Param param, int wait) {
-        if (param == null) {
-            return getWindowRect(driver);
-        } else if (ELEMENT_TAGS.contains(param.getTag())) {
-            return getElementRect(driver, param, wait);
-        } else if (DataType.TEXT.equals(param.getTag()) && FULLSCREEN.equals(param.getValue())) {
-            java.awt.Dimension screenRect = Toolkit.getDefaultToolkit().getScreenSize();
-            return new Rectangle(screenRect);
-        } else if (DataType.RECT.equals(param.getTag())) {
-            return getRect(param);
-        } else {
-            return getWindowRect(driver);
         }
     }
 
@@ -363,6 +385,7 @@ public class Web implements Driver {
     private Rectangle getElementRect(WebDriver driver, Param param, int wait) {
         WebElement element = findElement(driver, param, wait);
         org.openqa.selenium.Rectangle r = element.getRect();
+        // TODO cenvert screen coordinate
         return new Rectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
 
