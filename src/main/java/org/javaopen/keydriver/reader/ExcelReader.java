@@ -82,7 +82,9 @@ public class ExcelReader implements Reader {
                         Cell c = r.getCell(i);
                         cols.put(keys[i], getCellString(c));
                 }
-                section.getTestCaseList().add(new TestCase(context, cols));
+                if (StringUtils.isNotEmpty(cols.get(keys[0]))) {
+                    section.getTestCaseList().add(new TestCase(context, cols));
+                }
             }
             n++;
         }
