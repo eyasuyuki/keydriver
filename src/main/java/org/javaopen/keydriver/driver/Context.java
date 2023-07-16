@@ -57,6 +57,7 @@ public class Context {
     public static final String VALUE_HEAD_KEY = "keydriver.value.head";
     public static final String VALUE_TAIL_KEY = "keydriver.value.tail";
     public static final String ATTRIBUTE_SEPARATOR_KEY = "keydriver.attribute.separator";
+    public static final String RECT_SEPARATOR_KEY = "keydriver.rect.separator";
     public static final String ERROR_SUFFIX_KEY = "keydriver.error.suffix";
 
     // Reader

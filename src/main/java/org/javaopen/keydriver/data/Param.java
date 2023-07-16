@@ -15,6 +15,7 @@ public class Param {
     private static final String VALUE_HEAD_DEFAULT = "\\[";
     private static final String VALUE_TAIL_DEFAULT = "]";
     private static final String ATTRIBUTE_SEPARATOR_DEFAULT = "#";
+    public static final String RECT_SEPARATOR_DEFAULT = ":";
     private static final List<String> MATCHERS = Arrays.asList(Matches.values())
         .stream()
         .map(x -> x.getString())

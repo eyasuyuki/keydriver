@@ -9,7 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -56,6 +58,14 @@ public class TestWeb {
         Alert alert = mock(Alert.class);
         when(locator.alert()).thenReturn(alert);
         when(driver.switchTo()).thenReturn(locator);
+        // mock window
+        WebDriver.Window window = mock(WebDriver.Window.class);
+        when(window.getPosition()).thenReturn(new Point(0, 0));
+        when(window.getSize()).thenReturn(new Dimension(800, 600));
+        // mock manage
+        WebDriver.Options manage = mock(WebDriver.Options.class);
+        when(manage.window()).thenReturn(window);
+        when(driver.manage()).thenReturn(manage);
     }
 
     @Test

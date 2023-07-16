@@ -12,6 +12,7 @@ public enum DataType implements Tag {
     SQL("sql"),
     TEXT("text"),
     WINDOW("window"),
+    RECT("rect"),
     ;
 
     public static Tag getTag(String name) {

@@ -37,5 +37,9 @@ public class TestParam {
         param = new Param("window[1]");
         assertThat(param.getTag(), is(DataType.WINDOW));
         assertThat(param.getValue(), is("1"));
+
+        param = new Param("rect[50:20:200:120]");
+        assertThat(param.getTag(), is(DataType.RECT));
+        assertThat(param.getValue(), is("50:20:200:120"));
     }
 }
