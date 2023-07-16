@@ -51,35 +51,50 @@ public class TestExcelReader {
 
         testCase = section.getTestCaseList().get(1);
         assertThat(testCase)
-            .extracting("keyword", "target", "argument", "object")
-            .doesNotContainNull()
-            .containsExactly(Keyword.INPUT, new Param("テキストボックス"), new Param("サルゲッチュ"), new Param("name[q]"));
+                .extracting("keyword", "target")
+                .containsExactly(Keyword.CAPTURE, new Param("ウインドウ"));
 
         testCase = section.getTestCaseList().get(2);
         assertThat(testCase)
             .extracting("keyword", "target", "argument", "object")
             .doesNotContainNull()
-            .containsExactly(Keyword.ASSERT, new Param("ボタン[Google 検索]表示"), new Param("is[true]"), new Param("name[btnK#displayed]"));
+            .containsExactly(Keyword.INPUT, new Param("テキストボックス"), new Param("サルゲッチュ"), new Param("name[q]"));
 
         testCase = section.getTestCaseList().get(3);
         assertThat(testCase)
-            .extracting("keyword", "target", "argument", "object")
-            .doesNotContainNull()
-            .containsExactly(Keyword.ASSERT, new Param("ボタン[Google 検索]活性"), new Param("is[true]"), new Param("name[btnK#enabled]"));
+                .extracting("keyword", "target", "object")
+                .containsExactly(Keyword.CAPTURE, new Param("要素スクリーンショット"), new Param("name[q]"));
 
         testCase = section.getTestCaseList().get(4);
         assertThat(testCase)
-            .extracting("keyword", "target", "object")
+            .extracting("keyword", "target", "argument", "object")
             .doesNotContainNull()
-            .containsExactly(Keyword.CLICK, new Param("ボタン[Google 検索]"), new Param("name[btnK]"));
+            .containsExactly(Keyword.ASSERT, new Param("ボタン[Google 検索]表示"), new Param("is[true]"), new Param("name[btnK#displayed]"));
 
         testCase = section.getTestCaseList().get(5);
         assertThat(testCase)
             .extracting("keyword", "target", "argument", "object")
             .doesNotContainNull()
-            .containsExactly(Keyword.ASSERT, new Param("タイトル"), new Param("is[サルゲッチュ - Google 検索]"), new Param("xpath[/html/head/title]"));
+            .containsExactly(Keyword.ASSERT, new Param("ボタン[Google 検索]活性"), new Param("is[true]"), new Param("name[btnK#enabled]"));
 
         testCase = section.getTestCaseList().get(6);
+        assertThat(testCase)
+                .extracting("keyword", "target", "object")
+                .containsExactly(Keyword.CAPTURE, new Param("フルスクリーン"), new Param("fullscreen"));
+
+        testCase = section.getTestCaseList().get(7);
+        assertThat(testCase)
+            .extracting("keyword", "target", "object")
+            .doesNotContainNull()
+            .containsExactly(Keyword.CLICK, new Param("ボタン[Google 検索]"), new Param("name[btnK]"));
+
+        testCase = section.getTestCaseList().get(8);
+        assertThat(testCase)
+            .extracting("keyword", "target", "argument", "object")
+            .doesNotContainNull()
+            .containsExactly(Keyword.ASSERT, new Param("タイトル"), new Param("is[サルゲッチュ - Google 検索]"), new Param("xpath[/html/head/title]"));
+
+        testCase = section.getTestCaseList().get(9);
         assertThat(testCase)
                 .extracting("keyword", "comment")
                 .doesNotContainNull()

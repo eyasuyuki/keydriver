@@ -290,7 +290,7 @@ public class Web implements Driver {
             current = driver.getWindowHandle();
             w.until(numberOfWindowsToBe(2));
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(), e);
+            logger.info(e.getLocalizedMessage());
         }
         if (argument != null && StringUtils.isNotEmpty(current) && current.equals(argument.getValue())) {
             return;
