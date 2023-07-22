@@ -4,7 +4,7 @@
   <groupId>org.javaopen.keydriver</groupId>
   <artifactId>keydriver</artifactId>
   <packaging>jar</packaging>
-  <version>0.8.2</version>
+  <version>0.8.3</version>
   <name>keydriver</name>
   <url>http://maven.apache.org</url>
   <repositories>
