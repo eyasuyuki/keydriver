@@ -47,6 +47,7 @@ Tag is these types:
 | sql  | SQL text            | ```sql[SELECT name FROM employee WHERE id=94238]``` |
 | text | Any text            | ```text[Foo Bar Buz]```                                |
 | sheet | Excel worksheet name | ```sheet[Sheet1]``` |
+| rect | int:int:int:int | x:y:width:height |
 
 ## Matches
 
